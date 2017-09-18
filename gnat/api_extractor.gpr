@@ -1,0 +1,19 @@
+with "config";
+
+project API_Extractor is
+
+   for Languages use ("Ada", "C++");
+
+   for Source_Dirs use (Config.Root_Source_Dir & "/sources/binding");
+   for Object_Dir use Config.Root_Build_Dir & "/.objs";
+
+   package Compiler is
+
+      for Switches ("C++") use
+        Config.Cxx_Compiler_Switches
+          & ("-fPIC",   --  XXX Should be passed from CMake
+             "-I" & Config.Root_Source_Dir & "/sources/ApiExtractor");
+
+   end Compiler;
+
+end API_Extractor;

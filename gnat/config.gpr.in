@@ -1,0 +1,9 @@
+
+abstract project Config is
+
+   Root_Source_Dir := "@PROJECT_SOURCE_DIR@";
+   Root_Build_Dir  := "@PROJECT_BINARY_DIR@";
+
+   CXX_Compiler_Switches := (@CXX_COMPILER_SWITCHES@);
+
+end Config;

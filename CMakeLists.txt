@@ -25,3 +25,16 @@ endif()
 set(CLANG_EXTRA_INCLUDES ${CLANG_DIR}/include)
 
 add_subdirectory(sources/ApiExtractor)
+# add_subdirectory(sources)
+
+# Configure GNAT project files
+
+string(REPLACE ";" "\", \"-I" QT_INCLUDE_SWITCHES "${Qt5Core_INCLUDE_DIRS}")
+string(CONCAT QT_INCLUDE_SWITCHES "\"-I" ${QT_INCLUDE_SWITCHES} "\"")
+
+set(CXX_COMPILER_SWITCHES ${QT_INCLUDE_SWITCHES})
+configure_file(gnat/config.gpr.in gnat/config.gpr @ONLY)
+
+# Run GPRbuild to build binding library
+
+add_custom_target(binding ALL COMMAND ${CMAKE_COMMAND} -E env "GPR_PROJECT_PATH=${GPR_PROJECT_PATH}:${PROJECT_SOURCE_DIR}/gnat:${PROJECT_BINARY_DIR}/gnat" "gprbuild" "-p" "-Papi_extractor")
