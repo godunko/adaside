@@ -43,9 +43,14 @@ get_target_property(Qt5Core_IMPORTED_LOCATION Qt5::Core IMPORTED_LOCATION_RELEAS
 set(CXX_COMPILER_SWITCHES ${QT_INCLUDE_SWITCHES})
 configure_file(gnat/config.gpr.in gnat/config.gpr @ONLY)
 
+# Prepare project files search paths switches
+
+list(APPEND GPRBUILD_GRP_FLAGS "-aP${PROJECT_BINARY_DIR}/gnat")
+list(APPEND GPRBUILD_GRP_FLAGS "-aP${PROJECT_SOURCE_DIR}/gnat")
+
 # Run GPRbuild to build binding library
 
-add_custom_target(binding ALL COMMAND ${CMAKE_COMMAND} -E env "GPR_PROJECT_PATH=${GPR_PROJECT_PATH}:${PROJECT_SOURCE_DIR}/gnat:${PROJECT_BINARY_DIR}/gnat" "gprbuild" "-p" "-Papi_extractor")
+add_custom_target(binding ALL COMMAND "gprbuild" ${GPRBUILD_GRP_FLAGS} "-p" "-Papi_extractor")
 add_dependencies(binding apiextractor)
-add_custom_target(adaside ALL COMMAND ${CMAKE_COMMAND} -E env "GPR_PROJECT_PATH=${GPR_PROJECT_PATH}:${PROJECT_SOURCE_DIR}/gnat:${PROJECT_BINARY_DIR}/gnat" "gprbuild" "-p" "-Pada_side")
+add_custom_target(adaside ALL COMMAND "gprbuild" ${GPRBUILD_GRP_FLAGS} "-p" "-Pada_side")
 add_dependencies(adaside binding)
