@@ -16,4 +16,10 @@ project API_Extractor is
 
    end Compiler;
 
+   Linker_Switches :=
+    ("-L" & Config.Root_Build_Dir & "/sources/ApiExtractor",
+     "-lapiextractor",
+     Config.Clang_Imported_Location,
+     Config.Qt5Core_Imported_Location);
+
 end API_Extractor;

@@ -6,4 +6,7 @@ abstract project Config is
 
    CXX_Compiler_Switches := (@CXX_COMPILER_SWITCHES@);
 
+   Clang_Imported_Location   := "@CLANG_LIBRARY@";
+   Qt5Core_Imported_Location := "@Qt5Core_IMPORTED_LOCATION@";
+
 end Config;

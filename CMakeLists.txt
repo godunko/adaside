@@ -24,13 +24,21 @@ endif()
 
 set(CLANG_EXTRA_INCLUDES ${CLANG_DIR}/include)
 
+find_library(CLANG_LIBRARY clang HINTS ${CLANG_DIR}/lib)
+if (NOT EXISTS ${CLANG_LIBRARY})
+    message(FATAL_ERROR "Unable to find Clang library ${CLANG_LIB_NAME} in ${CLANG_DIR}.")
+endif()
+
+message(STATUS "CLANG: ${CLANG_DIR}, ${CLANG_LIBRARY} detected by ${CLANG_DIR_SOURCE}")
+
 add_subdirectory(sources/ApiExtractor)
-# add_subdirectory(sources)
 
 # Configure GNAT project files
 
 string(REPLACE ";" "\", \"-I" QT_INCLUDE_SWITCHES "${Qt5Core_INCLUDE_DIRS}")
 string(CONCAT QT_INCLUDE_SWITCHES "\"-I" ${QT_INCLUDE_SWITCHES} "\"")
+
+get_target_property(Qt5Core_IMPORTED_LOCATION Qt5::Core IMPORTED_LOCATION_RELEASE)
 
 set(CXX_COMPILER_SWITCHES ${QT_INCLUDE_SWITCHES})
 configure_file(gnat/config.gpr.in gnat/config.gpr @ONLY)
@@ -38,3 +46,4 @@ configure_file(gnat/config.gpr.in gnat/config.gpr @ONLY)
 # Run GPRbuild to build binding library
 
 add_custom_target(binding ALL COMMAND ${CMAKE_COMMAND} -E env "GPR_PROJECT_PATH=${GPR_PROJECT_PATH}:${PROJECT_SOURCE_DIR}/gnat:${PROJECT_BINARY_DIR}/gnat" "gprbuild" "-p" "-Papi_extractor")
+add_dependencies(binding apiextractor)
