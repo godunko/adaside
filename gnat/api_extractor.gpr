@@ -11,8 +11,11 @@ project API_Extractor is
 
       for Switches ("C++") use
         Config.Cxx_Compiler_Switches
-          & ("-fPIC",   --  XXX Should be passed from CMake
+          & ("-g",
+             "-fPIC",   --  XXX Should be passed from CMake
              "-I" & Config.Root_Source_Dir & "/sources/ApiExtractor");
+
+      for Switches ("Ada") use ("-g");
 
    end Compiler;
 

@@ -12,6 +12,10 @@ project Ada_Side is
       for Executable ("generator-driver.adb") use "adaside";
    end Builder;
 
+   package Compiler is
+      for Switches ("Ada") use ("-g");
+   end Compiler;
+
    package Linker is
       for Switches ("Ada") use API_Extractor.Linker_Switches;
    end Linker;
