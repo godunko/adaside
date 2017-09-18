@@ -1,0 +1,19 @@
+with "config";
+with "api_extractor";
+
+project Ada_Side is
+
+   for Source_Dirs use
+    (Config.Root_Source_Dir & "/sources/generator");
+   for Object_Dir use Config.Root_Build_Dir & "/.objs";
+   for Main use ("generator-driver.adb");
+
+   package Builder is
+      for Executable ("generator-driver.adb") use "adaside";
+   end Builder;
+
+   package Linker is
+      for Switches ("Ada") use API_Extractor.Linker_Switches;
+   end Linker;
+
+end Ada_Side;

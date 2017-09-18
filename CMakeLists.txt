@@ -47,3 +47,5 @@ configure_file(gnat/config.gpr.in gnat/config.gpr @ONLY)
 
 add_custom_target(binding ALL COMMAND ${CMAKE_COMMAND} -E env "GPR_PROJECT_PATH=${GPR_PROJECT_PATH}:${PROJECT_SOURCE_DIR}/gnat:${PROJECT_BINARY_DIR}/gnat" "gprbuild" "-p" "-Papi_extractor")
 add_dependencies(binding apiextractor)
+add_custom_target(adaside ALL COMMAND ${CMAKE_COMMAND} -E env "GPR_PROJECT_PATH=${GPR_PROJECT_PATH}:${PROJECT_SOURCE_DIR}/gnat:${PROJECT_BINARY_DIR}/gnat" "gprbuild" "-p" "-Pada_side")
+add_dependencies(adaside binding)
