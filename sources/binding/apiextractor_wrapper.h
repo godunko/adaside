@@ -9,5 +9,6 @@ extern "C"
     bool ApiExtractor__run(ApiExtractor *self);
     void ApiExtractor__setCppFileName(ApiExtractor *self, QString *fileName);
     void ApiExtractor__setTypeSystem(ApiExtractor *self, QString *fileName);
+    void ApiExtractor__addIncludePath(ApiExtractor *self, HeaderPath *fileName);
 
 }

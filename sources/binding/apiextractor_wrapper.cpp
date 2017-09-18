@@ -4,6 +4,11 @@
 extern "C"
 {
 
+    void ApiExtractor__addIncludePath(ApiExtractor *self, HeaderPath *path) 
+    {
+        self->addIncludePath(*path);
+    }
+
     void ApiExtractor__delete(ApiExtractor **self)
     {
         delete *self;

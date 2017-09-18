@@ -2,6 +2,8 @@ private with Ada.Finalization;
 
 with Q_Strings;
 
+with Header_Paths;
+
 package API_Extractors is
 
    --    QString typeSystem() const { return m_typeSystemFileName; }
@@ -11,7 +13,6 @@ package API_Extractors is
    --    void setSilent(bool value);
    --    void addTypesystemSearchPath(const QString& path);
    --    void addTypesystemSearchPath(const QStringList& paths);
-   --    void addIncludePath(const HeaderPath& path);
    --    void addIncludePath(const HeaderPaths& paths);
    --    HeaderPaths includePaths() const { return m_includePaths; }
    --    void setLogDirectory(const QString& logDir);
@@ -49,6 +50,11 @@ package API_Extractors is
     (Self      : in out API_Extractor'Class;
      File_Name : Q_Strings.Q_String'Class);
    --    void setTypeSystem(const QString& typeSystemFileName);
+
+   procedure Add_Include_Path
+    (Self : in out API_Extractor'Class;
+     Path : Header_Paths.Header_Path'Class);
+   --    void addIncludePath(const HeaderPath& path);
 
 private
 

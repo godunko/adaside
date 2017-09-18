@@ -28,6 +28,24 @@ package body API_Extractors is
             Convention => C,
             Link_Name  => "ApiExtractor__setTypeSystem";
 
+   procedure ApiExtractor_addIncludePath
+    (This : not null ApiExtractor_Access;
+     Path : not null Header_Paths.Internals.HeaderPath_Access)
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "ApiExtractor__addIncludePath";
+
+   ----------------------
+   -- Add_Include_Path --
+   ----------------------
+
+   procedure Add_Include_Path
+    (Self : in out API_Extractor'Class;
+     Path : Header_Paths.Header_Path'Class) is
+   begin
+      ApiExtractor_addIncludePath (Self.Object, Header_Paths.Internals.Internal (Path));
+   end Add_Include_Path;
+
    --------------
    -- Finalize --
    --------------
