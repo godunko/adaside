@@ -2,6 +2,7 @@ private with Ada.Finalization;
 
 with Q_Strings;
 
+with Abstract_Meta_Class_Lists;
 with Header_Paths;
 
 package API_Extractors is
@@ -21,7 +22,6 @@ package API_Extractors is
    --
    --    AbstractMetaEnumList globalEnums() const;
    --    AbstractMetaFunctionList globalFunctions() const;
-   --    AbstractMetaClassList classes() const;
    --    AbstractMetaClassList smartPointers() const;
    --    AbstractMetaClassList classesTopologicalSorted(const Dependencies &additionalDependencies = Dependencies()) const;
    --    PrimitiveTypeEntryList primitiveTypes() const;
@@ -55,6 +55,11 @@ package API_Extractors is
     (Self : in out API_Extractor'Class;
      Path : Header_Paths.Header_Path'Class);
    --    void addIncludePath(const HeaderPath& path);
+
+   function Classes
+    (Self : API_Extractor'Class)
+       return Abstract_Meta_Class_Lists.Abstract_Meta_Class_List;
+   --    AbstractMetaClassList classes() const;
 
 private
 

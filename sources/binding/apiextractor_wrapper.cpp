@@ -9,6 +9,11 @@ extern "C"
         self->addIncludePath(*path);
     }
 
+    void ApiExtractor__classes(AbstractMetaClassList* _result, ApiExtractor *self)
+    {
+       *_result = self->classes();
+    }
+
     void ApiExtractor__delete(ApiExtractor **self)
     {
         delete *self;

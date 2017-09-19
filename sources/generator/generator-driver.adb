@@ -1,11 +1,13 @@
 with Ada.Command_Line;
 
+with Abstract_Meta_Class_Lists;
 with API_Extractors;
 with Header_Paths;
 with Q_Strings;
 
 procedure Generator.Driver is
    Extractor : API_Extractors.API_Extractor;
+   Classes   : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List;
 
 begin
    Extractor.Set_Cpp_File_Name (Q_Strings.From_UTF8 (Ada.Command_Line.Argument (1)));
@@ -18,4 +20,7 @@ begin
    if Extractor.Run then
       null;
    end if;
+
+   Classes := Extractor.Classes;
+
 end Generator.Driver;

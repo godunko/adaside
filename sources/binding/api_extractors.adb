@@ -35,6 +35,13 @@ package body API_Extractors is
             Convention => C,
             Link_Name  => "ApiExtractor__addIncludePath";
 
+   procedure ApiExtractor_classes
+    (Result : not null Abstract_Meta_Class_Lists.Internals.AbstractMetaClassList_Access;
+     This   : not null ApiExtractor_Access)
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "ApiExtractor__classes";
+
    ----------------------
    -- Add_Include_Path --
    ----------------------
@@ -45,6 +52,20 @@ package body API_Extractors is
    begin
       ApiExtractor_addIncludePath (Self.Object, Header_Paths.Internals.Internal (Path));
    end Add_Include_Path;
+
+   -------------
+   -- Classes --
+   -------------
+
+   function Classes
+    (Self : API_Extractor'Class)
+       return Abstract_Meta_Class_Lists.Abstract_Meta_Class_List is
+   begin
+      return Result : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List do
+         ApiExtractor_classes
+          (Abstract_Meta_Class_Lists.Internals.Internal (Result), Self.Object);
+      end return;
+   end Classes;
 
    --------------
    -- Finalize --
