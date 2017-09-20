@@ -13,6 +13,12 @@ package body Abstract_Meta_Class_Lists is
             Convention => C,
             Link_Name  => "AbstractMetaClassList__finalize";
 
+   function AbstractMetaClassList_size
+    (This : Internals.AbstractMetaClassList_Access) return Interfaces.C.int
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaClassList_size";
+
    ------------
    -- Adjust --
    ------------
@@ -49,5 +55,14 @@ package body Abstract_Meta_Class_Lists is
       end Internal;
 
    end Internals;
+
+   ----------
+   -- Size --
+   ----------
+
+   function Size (Self : Abstract_Meta_Class_List'Class) return Interfaces.C.int is
+   begin
+      return AbstractMetaClassList_size (Self.Object);
+   end Size;
 
 end Abstract_Meta_Class_Lists;

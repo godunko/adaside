@@ -21,4 +21,9 @@ extern "C"
         *self = 0;
     }
 
+    int AbstractMetaClassList_size(AbstractMetaClassList* self)
+    {
+        return self->size();
+    }
+
 }

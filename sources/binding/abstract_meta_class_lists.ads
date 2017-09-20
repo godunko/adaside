@@ -1,8 +1,11 @@
 private with Ada.Finalization;
+with Interfaces.C;
 
 package Abstract_Meta_Class_Lists is
 
    type Abstract_Meta_Class_List is tagged private;
+
+   function Size (Self : Abstract_Meta_Class_List'Class) return Interfaces.C.int;
 
    package Internals is
 
