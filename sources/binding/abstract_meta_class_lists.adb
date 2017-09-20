@@ -42,12 +42,6 @@ package body Abstract_Meta_Class_Lists is
 
    package body Cursors is
 
-      function Has_Element (Self : Interfaces.C.int) return Boolean is
-         use type Interfaces.C.int;
-      begin
-         return Self >= 0;
-      end Has_Element;
-
       function Each (Self : aliased in out Abstract_Meta_Class_List'Class)
         return Cursors.Forward_Iterator is
       begin
@@ -61,6 +55,12 @@ package body Abstract_Meta_Class_Lists is
       begin
          return Self.Next (-1);
       end First;
+
+      function Has_Element (Self : Interfaces.C.int) return Boolean is
+         use type Interfaces.C.int;
+      begin
+         return Self >= 0;
+      end Has_Element;
 
       overriding function Next
         (Self     : Forward_Iterator;
@@ -108,7 +108,7 @@ package body Abstract_Meta_Class_Lists is
        (Item : Abstract_Meta_Class_List'Class)
           return AbstractMetaClassList_Access is
       begin
-          return Item.Object;
+         return Item.Object;
       end Internal;
 
    end Internals;
@@ -117,7 +117,8 @@ package body Abstract_Meta_Class_Lists is
    -- Size --
    ----------
 
-   function Size (Self : Abstract_Meta_Class_List'Class) return Interfaces.C.int is
+   function Size (Self : Abstract_Meta_Class_List'Class)
+     return Interfaces.C.int is
    begin
       return AbstractMetaClassList_size (Self.Object);
    end Size;
@@ -128,7 +129,8 @@ package body Abstract_Meta_Class_Lists is
 
    function Value
     (Self  : Abstract_Meta_Class_List'Class;
-     Index : Interfaces.C.int) return Abstract_Meta_Classes.Abstract_Meta_Class is
+     Index : Interfaces.C.int)
+      return Abstract_Meta_Classes.Abstract_Meta_Class is
    begin
       return
         Abstract_Meta_Classes.Internals.Wrap

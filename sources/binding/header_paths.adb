@@ -34,7 +34,8 @@ package body Header_Paths is
    function Create (Path : Q_Strings.Q_String) return Header_Path is
    begin
       return (Ada.Finalization.Controlled
-                with Object => HeaderPath_new_2 (Q_Strings.Internals.Internal (Path)));
+                with Object => HeaderPath_new_2
+                                (Q_Strings.Internals.Internal (Path)));
    end Create;
 
    --------------

@@ -9,7 +9,8 @@ package body API_Extractors is
           Convention => C,
           Link_Name  => "ApiExtractor__delete";
 
-   function ApiExtractor_run (This : not null ApiExtractor_Access) return Interfaces.C.Extensions.bool
+   function ApiExtractor_run (This : not null ApiExtractor_Access)
+     return Interfaces.C.Extensions.bool
      with Import     => True,
           Convention => C,
           Link_Name  => "ApiExtractor__run";
@@ -36,7 +37,8 @@ package body API_Extractors is
             Link_Name  => "ApiExtractor__addIncludePath";
 
    procedure ApiExtractor_classes
-    (Result : not null Abstract_Meta_Class_Lists.Internals.AbstractMetaClassList_Access;
+    (Result : not null Abstract_Meta_Class_Lists.Internals
+                        .AbstractMetaClassList_Access;
      This   : not null ApiExtractor_Access)
        with Import     => True,
             Convention => C,
@@ -50,7 +52,8 @@ package body API_Extractors is
     (Self : in out API_Extractor'Class;
      Path : Header_Paths.Header_Path'Class) is
    begin
-      ApiExtractor_addIncludePath (Self.Object, Header_Paths.Internals.Internal (Path));
+      ApiExtractor_addIncludePath
+        (Self.Object, Header_Paths.Internals.Internal (Path));
    end Add_Include_Path;
 
    -------------
@@ -74,7 +77,7 @@ package body API_Extractors is
    overriding procedure Finalize (Self : in out API_Extractor) is
    begin
       if Self.Object /= null then
-         ApiExtractor_delete(Self.Object);
+         ApiExtractor_delete (Self.Object);
          Self.Object := null;
       end if;
    end Finalize;
@@ -96,7 +99,8 @@ package body API_Extractors is
     (Self      : in out API_Extractor'Class;
      File_Name : Q_Strings.Q_String'Class) is
    begin
-      ApiExtractor_setCppFileName (Self.Object, Q_Strings.Internals.Internal (File_Name));
+      ApiExtractor_setCppFileName
+        (Self.Object, Q_Strings.Internals.Internal (File_Name));
    end Set_Cpp_File_Name;
 
    ---------------------
@@ -107,7 +111,8 @@ package body API_Extractors is
     (Self      : in out API_Extractor'Class;
      File_Name : Q_Strings.Q_String'Class) is
    begin
-      ApiExtractor_setTypeSystem (Self.Object, Q_Strings.Internals.Internal (File_Name));
+      ApiExtractor_setTypeSystem
+        (Self.Object, Q_Strings.Internals.Internal (File_Name));
    end Set_Type_System;
 
 end API_Extractors;

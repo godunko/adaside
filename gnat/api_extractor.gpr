@@ -15,7 +15,7 @@ project API_Extractor is
              "-fPIC",   --  XXX Should be passed from CMake
              "-I" & Config.Root_Source_Dir & "/sources/ApiExtractor");
 
-      for Switches ("Ada") use ("-g");
+      for Switches ("Ada") use ("-g", "-gnatyyo", "-gnatwae");
 
    end Compiler;
 

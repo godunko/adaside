@@ -13,7 +13,7 @@ project Ada_Side is
    end Builder;
 
    package Compiler is
-      for Switches ("Ada") use ("-g");
+      for Switches ("Ada") use ("-g", "-gnatyyo", "-gnatwae");
    end Compiler;
 
    package Linker is

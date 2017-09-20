@@ -44,7 +44,7 @@ package body Q_Strings is
 
    begin
       if Self.Object /= null then
-         QString_delete(Self.Object);
+         QString_delete (Self.Object);
       end if;
    end Finalize;
 
@@ -57,7 +57,8 @@ package body Q_Strings is
 
    begin
       return (Ada.Finalization.Controlled
-                with Object => QString_fromUtf8 (C (C'First)'Access, Item'Length));
+                with Object => QString_fromUtf8
+                                (C (C'First)'Access, Item'Length));
    end From_UTF8;
 
    ---------------
@@ -82,7 +83,7 @@ package body Q_Strings is
 
    begin
       return Result : constant String := Interfaces.C.Strings.Value (Aux) do
-         Interfaces.C.Strings.free (Aux);
+         Interfaces.C.Strings.Free (Aux);
       end return;
    end To_UTF8;
 end Q_Strings;

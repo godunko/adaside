@@ -6,7 +6,7 @@ with Abstract_Meta_Class_Lists;
 with Header_Paths;
 
 package API_Extractors is
-
+   pragma Style_Checks (Off);
    --    QString typeSystem() const { return m_typeSystemFileName; }
    --    QString cppFileName() const { return m_cppFileName; }
    --    void setDebugLevel(ReportHandler::DebugLevel debugLevel);
@@ -34,6 +34,7 @@ package API_Extractors is
    --    const AbstractMetaEnum* findAbstractMetaEnum(const AbstractMetaType* metaType) const;
    --
    --    int classCount() const;
+   pragma Style_Checks (On);
 
 
    type API_Extractor is tagged limited private;

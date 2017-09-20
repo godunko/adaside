@@ -10,6 +10,7 @@ package Abstract_Meta_Classes is
    type Abstract_Meta_Class is
      new Abstract_Meta_Attributes.Abstract_Meta_Attributes with private;
 
+   pragma Style_Checks (Off);
    --    AbstractMetaClass *extractInterface();
    --    void fixFunctions();
    --
@@ -387,6 +388,7 @@ package Abstract_Meta_Classes is
    --                                                const QString &string);
    --    static AbstractMetaEnum *findEnum(const AbstractMetaClassList &classes,
    --                                      const EnumTypeEntry *entry);
+   pragma Style_Checks (On);
 
    function Name (Self : Abstract_Meta_Class'Class) return Q_Strings.Q_String;
    --  Retrieves the class name without any namespace/scope information.
