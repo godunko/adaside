@@ -19,6 +19,14 @@ package body Abstract_Meta_Class_Lists is
             Convention => C,
             Link_Name  => "AbstractMetaClassList_size";
 
+   function AbstractMetaClassList_value
+    (This  : Internals.AbstractMetaClassList_Access;
+     Index : Interfaces.C.int)
+       return Abstract_Meta_Classes.AbstractMetaClass_Access
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaClassList_value";
+
    ------------
    -- Adjust --
    ------------
@@ -64,5 +72,18 @@ package body Abstract_Meta_Class_Lists is
    begin
       return AbstractMetaClassList_size (Self.Object);
    end Size;
+
+   -----------
+   -- Value --
+   -----------
+
+   function Value
+    (Self  : Abstract_Meta_Class_List'Class;
+     Index : Interfaces.C.int) return Abstract_Meta_Classes.Abstract_Meta_Class is
+   begin
+      return
+        Abstract_Meta_Classes.Internals.Wrap
+         (AbstractMetaClassList_value (Self.Object, Index));
+   end Value;
 
 end Abstract_Meta_Class_Lists;

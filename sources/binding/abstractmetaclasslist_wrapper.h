@@ -9,5 +9,6 @@ extern "C"
     void AbstractMetaClassList__finalize(AbstractMetaClassList** self);
 
     int AbstractMetaClassList_size(AbstractMetaClassList* self);
+    AbstractMetaClass* AbstractMetaClassList_value(AbstractMetaClassList* self, int index);
 
 }

@@ -26,4 +26,9 @@ extern "C"
         return self->size();
     }
 
+    AbstractMetaClass* AbstractMetaClassList_value(AbstractMetaClassList* self, int index)
+    {
+        return self->value(index);
+    }
+
 }
