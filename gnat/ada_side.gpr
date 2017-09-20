@@ -6,10 +6,10 @@ project Ada_Side is
    for Source_Dirs use
     (Config.Root_Source_Dir & "/sources/generator");
    for Object_Dir use Config.Root_Build_Dir & "/.objs";
-   for Main use ("generator-driver.adb");
+   for Main use ("ada_side-driver.adb");
 
    package Builder is
-      for Executable ("generator-driver.adb") use "adaside";
+      for Executable ("ada_side-driver.adb") use "adaside";
    end Builder;
 
    package Compiler is

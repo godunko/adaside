@@ -8,7 +8,7 @@ with API_Extractors;
 with Header_Paths;
 with Q_Strings;
 
-procedure Generator.Driver is
+procedure Ada_Side.Driver is
    Extractor : API_Extractors.API_Extractor;
    Classes   : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List;
 
@@ -37,4 +37,4 @@ begin
       Ada.Text_IO.Put_Line (" " & Class.Full_Name.To_UTF8);
    end loop;
 
-end Generator.Driver;
+end Ada_Side.Driver;
