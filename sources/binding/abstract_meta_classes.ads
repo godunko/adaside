@@ -134,11 +134,6 @@ package Abstract_Meta_Classes is
    --    void addInterface(AbstractMetaClass *interface);
    --    void setInterfaces(const AbstractMetaClassList &interface);
    --
-   --    QString fullName() const
-   --    {
-   --        return package() + QLatin1Char('.') + name();
-   --    }
-   --
    --    QString baseClassName() const
    --    {
    --        return m_baseClass ? m_baseClass->name() : QString();
@@ -389,6 +384,10 @@ package Abstract_Meta_Classes is
    --    static AbstractMetaEnum *findEnum(const AbstractMetaClassList &classes,
    --                                      const EnumTypeEntry *entry);
    pragma Style_Checks (On);
+
+   function Full_Name
+    (Self : Abstract_Meta_Class'Class) return Q_Strings.Q_String;
+   --    QString fullName() const
 
    function Name (Self : Abstract_Meta_Class'Class) return Q_Strings.Q_String;
    --  Retrieves the class name without any namespace/scope information.
