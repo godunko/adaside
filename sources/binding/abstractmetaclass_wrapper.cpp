@@ -9,4 +9,9 @@ extern "C"
         return dynamic_cast<AbstractMetaAttributes*>(self);
     }
 
+    void AbstractMetaClass_name(QString* _return, AbstractMetaClass* self)
+    {
+        *_return = self->name();
+    }
+
 }
