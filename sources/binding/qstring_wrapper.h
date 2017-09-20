@@ -9,5 +9,6 @@ extern "C"
     QString *QString__new();
 
     QString *QString__fromUtf8(const char *str, int size);
+    char* QString_toUtf8(QString* self);
 
 }

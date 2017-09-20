@@ -8,6 +8,8 @@ package Q_Strings is
 
    function From_UTF8 (Item : String) return Q_String;
 
+   function To_UTF8 (Self : Q_String'Class) return String;
+
    package Internals is
 
       type QString is null record with Convention => C;

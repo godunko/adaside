@@ -1,4 +1,4 @@
-with Interfaces.C;
+with Interfaces.C.Strings;
 
 package body Q_Strings is
 
@@ -13,11 +13,18 @@ package body Q_Strings is
           Link_Name  => "QString__delete";
 
    function QString_fromUtf8
-             (str  : access constant Interfaces.C.char;
-              size : Interfaces.C.int) return Internals.QString_Access
-     with Import     => True,
-          Convention => C,
-          Link_Name  => "QString__fromUtf8";
+    (str  : access constant Interfaces.C.char;
+     size : Interfaces.C.int) return Internals.QString_Access
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "QString__fromUtf8";
+
+   function QString_toUtf8
+    (Self : not null Internals.QString_Access)
+       return Interfaces.C.Strings.chars_ptr
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "QString_toUtf8";
 
    ------------
    -- Adjust --
@@ -66,4 +73,16 @@ package body Q_Strings is
 
    end Internals;
 
+   -------------
+   -- To_UTF8 --
+   -------------
+
+   function To_UTF8 (Self : Q_String'Class) return String is
+      Aux : Interfaces.C.Strings.chars_ptr := QString_toUtf8 (Self.Object);
+
+   begin
+      return Result : constant String := Interfaces.C.Strings.Value (Aux) do
+         Interfaces.C.Strings.free (Aux);
+      end return;
+   end To_UTF8;
 end Q_Strings;
