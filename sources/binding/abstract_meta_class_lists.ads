@@ -1,11 +1,15 @@
 private with Ada.Finalization;
+with Ada.Iterator_Interfaces;
 with Interfaces.C;
 
 with Abstract_Meta_Classes;
 
 package Abstract_Meta_Class_Lists is
 
-   type Abstract_Meta_Class_List is tagged private;
+   type Abstract_Meta_Class_List is tagged private
+     with Iterator_Element  => Abstract_Meta_Classes.Abstract_Meta_Class,
+          Constant_Indexing => Value,
+          Default_Iterator  => Each;
 
    function Size (Self : Abstract_Meta_Class_List'Class) return Interfaces.C.int;
 
@@ -24,6 +28,38 @@ package Abstract_Meta_Class_Lists is
           return AbstractMetaClassList_Access;
 
    end Internals;
+
+   package Cursors is
+
+      function Has_Element (Self : Interfaces.C.int) return Boolean;
+
+      package Iterator_Interfaces is new Ada.Iterator_Interfaces
+        (Cursor       => Interfaces.C.int,
+         Has_Element  => Cursors.Has_Element);
+
+      type Forward_Iterator is
+        new Iterator_Interfaces.Forward_Iterator with private;
+
+      function Each (Self : aliased in out Abstract_Meta_Class_List'Class)
+                        return Cursors.Forward_Iterator;
+
+   private
+      type Forward_Iterator is
+        new Iterator_Interfaces.Forward_Iterator with record
+         List  : access constant Abstract_Meta_Class_List'Class;
+      end record;
+
+      overriding function First
+        (Self : Forward_Iterator) return Interfaces.C.int;
+
+      overriding function Next
+        (Self     : Forward_Iterator;
+         Position : Interfaces.C.int) return Interfaces.C.int;
+
+   end Cursors;
+
+   function Each (Self : aliased in out Abstract_Meta_Class_List'Class)
+     return Cursors.Forward_Iterator;
 
 private
 

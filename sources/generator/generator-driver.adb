@@ -23,4 +23,8 @@ begin
 
    Classes := Extractor.Classes;
 
+   for Class of Classes loop
+      null;
+   end loop;
+
 end Generator.Driver;
