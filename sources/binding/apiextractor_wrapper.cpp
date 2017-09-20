@@ -27,7 +27,11 @@ extern "C"
 
     bool ApiExtractor__run(ApiExtractor *self)
     {
-        return self->run();
+        bool _return = self->run();
+        qCWarning(lcShiboken) << *self;
+//        qCDebug(lcShiboken) << *self;
+        return _return;
+//        return self->run();
     }
 
     void ApiExtractor__setCppFileName(ApiExtractor *self, QString *fileName)
