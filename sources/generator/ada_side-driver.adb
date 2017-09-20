@@ -8,9 +8,13 @@ with API_Extractors;
 with Header_Paths;
 with Q_Strings;
 
+with Ada_Side.Setup;
+
 procedure Ada_Side.Driver is
-   Extractor : API_Extractors.API_Extractor;
-   Classes   : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List;
+   Extractor  : API_Extractors.API_Extractor;
+   Classes    : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List;
+   Generators : constant Ada_Side.Setup.Generator_Array
+     := Ada_Side.Setup.Generators;
 
 begin
    Extractor.Set_Cpp_File_Name
@@ -35,6 +39,12 @@ begin
 
    for Class of Classes loop
       Ada.Text_IO.Put_Line (" " & Class.Full_Name.To_UTF8);
+
+      for Generator of Generators loop
+         if Generator.Should_Generate (Class) then
+            null;
+         end if;
+      end loop;
    end loop;
 
 end Ada_Side.Driver;
