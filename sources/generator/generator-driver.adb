@@ -1,6 +1,9 @@
 with Ada.Command_Line;
+with Ada.Text_IO;
+with Interfaces.C;
 
 with Abstract_Meta_Class_Lists;
+with Abstract_Meta_Classes;
 with API_Extractors;
 with Header_Paths;
 with Q_Strings;
@@ -28,8 +31,10 @@ begin
 
    Classes := Extractor.Classes;
 
+   Ada.Text_IO.Put_Line (Interfaces.C.int'Image (Classes.Size));
+
    for Class of Classes loop
-      null;
+      Ada.Text_IO.Put_Line (" " & Class.Full_Name.To_UTF8);
    end loop;
 
 end Generator.Driver;
