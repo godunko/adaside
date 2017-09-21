@@ -10,6 +10,9 @@ with Q_Strings;
 
 with Ada_Side.Setup;
 
+with League.Strings;
+with Ada_Side.Outputs;
+
 procedure Ada_Side.Driver is
    Extractor  : API_Extractors.API_Extractor;
    Classes    : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List;
@@ -48,4 +51,16 @@ begin
       end loop;
    end loop;
 
+   declare
+      F : aliased Ada_Side.Outputs.Factory;
+      Aaa  : constant League.Strings.Universal_String :=
+        League.Strings.To_Universal_String ("Aaa");
+      Name : constant Ada_Side.Outputs.Node_Access := F.New_Name (Aaa);
+      Root : constant Ada_Side.Outputs.Node_Access := F.New_Package
+        (Name, Comment => Aaa);
+      Unit : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Compilation_Unit (Root, License => Aaa);
+   begin
+      Ada.Text_IO.Put_Line (F.To_Text (Unit).To_UTF_8_String);
+   end;
 end Ada_Side.Driver;

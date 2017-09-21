@@ -1,0 +1,104 @@
+with League.Strings;
+private with League.Pretty_Printers;
+
+package Ada_Side.Outputs is
+
+   type Node is abstract tagged private;
+   type Node_Access is access all Node'Class;
+
+   type Factory is tagged private;
+
+   not overriding function To_Text
+     (Self : access Factory;
+      Unit : not null Node_Access) return League.Strings.Universal_String;
+
+   not overriding function New_Compilation_Unit
+     (Self    : access Factory;
+      Root    : not null Node_Access;
+      Clauses : Node_Access := null;
+      License : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   not overriding function New_List
+     (Self : access Factory;
+      Head : Node_Access := null;
+      Tail : Node_Access := null) return not null Node_Access;
+
+   not overriding function New_Name
+     (Self : access Factory;
+      Name : League.Strings.Universal_String) return not null Node_Access;
+   --  Identifier, character literal ('X'), operator ("<")
+
+   not overriding function New_Literal
+     (Self : access Factory;
+      Name : Natural;
+      Base : Positive := 10) return not null Node_Access;
+
+   not overriding function New_String_Literal
+     (Self : access Factory;
+      Name : League.Strings.Universal_String) return not null Node_Access;
+
+   not overriding function New_Type
+     (Self          : access Factory;
+      Name          : not null Node_Access;
+      Discriminants : Node_Access := null;
+      Definition    : Node_Access;
+      Aspects       : Node_Access := null;
+      Comment       : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   not overriding function New_Subtype
+     (Self          : access Factory;
+      Name          : not null Node_Access;
+      Definition    : not null Node_Access;
+      Constrain     : Node_Access := null;
+      Comment       : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   not overriding function New_Selected_Name
+     (Self     : access Factory;
+      Prefix   : not null Node_Access;
+      Selector : not null Node_Access) return not null Node_Access;
+
+   not overriding function New_Package
+     (Self         : access Factory;
+      Name         : not null Node_Access;
+      Public_Part  : Node_Access := null;
+      Private_Part : Node_Access := null;
+      Comment      : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   not overriding function New_Package_Body
+     (Self : access Factory;
+      Name : not null Node_Access;
+      List : Node_Access) return not null Node_Access;
+
+   not overriding function New_Pragma
+     (Self      : access Factory;
+      Name      : not null Node_Access;
+      Arguments : Node_Access;
+      Comment   : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   not overriding function New_Variable
+     (Self            : access Factory;
+      Name            : not null Node_Access;
+      Type_Definition : Node_Access;
+      Initialization  : Node_Access;
+      Is_Constant     : Boolean := False;
+      Is_Aliased      : Boolean := False;
+      Comment         : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+
+private
+   type Node is abstract tagged null record;
+
+   not overriding function Document
+    (Self    : Node;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document;
+
+   type Factory is tagged null record;
+
+end Ada_Side.Outputs;
