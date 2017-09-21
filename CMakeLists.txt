@@ -10,6 +10,7 @@ add_definitions(${Qt5Core_DEFINITIONS})
 add_definitions(-fPIC)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "-g")
 
 # Configure use of LLVM/Clang
 
