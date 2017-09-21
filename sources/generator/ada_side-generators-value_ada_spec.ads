@@ -13,4 +13,8 @@ private
     (Self  : in out Value_Ada_Spec_Generator;
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class) return Boolean;
 
+   overriding procedure Generate
+    (Self  : in out Value_Ada_Spec_Generator;
+     Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class);
+
 end Ada_Side.Generators.Value_Ada_Spec;

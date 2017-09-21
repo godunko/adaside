@@ -47,6 +47,7 @@ begin
       for Generator of Generators loop
          if Generator.Should_Generate (Class) then
             Ada.Text_IO.Put_Line ("   ...generating...");
+            Generator.Generate (Class);
          end if;
       end loop;
    end loop;

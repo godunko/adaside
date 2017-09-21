@@ -1,6 +1,17 @@
 
 package body Ada_Side.Generators.Value_Ada_Spec is
 
+   --------------
+   -- Generate --
+   --------------
+
+   overriding procedure Generate
+    (Self  : in out Value_Ada_Spec_Generator;
+     Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class) is
+   begin
+      null;
+   end Generate;
+
    ---------------------
    -- Should_Generate --
    ---------------------
