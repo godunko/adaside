@@ -7,6 +7,8 @@ package Type_Entries is
 
    type Type_Entry is tagged private;
 
+   function Is_Value (Self : Type_Entry'Class) return Boolean;
+
    function Name (Self : Type_Entry'Class) return Q_Strings.Q_String;
 
    package Internals is

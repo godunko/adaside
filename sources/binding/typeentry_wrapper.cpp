@@ -9,4 +9,9 @@ extern "C"
         *_return = self->name();
     }
 
+    bool TypeEntry_isValue(TypeEntry* self)
+    {
+        return self->isValue();
+    }
+
 }

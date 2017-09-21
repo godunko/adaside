@@ -1,5 +1,12 @@
+with Interfaces.C.Extensions;
 
 package body Type_Entries is
+
+   function TypeEntry_isValue
+    (Self : not null TypeEntry_Access) return Interfaces.C.Extensions.bool
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "TypeEntry_isValue";
 
    procedure TypeEntry_name
     (Result : not null Q_Strings.Internals.QString_Access;
@@ -26,6 +33,17 @@ package body Type_Entries is
       end Initialize;
 
    end Internals;
+
+   --------------
+   -- Is_Value --
+   --------------
+
+   function Is_Value (Self : Type_Entry'Class) return Boolean is
+      use type Interfaces.C.Extensions.bool;
+
+   begin
+      return TypeEntry_isValue (Self.TypeEntry_View) /= 0;
+   end Is_Value;
 
    ----------
    -- Name --
