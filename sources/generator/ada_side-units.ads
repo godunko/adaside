@@ -13,6 +13,8 @@ package Ada_Side.Units is
    procedure Put_Line
     (Self : in out Ada_Spec_Unit; Item : League.Strings.Universal_String);
 
+   procedure New_Line (Self : in out Ada_Spec_Unit);
+
 private
 
    type Ada_Spec_Unit is new Ada.Finalization.Limited_Controlled with record

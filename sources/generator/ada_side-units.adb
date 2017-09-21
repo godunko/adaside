@@ -29,6 +29,16 @@ package body Ada_Side.Units is
       Self.Flushed := True;
    end Initialize;
 
+   --------------
+   -- New_Line --
+   --------------
+
+   procedure New_Line (Self : in out Ada_Spec_Unit) is
+   begin
+      Self.Text.Append (League.Strings.Empty_Universal_String);
+      Self.Flushed := False;
+   end New_Line;
+
    ---------
    -- Put --
    ---------
