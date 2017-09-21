@@ -1,5 +1,7 @@
 
 with Abstract_Meta_Attributes;
+with Complex_Type_Entries;
+pragma Unreferenced (Complex_Type_Entries);
 with Q_Strings;
 
 package Abstract_Meta_Classes is
@@ -264,11 +266,6 @@ package Abstract_Meta_Classes is
    --        return m_typeEntry;
    --    }
    --
-   --    ComplexTypeEntry *typeEntry()
-   --    {
-   --        return m_typeEntry;
-   --    }
-   --
    --    void setTypeEntry(ComplexTypeEntry *type)
    --    {
    --        m_typeEntry = type;
@@ -393,6 +390,11 @@ package Abstract_Meta_Classes is
    --  Retrieves the class name without any namespace/scope information.
    --  /return the class name without scope information
    --    QString name() const;
+
+   function Type_Entry
+    (Self : Abstract_Meta_Class'Class)
+       return Complex_Type_Entries.Complex_Type_Entry;
+   --    ComplexTypeEntry *typeEntry()
 
    package Internals is
 

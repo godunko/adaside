@@ -19,4 +19,9 @@ extern "C"
         *_return = self->name();
     }
 
+    ComplexTypeEntry* AbstractMetaClass_typeEntry (AbstractMetaClass* self)
+    {
+        return self->typeEntry();
+    }
+
 }
