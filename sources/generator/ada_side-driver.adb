@@ -38,11 +38,12 @@ begin
    Ada.Text_IO.Put_Line (Interfaces.C.int'Image (Classes.Size));
 
    for Class of Classes loop
-      Ada.Text_IO.Put_Line (" " & Class.Full_Name.To_UTF8);
+      Ada.Text_IO.Put_Line
+       (" " & Class.Full_Name.To_UTF8 & " " & Class.Type_Entry.Name.To_UTF8);
 
       for Generator of Generators loop
          if Generator.Should_Generate (Class) then
-            null;
+            Ada.Text_IO.Put_Line ("   ...generating...");
          end if;
       end loop;
    end loop;
