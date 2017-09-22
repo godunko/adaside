@@ -21,9 +21,9 @@ package body Ada_Side.Outputs.Selected_Names is
       Result.New_Line (Gap => "");
       Result.Put (".");
       Result.Append (Selector);
+      Result.Nest (2);
+      Result.Group;
       Prefix.Append (Result);
-      Prefix.Nest (2);
-      Prefix.Group;
       return Prefix;
    end Document;
 
