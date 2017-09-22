@@ -1,10 +1,16 @@
 with League.String_Vectors;
 
+with Ada_Side.Outputs.Accesses;
+with Ada_Side.Outputs.Aspects;
+with Ada_Side.Outputs.Joins;
 with Ada_Side.Outputs.Names;
 with Ada_Side.Outputs.Packages;
 with Ada_Side.Outputs.Pragmas;
+with Ada_Side.Outputs.Records;
 with Ada_Side.Outputs.Selected_Names;
+with Ada_Side.Outputs.Type_Declarations;
 with Ada_Side.Outputs.Units;
+with Ada_Side.Outputs.Variables;
 with Ada_Side.Outputs.With_Clauses;
 
 package body Ada_Side.Outputs is
@@ -22,6 +28,33 @@ package body Ada_Side.Outputs is
       raise Program_Error;
       return Printer.New_Document;
    end Document;
+
+   ----------------
+   -- New_Access --
+   ----------------
+
+   not overriding function New_Access
+     (Self   : access Factory;
+      Is_All : Boolean;
+      Target : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Accesses.New_Access
+                             (Is_All => True, Target => Target));
+   end New_Access;
+
+   ----------------
+   -- New_Aspect --
+   ----------------
+
+   not overriding function New_Aspect
+     (Self  : access Factory;
+      Name  : not null Node_Access;
+      Value : Node_Access := null) return not null Node_Access is
+   begin
+      return new Node'Class'(Outputs.Aspects.New_Aspect (Name, Value));
+   end New_Aspect;
 
    --------------------------
    -- New_Compilation_Unit --
@@ -47,14 +80,12 @@ package body Ada_Side.Outputs is
 
    not overriding function New_List
      (Self : access Factory;
-      Head : Node_Access := null;
-      Tail : Node_Access := null)
-      return not null Node_Access
+      Head : not null Node_Access;
+      Tail : not null Node_Access) return not null Node_Access
    is
+      pragma Unreferenced (Self);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "New_List unimplemented");
-      return raise Program_Error with "Unimplemented function New_List";
+      return new Node'Class'(Outputs.Joins.New_Join (Head, Tail));
    end New_List;
 
    -----------------
@@ -113,8 +144,7 @@ package body Ada_Side.Outputs is
    not overriding function New_Package_Body
      (Self : access Factory;
       Name : not null Node_Access;
-      List : Node_Access)
-      return not null Node_Access
+      List : Node_Access := null) return not null Node_Access
    is
    begin
       --  Generated stub: replace with real body!
@@ -140,6 +170,17 @@ package body Ada_Side.Outputs is
    begin
       return new Node'Class'(Outputs.Pragmas.New_Pragma (Name, Arguments));
    end New_Pragma;
+
+   ----------------
+   -- New_Record --
+   ----------------
+
+   not overriding function New_Record
+     (Self : access Factory;
+      List : Node_Access := null) return not null Node_Access is
+   begin
+      return new Node'Class'(Outputs.Records.New_Record (List));
+   end New_Record;
 
    -----------------------
    -- New_Selected_Name --
@@ -216,16 +257,19 @@ package body Ada_Side.Outputs is
      (Self          : access Factory;
       Name          : not null Node_Access;
       Discriminants : Node_Access := null;
-      Definition    : Node_Access;
+      Definition    : Node_Access := null;
       Aspects       : Node_Access := null;
       Comment       : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String)
       return not null Node_Access
    is
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "New_Type unimplemented");
-      return raise Program_Error with "Unimplemented function New_Type";
+      return new Node'Class'(Outputs.Type_Declarations.New_Type
+                             (Name,
+                              Discriminants,
+                              Definition,
+                              Aspects,
+                              Comment));
    end New_Type;
 
    ------------------
@@ -235,20 +279,24 @@ package body Ada_Side.Outputs is
    not overriding function New_Variable
      (Self            : access Factory;
       Name            : not null Node_Access;
-      Type_Definition : Node_Access;
-      Initialization  : Node_Access;
+      Type_Definition : Node_Access := null;
+      Initialization  : Node_Access := null;
       Is_Constant     : Boolean := False;
       Is_Aliased      : Boolean := False;
+      Aspects         : Node_Access := null;
       Comment         : League.Strings.Universal_String :=
-        League.Strings.Empty_Universal_String)
-      return not null Node_Access
+        League.Strings.Empty_Universal_String) return not null Node_Access
    is
+      pragma Unreferenced (Self);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning
-        (Standard.True, "New_Variable unimplemented");
-      return raise Program_Error with
-        "Unimplemented function New_Variable";
+      return new Node'Class'(Outputs.Variables.New_Variable
+                             (Name,
+                              Type_Definition,
+                              Initialization,
+                              Is_Constant,
+                              Is_Aliased,
+                              Aspects,
+                              Comment));
    end New_Variable;
 
    --------------

@@ -16,8 +16,31 @@ procedure Ada_Side.Output_Test is
      (F.New_Selected_Name (+"System.Storage_Elements"));
    Preelaborate : constant Ada_Side.Outputs.Node_Access := F.New_Pragma
      (F.New_Name (+"Preelaborate"));
+   Convention : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
+     (F.New_Name (+"Convention"),
+      F.New_Name (+"C"));
+   QString : constant Ada_Side.Outputs.Node_Access := F.New_Name (+"QString");
+   QString_Type : constant Ada_Side.Outputs.Node_Access := F.New_Type
+     (Name       => QString,
+      Definition => F.New_Record,
+      Aspects    => Convention);
+   QString_Access : constant Ada_Side.Outputs.Node_Access := F.New_Type
+     (Name       => F.New_Name (+"QString_Access"),
+      Definition => F.New_Access (True, QString),
+      Aspects    => Convention);
+   QString_Storage_Size : constant Ada_Side.Outputs.Node_Access :=
+     F.New_Variable
+       (Name            => F.New_Name (+"QString_Storage_Size"),
+        Type_Definition => F.New_Selected_Name
+          (+"System.Storage_Elements.Storage_Offset"),
+        Is_Constant     => True,
+        Aspects         => Convention);
+   Public : constant Ada_Side.Outputs.Node_Access :=
+     F.New_List (Preelaborate,
+      F.New_List (QString_Type,
+        F.New_List (QString_Access, QString_Storage_Size)));
    Root : constant Ada_Side.Outputs.Node_Access := F.New_Package
-     (Name, Preelaborate, Comment => Aaa);
+     (Name, Public, Comment => Aaa);
    Unit : constant Ada_Side.Outputs.Node_Access :=
      F.New_Compilation_Unit (Root, Clause, License => Aaa);
 begin
