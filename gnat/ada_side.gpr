@@ -8,7 +8,7 @@ project Ada_Side is
     (Config.Root_Source_Dir & "/sources/generator");
    for Object_Dir use Config.Root_Build_Dir & "/.objs";
    for Exec_Dir use Config.Root_Build_Dir & "/bin";
-   for Main use ("ada_side-driver.adb");
+   for Main use ("ada_side-driver.adb", "ada_side-output_test.adb");
 
    package Builder is
       for Executable ("ada_side-driver.adb") use "adaside";

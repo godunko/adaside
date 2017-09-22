@@ -60,6 +60,10 @@ package Ada_Side.Outputs is
       Prefix   : not null Node_Access;
       Selector : not null Node_Access) return not null Node_Access;
 
+   not overriding function New_Selected_Name
+     (Self : access Factory;
+      Name : League.Strings.Universal_String) return not null Node_Access;
+
    not overriding function New_Package
      (Self         : access Factory;
       Name         : not null Node_Access;
@@ -76,7 +80,7 @@ package Ada_Side.Outputs is
    not overriding function New_Pragma
      (Self      : access Factory;
       Name      : not null Node_Access;
-      Arguments : Node_Access;
+      Arguments : Node_Access := null;
       Comment   : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String) return not null Node_Access;
 
@@ -90,6 +94,9 @@ package Ada_Side.Outputs is
       Comment         : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String) return not null Node_Access;
 
+   not overriding function New_With
+     (Self : access Factory;
+      Name : not null Node_Access) return not null Node_Access;
 
 private
    type Node is abstract tagged null record;

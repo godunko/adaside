@@ -18,6 +18,7 @@ package body Ada_Side.Outputs.Units is
 
       if Self.Clauses /= null then
          Result.Append (Self.Clauses.Document (Printer));
+         Result.New_Line;
       end if;
 
       Result.Append (Self.Root.Document (Printer));

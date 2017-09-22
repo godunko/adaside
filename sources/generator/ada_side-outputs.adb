@@ -1,6 +1,11 @@
+with League.String_Vectors;
+
 with Ada_Side.Outputs.Names;
 with Ada_Side.Outputs.Packages;
+with Ada_Side.Outputs.Pragmas;
+with Ada_Side.Outputs.Selected_Names;
 with Ada_Side.Outputs.Units;
+with Ada_Side.Outputs.With_Clauses;
 
 package body Ada_Side.Outputs is
    pragma Warnings (Off);
@@ -126,15 +131,14 @@ package body Ada_Side.Outputs is
    not overriding function New_Pragma
      (Self      : access Factory;
       Name      : not null Node_Access;
-      Arguments : Node_Access;
+      Arguments : Node_Access := null;
       Comment   : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String)
       return not null Node_Access
    is
+      pragma Unreferenced (Self);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "New_Pragma unimplemented");
-      return raise Program_Error with "Unimplemented function New_Pragma";
+      return new Node'Class'(Outputs.Pragmas.New_Pragma (Name, Arguments));
    end New_Pragma;
 
    -----------------------
@@ -148,11 +152,24 @@ package body Ada_Side.Outputs is
       return not null Node_Access
    is
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning
-        (Standard.True, "New_Selected_Name unimplemented");
-      return raise Program_Error with
-        "Unimplemented function New_Selected_Name";
+      return new Node'Class'(Outputs.Selected_Names.New_Selected_Name
+                             (Prefix, Selector));
+   end New_Selected_Name;
+
+   not overriding function New_Selected_Name
+     (Self : access Factory;
+      Name : League.Strings.Universal_String) return not null Node_Access
+   is
+      List : League.String_Vectors.Universal_String_Vector :=
+        Name.Split ('.');
+      Result : Node_Access := Self.New_Name (List.Element (1));
+   begin
+      for J in 2 .. List.Length loop
+         Result := Self.New_Selected_Name
+           (Result, Self.New_Name (List.Element (J)));
+      end loop;
+
+      return Result;
    end New_Selected_Name;
 
    ------------------------
@@ -233,6 +250,19 @@ package body Ada_Side.Outputs is
       return raise Program_Error with
         "Unimplemented function New_Variable";
    end New_Variable;
+
+   --------------
+   -- New_With --
+   --------------
+
+   not overriding function New_With
+     (Self : access Factory;
+      Name : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.With_Clauses.New_With (Name));
+   end New_With;
 
    -------------
    -- To_Text --
