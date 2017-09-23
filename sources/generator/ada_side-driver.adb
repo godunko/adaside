@@ -2,6 +2,7 @@ with Ada.Wide_Wide_Text_IO;
 with Interfaces.C;
 
 with League.Application;
+with League.Strings;
 with League.String_Vectors;
 
 with Abstract_Meta_Class_Lists;
@@ -13,12 +14,18 @@ with Q_Strings;
 with Ada_Side.Setup;
 
 procedure Ada_Side.Driver is
+   Output_Directory_Switch : constant League.Strings.Universal_String
+     := League.Strings.To_Universal_String ("--output-directory");
+
+   Output_Directory : League.Strings.Universal_String
+     := League.Strings.To_Universal_String (".");
+
+   Generators : constant Ada_Side.Setup.Generator_Array
+     := Ada_Side.Setup.Generators;
    Arguments  : constant League.String_Vectors.Universal_String_Vector
      := League.Application.Arguments;
    Extractor  : API_Extractors.API_Extractor;
    Classes    : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List;
-   Generators : constant Ada_Side.Setup.Generator_Array
-     := Ada_Side.Setup.Generators;
 
 begin
    Extractor.Set_Cpp_File_Name
@@ -33,10 +40,17 @@ begin
           (Header_Paths.Create
             (Q_Strings.From_Universal_String (Arguments (J).Tail_From (3))));
 
+      elsif Arguments (J).Starts_With (Output_Directory_Switch) then
+         Output_Directory :=
+           Arguments (J).Tail_From (Output_Directory_Switch.Length + 1);
+
       else
          raise Program_Error;
       end if;
    end loop;
+
+   Extractor.Set_Log_Directory
+    (Q_Strings.From_Universal_String (Output_Directory));
 
    if Extractor.Run then
       null;
