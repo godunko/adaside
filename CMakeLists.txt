@@ -32,6 +32,27 @@ endif()
 
 message(STATUS "CLANG: ${CLANG_DIR}, ${CLANG_LIBRARY} detected by ${CLANG_DIR_SOURCE}")
 
+# Find highest version clang builtin includes folder to pass along to shiboken.
+set(CLANG_BUILTIN_INCLUDES_DIR_PREFIX ${CLANG_DIR}/lib/clang)
+file(GLOB CLANG_BUILTIN_INCLUDES_DIR_VERSIONS "${CLANG_BUILTIN_INCLUDES_DIR_PREFIX}/*")
+
+# Sort in alphabetical order the list of version folders.
+list(SORT CLANG_BUILTIN_INCLUDES_DIR_VERSIONS)
+
+# Reverse it so the first element is the highest version.
+list(REVERSE CLANG_BUILTIN_INCLUDES_DIR_VERSIONS)
+
+message(STATUS "Found the following CLANG builtins includes directories: ${CLANG_BUILTIN_INCLUDES_DIR_VERSIONS}")
+if(CLANG_BUILTIN_INCLUDES_DIR_VERSIONS)
+    # Get highest version.
+    list(GET CLANG_BUILTIN_INCLUDES_DIR_VERSIONS 0 CLANG_BUILTIN_INCLUDES_DIR_HIGHEST_VERSION)
+    if (CLANG_BUILTIN_INCLUDES_DIR_HIGHEST_VERSION)
+        # Set the final variable to the full include path to pass along to shiboken.
+        set(CLANG_BUILTIN_INCLUDES_DIR "${CLANG_BUILTIN_INCLUDES_DIR_HIGHEST_VERSION}/include")
+    endif()
+endif()
+message(STATUS "CLANG builtins includes directory chosen: ${CLANG_BUILTIN_INCLUDES_DIR}")
+
 add_subdirectory(sources/ApiExtractor)
 
 # Configure GNAT project files
@@ -43,6 +64,7 @@ get_target_property(Qt5Core_IMPORTED_LOCATION Qt5::Core IMPORTED_LOCATION_RELEAS
 
 set(CXX_COMPILER_SWITCHES ${QT_INCLUDE_SWITCHES})
 configure_file(gnat/config.gpr.in gnat/config.gpr @ONLY)
+configure_file(sources/generator/ada_side-config.ads.in sources/generator/ada_side-config.ads @ONLY)
 
 # Prepare project files search paths switches
 

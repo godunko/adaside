@@ -1,0 +1,9 @@
+with League.Strings;
+
+package Ada_Side.Config is
+
+   Clang_Builtin_Includes_Dir : constant League.Strings.Universal_String
+     := League.Strings.To_Universal_String
+         ("@CLANG_BUILTIN_INCLUDES_DIR@");
+
+end Ada_Side.Config;

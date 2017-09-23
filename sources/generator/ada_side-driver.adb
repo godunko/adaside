@@ -11,6 +11,7 @@ with API_Extractors;
 with Header_Paths;
 with Q_Strings;
 
+with Ada_Side.Config;
 with Ada_Side.Setup;
 
 procedure Ada_Side.Driver is
@@ -51,6 +52,13 @@ begin
 
    Extractor.Set_Log_Directory
     (Q_Strings.From_Universal_String (Output_Directory));
+
+   if not Ada_Side.Config.Clang_Builtin_Includes_Dir.Is_Empty then
+      Extractor.Add_Include_Path
+       (Header_Paths.Create
+         (Q_Strings.From_Universal_String
+           (Ada_Side.Config.Clang_Builtin_Includes_Dir)));
+   end if;
 
    if not Extractor.Run then
       raise Program_Error;
