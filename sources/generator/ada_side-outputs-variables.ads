@@ -29,4 +29,7 @@ private
       Comment         : League.Strings.Universal_String;
    end record;
 
+   overriding function Max_Pad (Self : Variable) return Natural is
+     (Self.Name.Max_Pad);
+
 end Ada_Side.Outputs.Variables;

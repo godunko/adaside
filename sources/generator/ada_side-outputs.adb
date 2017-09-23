@@ -6,6 +6,7 @@ with Ada_Side.Outputs.Joins;
 with Ada_Side.Outputs.Names;
 with Ada_Side.Outputs.Packages;
 with Ada_Side.Outputs.Pragmas;
+with Ada_Side.Outputs.Private_Records;
 with Ada_Side.Outputs.Records;
 with Ada_Side.Outputs.Selected_Names;
 with Ada_Side.Outputs.Strings;
@@ -211,6 +212,18 @@ package body Ada_Side.Outputs is
    begin
       return new Node'Class'(Outputs.Pragmas.New_Pragma (Name, Arguments));
    end New_Pragma;
+
+   ------------------------
+   -- New_Private_Record --
+   ------------------------
+
+   not overriding function New_Private_Record
+     (Self      : access Factory;
+      Is_Tagged : Boolean := False) return not null Node_Access is
+   begin
+      return new Node'Class'(Outputs.Private_Records.New_Private_Record
+                               (Is_Tagged));
+   end New_Private_Record;
 
    ----------------
    -- New_Record --

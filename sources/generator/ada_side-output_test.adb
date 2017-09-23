@@ -96,8 +96,28 @@ procedure Ada_Side.Output_Test is
       Clause : constant Ada_Side.Outputs.Node_Access :=
         F.New_List ((With_1, With_2, With_3));
 
+      QString : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Name (+"QString");
+
+      QString_Type : constant Ada_Side.Outputs.Node_Access := F.New_Type
+        (Name       => QString,
+         Definition => F.New_Private_Record (Is_Tagged => True));
+
+      QString_View : constant Ada_Side.Outputs.Node_Access := F.New_Variable
+        (Name            => F.New_Name (+"QString_View"),
+         Type_Definition => F.New_Selected_Name
+           (+"Qt_Ada.API.Strings.QString_Access"));
+
+      Is_Wrapper : constant Ada_Side.Outputs.Node_Access := F.New_Variable
+        (Name            => F.New_Name (+"Is_Wrapper"),
+         Type_Definition => F.New_Name (+"Boolean"));
+
+      QString_Type_Full : constant Ada_Side.Outputs.Node_Access := F.New_Type
+        (Name       => QString,
+         Definition => F.New_Record (F.New_List (QString_View, Is_Wrapper)));
+
       Root : constant Ada_Side.Outputs.Node_Access :=
-        F.New_Package (Name);
+        F.New_Package (Name, QString_Type, QString_Type_Full);
 
       Unit : constant Ada_Side.Outputs.Node_Access :=
         F.New_Compilation_Unit (Root, Clause);
