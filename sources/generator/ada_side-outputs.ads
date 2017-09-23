@@ -114,6 +114,14 @@ package Ada_Side.Outputs is
      (Self      : access Factory;
       Is_Tagged : Boolean := False) return not null Node_Access;
 
+   not overriding function New_Apply
+     (Self      : access Factory;
+      Prefix    : not null Node_Access;
+      Arguments : not null Node_Access) return not null Node_Access;
+   --  This node represent construction in form 'prefix (arguments)'
+   --  This includes function_call, indexed_component, slice,
+   --  subtype_indication, etc
+
    not overriding function New_Access
      (Self   : access Factory;
       Is_All : Boolean;

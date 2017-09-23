@@ -112,9 +112,16 @@ procedure Ada_Side.Output_Test is
         (Name            => F.New_Name (+"Is_Wrapper"),
          Type_Definition => F.New_Name (+"Boolean"));
 
+      Storage : constant Ada_Side.Outputs.Node_Access := F.New_Variable
+        (Name            => F.New_Name (+"Storage"),
+         Type_Definition => F.New_Apply
+           (F.New_Selected_Name (+"System.Storage_Elements.Storage_Array"),
+            F.New_Selected_Name (+"Qt_Ada.API.Strings.QString_Storage_Size")));
+
       QString_Type_Full : constant Ada_Side.Outputs.Node_Access := F.New_Type
         (Name       => QString,
-         Definition => F.New_Record (F.New_List (QString_View, Is_Wrapper)));
+         Definition => F.New_Record
+           (F.New_List ((QString_View, Is_Wrapper, Storage))));
 
       Root : constant Ada_Side.Outputs.Node_Access :=
         F.New_Package (Name, QString_Type, QString_Type_Full);

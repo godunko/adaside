@@ -1,6 +1,7 @@
 with League.String_Vectors;
 
 with Ada_Side.Outputs.Accesses;
+with Ada_Side.Outputs.Applies;
 with Ada_Side.Outputs.Aspects;
 with Ada_Side.Outputs.Joins;
 with Ada_Side.Outputs.Names;
@@ -68,6 +69,18 @@ package body Ada_Side.Outputs is
       return new Node'Class'(Outputs.Accesses.New_Access
                              (Is_All => True, Target => Target));
    end New_Access;
+
+   ---------------
+   -- New_Apply --
+   ---------------
+
+   not overriding function New_Apply
+     (Self      : access Factory;
+      Prefix    : not null Node_Access;
+      Arguments : not null Node_Access) return not null Node_Access is
+   begin
+      return new Node'Class'(Outputs.Applies.New_Apply (Prefix, Arguments));
+   end New_Apply;
 
    ----------------
    -- New_Aspect --
