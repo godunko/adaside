@@ -14,6 +14,10 @@ package body Ada_Side.Generators.Value_API_Ada_Spec is
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
 
+   function Generated_Package_Full_Name
+    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
+       return League.Strings.Universal_String;
+
    function API_Record_Type_Name
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
@@ -103,11 +107,12 @@ package body Ada_Side.Generators.Value_API_Ada_Spec is
       Unit : Ada_Side.Units.Ada_Spec_Unit;
 
    begin
+      Unit.Set_Package_Name (Generated_Package_Full_Name (Class), False);
+
       Unit.Put_Line (+"with Interfaces.C;");
       Unit.Put_Line (+"with System;");
       Unit.New_Line;
-      Unit.Put_Line
-       ("package Qt_Ada.API." & Generated_Package_Name (Class) & " is");
+      Unit.Put_Line ("package " & Generated_Package_Full_Name (Class) & " is");
       Unit.New_Line;
       Unit.Put_Line (+"   pragma Preelaborate;");
       Unit.New_Line;
@@ -135,8 +140,21 @@ package body Ada_Side.Generators.Value_API_Ada_Spec is
           & API_Size_Of_Name (Class) & ")");
       Unit.Put_Line (+"     with Alignment => System'Maximum_Alignment;");
       Unit.New_Line;
-      Unit.Put_Line ("end Qt_Ada.API." & Generated_Package_Name (Class) & ";");
+      Unit.Put_Line ("end " & Generated_Package_Full_Name (Class) & ";");
+
+      Unit.Save (+".");
    end Generate;
+
+   ---------------------------------
+   -- Generated_Package_Full_Name --
+   ---------------------------------
+
+   function Generated_Package_Full_Name
+    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
+       return League.Strings.Universal_String is
+   begin
+      return +"Qt_Ada.API." & Generated_Package_Name (Class);
+   end Generated_Package_Full_Name;
 
    ----------------------------
    -- Generated_Package_Name --
@@ -151,7 +169,7 @@ package body Ada_Side.Generators.Value_API_Ada_Spec is
             (Class.Type_Entry.Name.To_UTF8);
 
    begin
-      return +"Qt_Ada.API." & Class_Name.Tail_From (2);
+      return Class_Name.Tail_From (2);
    end Generated_Package_Name;
 
    ---------------------
