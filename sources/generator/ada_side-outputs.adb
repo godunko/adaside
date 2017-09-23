@@ -243,7 +243,9 @@ package body Ada_Side.Outputs is
 
    not overriding function New_Private_Record
      (Self      : access Factory;
-      Is_Tagged : Boolean := False) return not null Node_Access is
+      Is_Tagged : Boolean := False) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
    begin
       return new Node'Class'(Outputs.Private_Records.New_Private_Record
                                (Is_Tagged));
@@ -254,10 +256,13 @@ package body Ada_Side.Outputs is
    ----------------
 
    not overriding function New_Record
-     (Self : access Factory;
-      List : Node_Access := null) return not null Node_Access is
+     (Self       : access Factory;
+      Parent     : Node_Access := null;
+      Components : Node_Access := null) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Records.New_Record (List));
+      return new Node'Class'(Outputs.Records.New_Record (Parent, Components));
    end New_Record;
 
    -----------------------

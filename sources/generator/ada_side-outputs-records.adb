@@ -12,6 +12,12 @@ package body Ada_Side.Outputs.Records is
    is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
+      if Self.Parent /= null then
+         Result.Put ("new ");
+         Result.Append (Self.Parent.Document (Printer, 0));
+         Result.Put (" with ");
+      end if;
+
       if Self.Components = null then
          Result.Put ("null record");
       else
@@ -28,9 +34,11 @@ package body Ada_Side.Outputs.Records is
    -- New_Record --
    ----------------
 
-   function New_Record (Components : Node_Access) return Node'Class is
+   function New_Record
+     (Parent       : Node_Access := null;
+      Components   : Node_Access) return Node'Class is
    begin
-      return Record_Definition'(Components => Components);
+      return Record_Definition'(Parent, Components);
    end New_Record;
 
 end Ada_Side.Outputs.Records;

@@ -107,8 +107,9 @@ package Ada_Side.Outputs is
       Is_Private : Boolean := False) return not null Node_Access;
 
    not overriding function New_Record
-     (Self : access Factory;
-      List : Node_Access := null) return not null Node_Access;
+     (Self       : access Factory;
+      Parent     : Node_Access := null;
+      Components : Node_Access := null) return not null Node_Access;
 
    not overriding function New_Private_Record
      (Self      : access Factory;

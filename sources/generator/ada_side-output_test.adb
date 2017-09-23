@@ -96,11 +96,11 @@ procedure Ada_Side.Output_Test is
       Clause : constant Ada_Side.Outputs.Node_Access :=
         F.New_List ((With_1, With_2, With_3));
 
-      QString : constant Ada_Side.Outputs.Node_Access :=
-        F.New_Name (+"QString");
+      Q_String : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Name (+"Q_String");
 
-      QString_Type : constant Ada_Side.Outputs.Node_Access := F.New_Type
-        (Name       => QString,
+      Q_String_Type : constant Ada_Side.Outputs.Node_Access := F.New_Type
+        (Name       => Q_String,
          Definition => F.New_Private_Record (Is_Tagged => True));
 
       QString_View : constant Ada_Side.Outputs.Node_Access := F.New_Variable
@@ -123,13 +123,14 @@ procedure Ada_Side.Output_Test is
                   F.New_Selected_Name
                    (+"Qt_Ada.API.Strings.QString_Storage_Size")))));
 
-      QString_Type_Full : constant Ada_Side.Outputs.Node_Access := F.New_Type
-        (Name       => QString,
+      Q_String_Type_Full : constant Ada_Side.Outputs.Node_Access := F.New_Type
+        (Name       => Q_String,
          Definition => F.New_Record
-           (F.New_List ((QString_View, Is_Wrapper, Storage))));
+           (Parent     => F.New_Selected_Name (+"Ada.Finalization.Controlled"),
+            Components => F.New_List ((QString_View, Is_Wrapper, Storage))));
 
       Root : constant Ada_Side.Outputs.Node_Access :=
-        F.New_Package (Name, QString_Type, QString_Type_Full);
+        F.New_Package (Name, Q_String_Type, Q_String_Type_Full);
 
       Unit : constant Ada_Side.Outputs.Node_Access :=
         F.New_Compilation_Unit (Root, Clause);
