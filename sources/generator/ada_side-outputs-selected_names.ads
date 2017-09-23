@@ -14,7 +14,7 @@ private package Ada_Side.Outputs.Selected_Names is
 
 private
 
-   type Selected_Name is new Node with record
+   type Selected_Name is new Expression with record
       Prefix   : not null Node_Access;
       Selector : not null Node_Access;
    end record;

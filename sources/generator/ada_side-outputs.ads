@@ -194,6 +194,15 @@ private
       return League.Pretty_Printers.Document;
    --  Join documents of several nodes in a list
 
+   type Expression is abstract new Node with null record;
+
+   overriding function Join
+    (Self    : Expression;
+     List    : Node_Access_Array;
+     Pad     : Natural;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document;
+
    type Factory is tagged null record;
 
    function Print_Aspect

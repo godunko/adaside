@@ -47,7 +47,7 @@ package body Ada_Side.Outputs is
      List    : Node_Access_Array;
      Pad     : Natural;
      Printer : not null access League.Pretty_Printers.Printer'Class)
-     return League.Pretty_Printers.Document
+      return League.Pretty_Printers.Document
    is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
@@ -57,6 +57,31 @@ package body Ada_Side.Outputs is
          Result.Append (List (J).Document (Printer, Pad));
       end loop;
 
+      return Result;
+   end Join;
+
+   ----------
+   -- Join --
+   ----------
+
+   overriding function Join
+    (Self    : Expression;
+     List    : Node_Access_Array;
+     Pad     : Natural;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.Append (Node'Class (Self).Document (Printer, Pad));
+
+      for J in List'Range loop
+         Result.Put (",");
+         Result.New_Line;
+         Result.Append (List (J).Document (Printer, Pad));
+      end loop;
+
+      Result.Group;
       return Result;
    end Join;
 

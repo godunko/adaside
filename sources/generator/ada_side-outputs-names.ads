@@ -13,7 +13,7 @@ private package Ada_Side.Outputs.Names is
 
 private
 
-   type Name is new Node with record
+   type Name is new Expression with record
       Name : League.Strings.Universal_String;
    end record;
 
