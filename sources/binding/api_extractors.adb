@@ -22,6 +22,13 @@ package body API_Extractors is
             Convention => C,
             Link_Name  => "ApiExtractor__setCppFileName";
 
+   procedure ApiExtractor_setLogDirectory
+    (This      : not null ApiExtractor_Access;
+     File_Name : not null Q_Strings.Internals.QString_Access)
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "ApiExtractor__setLogDirectory";
+
    procedure ApiExtractor_setTypeSystem
     (This      : not null ApiExtractor_Access;
      File_Name : not null Q_Strings.Internals.QString_Access)
@@ -102,6 +109,18 @@ package body API_Extractors is
       ApiExtractor_setCppFileName
         (Self.Object, Q_Strings.Internals.Internal (File_Name));
    end Set_Cpp_File_Name;
+
+   -----------------------
+   -- Set_Log_Directory --
+   -----------------------
+
+   procedure Set_Log_Directory
+    (Self           : in out API_Extractor'Class;
+     Directory_Name : Q_Strings.Q_String'Class) is
+   begin
+      ApiExtractor_setLogDirectory
+        (Self.Object, Q_Strings.Internals.Internal (Directory_Name));
+   end Set_Log_Directory;
 
    ---------------------
    -- Set_Type_System --

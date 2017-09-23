@@ -16,7 +16,6 @@ package API_Extractors is
    --    void addTypesystemSearchPath(const QStringList& paths);
    --    void addIncludePath(const HeaderPaths& paths);
    --    HeaderPaths includePaths() const { return m_includePaths; }
-   --    void setLogDirectory(const QString& logDir);
    --    bool setApiVersion(const QString& package, const QString& version);
    --    void setDropTypeEntries(QString dropEntries);
    --
@@ -51,6 +50,11 @@ package API_Extractors is
     (Self      : in out API_Extractor'Class;
      File_Name : Q_Strings.Q_String'Class);
    --    void setTypeSystem(const QString& typeSystemFileName);
+
+   procedure Set_Log_Directory
+    (Self           : in out API_Extractor'Class;
+     Directory_Name : Q_Strings.Q_String'Class);
+   --    void setLogDirectory(const QString& logDir);
 
    procedure Add_Include_Path
     (Self : in out API_Extractor'Class;

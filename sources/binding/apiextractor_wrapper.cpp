@@ -45,3 +45,8 @@ extern "C"
     }
 
 }
+
+void ApiExtractor__setLogDirectory(ApiExtractor *self, QString *dirName)
+{
+    self->setLogDirectory(*dirName);
+}

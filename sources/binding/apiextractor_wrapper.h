@@ -13,3 +13,5 @@ extern "C"
     void ApiExtractor__classes(AbstractMetaClassList* _result, ApiExtractor *self);
 
 }
+
+extern "C" void ApiExtractor__setLogDirectory(ApiExtractor *self, QString *dirName);
