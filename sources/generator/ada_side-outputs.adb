@@ -332,6 +332,25 @@ package body Ada_Side.Outputs is
       return new Node'Class'(Outputs.Strings.New_String (Text));
    end New_String_Literal;
 
+   -------------------------
+   -- New_Subprogram_Body --
+   -------------------------
+
+   not overriding function New_Subprogram_Body
+     (Self          : access Factory;
+      Specification : not null Node_Access;
+      Declarations  : Node_Access := null;
+      Statements    : Node_Access := null;
+      Exceptions    : Node_Access := null) return not null Node_Access is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Subprograms.New_Body
+                             (Specification,
+                              Declarations,
+                              Statements,
+                              Exceptions));
+   end New_Subprogram_Body;
+
    --------------------------------
    -- New_Subprogram_Declaration --
    --------------------------------

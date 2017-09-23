@@ -136,28 +136,28 @@ procedure Ada_Side.Output_Test is
          Type_Definition => Q_String);
 
       Initialize : constant Ada_Side.Outputs.Node_Access :=
-        F.New_Subprogram_Declaration
-          (F.New_Subprogram_Specification
-             (Is_Overriding => True,
-              Name          => F.New_Name (+"Initialize"),
-              Parameters    => Self_Q_String));
+        F.New_Subprogram_Specification
+          (Is_Overriding => True,
+           Name          => F.New_Name (+"Initialize"),
+           Parameters    => Self_Q_String);
 
       Adjust : constant Ada_Side.Outputs.Node_Access :=
-        F.New_Subprogram_Declaration
-          (F.New_Subprogram_Specification
-             (Is_Overriding => True,
-              Name          => F.New_Name (+"Adjust"),
-              Parameters    => Self_Q_String));
+        F.New_Subprogram_Specification
+          (Is_Overriding => True,
+           Name          => F.New_Name (+"Adjust"),
+           Parameters    => Self_Q_String);
 
       Finalize : constant Ada_Side.Outputs.Node_Access :=
-        F.New_Subprogram_Declaration
-          (F.New_Subprogram_Specification
-             (Is_Overriding => True,
-              Name          => F.New_Name (+"Finalize"),
-              Parameters    => Self_Q_String));
+        F.New_Subprogram_Specification
+          (Is_Overriding => True,
+           Name          => F.New_Name (+"Finalize"),
+           Parameters    => Self_Q_String);
 
       Private_Part : constant Ada_Side.Outputs.Node_Access :=
-        F.New_List ((Q_String_Type_Full, Initialize, Adjust, Finalize));
+        F.New_List ((Q_String_Type_Full,
+                     F.New_Subprogram_Declaration (Initialize),
+                     F.New_Subprogram_Declaration (Adjust),
+                     F.New_Subprogram_Declaration (Finalize)));
 
       Spec_Root : constant Ada_Side.Outputs.Node_Access :=
         F.New_Package (Name, Q_String_Type, Private_Part);
@@ -221,13 +221,17 @@ procedure Ada_Side.Output_Test is
                 (F.New_Name (+"Link_Name"),
                  F.New_String_Literal (+"QString__adjust")))));
 
+      Adjust_Body : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Body (Adjust);
+
       Body_Root : constant Ada_Side.Outputs.Node_Access :=
         F.New_Package_Body
           (Name,
            F.New_List
              ((QString_initialize,
                QString_finalize,
-               QString_adjust)));
+               QString_adjust,
+               Adjust_Body)));
 
       Body_Unit : constant Ada_Side.Outputs.Node_Access :=
         F.New_Compilation_Unit (Body_Root);

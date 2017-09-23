@@ -27,6 +27,20 @@ private package Ada_Side.Outputs.Subprograms is
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
+   type Implementation is new Node with private;
+
+   function New_Body
+     (Specification : not null Node_Access;
+      Declarations  : Node_Access;
+      Statements    : Node_Access;
+      Exceptions    : Node_Access) return Node'Class;
+
+   overriding function Document
+    (Self    : Implementation;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document;
+
 private
 
    type Subprogram is new Node with record
@@ -40,6 +54,13 @@ private
       Specification : not null Node_Access;
       Aspects       : Node_Access;
       Comment       : League.Strings.Universal_String;
+   end record;
+
+   type Implementation is new Node with record
+      Specification : not null Node_Access;
+      Declarations  : Node_Access;
+      Statements    : Node_Access;
+      Exceptions    : Node_Access;
    end record;
 
 end Ada_Side.Outputs.Subprograms;

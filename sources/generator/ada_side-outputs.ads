@@ -163,6 +163,13 @@ package Ada_Side.Outputs is
       Comment         : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String) return not null Node_Access;
 
+   not overriding function New_Subprogram_Body
+     (Self          : access Factory;
+      Specification : not null Node_Access;
+      Declarations  : Node_Access := null;
+      Statements    : Node_Access := null;
+      Exceptions    : Node_Access := null) return not null Node_Access;
+
 private
    type Node is abstract tagged null record;
 
