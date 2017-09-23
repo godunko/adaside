@@ -39,6 +39,11 @@ extern "C"
 
 }
 
+QString* QString__fromUtf16(const ushort* data, int size)
+{
+    return new QString(QString::fromUtf16(data, size));
+}
+
 const ushort* QString__utf16(const QString* self)
 {
     return self->utf16();

@@ -1,5 +1,6 @@
 with Interfaces.C.Strings;
 
+with League.Strings.Internals;
 with Matreshka.Internals.Strings.C;
 with Matreshka.Internals.Utf16;
 
@@ -15,6 +16,13 @@ package body Q_Strings is
           Convention => C,
           Link_Name  => "QString__delete";
 
+   function QString_fromUtf16
+    (data : not null Matreshka.Internals.Strings.C.Utf16_Code_Unit_Access;
+     size : Interfaces.C.int) return Internals.QString_Access
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "QString__fromUtf16";
+
    function QString_fromUtf8
     (str  : access constant Interfaces.C.char;
      size : Interfaces.C.int) return Internals.QString_Access
@@ -29,18 +37,18 @@ package body Q_Strings is
               Convention => C,
               Link_Name  => "QString_toUtf8";
 
-   function QString_Utf16
-    (Self : not null Internals.QString_Access)
-       return not null Matreshka.Internals.Strings.C.Utf16_Code_Unit_Access
-         with Import     => True,
-              Convention => C,
-              Link_Name  => "QString__utf16";
-
    function QString_size
     (Self : not null Internals.QString_Access) return Interfaces.C.int
        with Import     => True,
             Convention => C,
             Link_Name  => "QString__size";
+
+   function QString_utf16
+    (Self : not null Internals.QString_Access)
+       return not null Matreshka.Internals.Strings.C.Utf16_Code_Unit_Access
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "QString__utf16";
 
    ------------
    -- Adjust --
@@ -63,6 +71,23 @@ package body Q_Strings is
          QString_delete (Self.Object);
       end if;
    end Finalize;
+
+   ---------------------------
+   -- From_Universal_String --
+   ---------------------------
+
+   function From_Universal_String
+    (Item : League.Strings.Universal_String) return Q_String
+   is
+      Aux : constant Matreshka.Internals.Strings.Shared_String_Access
+        := League.Strings.Internals.Internal (Item);
+
+   begin
+      return (Ada.Finalization.Controlled with
+                Object => QString_fromUtf16
+                           (Aux.Value (0)'Access,
+                            Interfaces.C.int (Aux.Unused)));
+   end From_Universal_String;
 
    ---------------
    -- From_UTF8 --
@@ -99,7 +124,7 @@ package body Q_Strings is
    begin
       return
         Matreshka.Internals.Strings.C.To_Valid_Universal_String
-         (QString_Utf16 (Self.Object),
+         (QString_utf16 (Self.Object),
           Matreshka.Internals.Utf16.Utf16_String_Index
            (QString_size (Self.Object)));
    end To_Universal_String;

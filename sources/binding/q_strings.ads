@@ -12,6 +12,9 @@ package Q_Strings is
 
    function To_UTF8 (Self : Q_String'Class) return String;
 
+   function From_Universal_String
+    (Item : League.Strings.Universal_String) return Q_String;
+
    function To_Universal_String
     (Self : Q_String'Class) return League.Strings.Universal_String;
 

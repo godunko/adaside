@@ -15,3 +15,4 @@ extern "C"
 
 extern "C" int QString__size(const QString* self);
 extern "C" const ushort* QString__utf16(const QString* self);
+extern "C" QString* QString__fromUtf16(const ushort* data, int size);
