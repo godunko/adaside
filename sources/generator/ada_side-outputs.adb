@@ -13,6 +13,7 @@ with Ada_Side.Outputs.Pragmas;
 with Ada_Side.Outputs.Private_Records;
 with Ada_Side.Outputs.Records;
 with Ada_Side.Outputs.Selected_Names;
+with Ada_Side.Outputs.Statements;
 with Ada_Side.Outputs.Strings;
 with Ada_Side.Outputs.Subprograms;
 with Ada_Side.Outputs.Type_Declarations;
@@ -317,6 +318,19 @@ package body Ada_Side.Outputs is
 
       return Result;
    end New_Selected_Name;
+
+   -------------------
+   -- New_Statement --
+   -------------------
+
+   not overriding function New_Statement
+     (Self       : access Factory;
+      Expression : Node_Access := null) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Statements.New_Statement (Expression));
+   end New_Statement;
 
    ------------------------
    -- New_String_Literal --

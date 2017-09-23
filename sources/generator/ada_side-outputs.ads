@@ -170,6 +170,10 @@ package Ada_Side.Outputs is
       Statements    : Node_Access := null;
       Exceptions    : Node_Access := null) return not null Node_Access;
 
+   not overriding function New_Statement
+     (Self       : access Factory;
+      Expression : Node_Access := null) return not null Node_Access;
+
 private
    type Node is abstract tagged null record;
 

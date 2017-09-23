@@ -221,8 +221,16 @@ procedure Ada_Side.Output_Test is
                 (F.New_Name (+"Link_Name"),
                  F.New_String_Literal (+"QString__adjust")))));
 
+      Adjust_Stmt_1 : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Statement
+          (F.New_Apply
+             (F.New_Name (+"QString_adjust"),
+              F.New_List
+                (F.New_Selected_Name (+"Self.QString_View"),
+                 F.New_Selected_Name (+"Self.Storage'Address"))));
+
       Adjust_Body : constant Ada_Side.Outputs.Node_Access :=
-        F.New_Subprogram_Body (Adjust);
+        F.New_Subprogram_Body (Adjust, Statements => Adjust_Stmt_1);
 
       Body_Root : constant Ada_Side.Outputs.Node_Access :=
         F.New_Package_Body
