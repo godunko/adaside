@@ -132,6 +132,11 @@ package Ada_Side.Outputs is
       Name  : not null Node_Access;
       Value : Node_Access := null) return not null Node_Access;
 
+   not overriding function New_Infix
+     (Self     : access Factory;
+      Operator : League.Strings.Universal_String;
+      Left     : not null Node_Access) return not null Node_Access;
+
 private
    type Node is abstract tagged null record;
 

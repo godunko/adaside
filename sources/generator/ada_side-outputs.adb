@@ -3,6 +3,7 @@ with League.String_Vectors;
 with Ada_Side.Outputs.Accesses;
 with Ada_Side.Outputs.Applies;
 with Ada_Side.Outputs.Aspects;
+with Ada_Side.Outputs.Infixes;
 with Ada_Side.Outputs.Joins;
 with Ada_Side.Outputs.Names;
 with Ada_Side.Outputs.Packages;
@@ -111,6 +112,16 @@ package body Ada_Side.Outputs is
       return new Node'Class'(Outputs.Units.New_Compilation_Unit
                              (Root, Clauses, License));
    end New_Compilation_Unit;
+
+   not overriding function New_Infix
+     (Self     : access Factory;
+      Operator : League.Strings.Universal_String;
+      Left     : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Infixes.New_Infix (Operator, Left));
+   end New_Infix;
 
    --------------
    -- New_List --
