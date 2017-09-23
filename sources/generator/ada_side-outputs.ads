@@ -138,6 +138,31 @@ package Ada_Side.Outputs is
       Operator : League.Strings.Universal_String;
       Left     : not null Node_Access) return not null Node_Access;
 
+   not overriding function New_Subprogram_Declaration
+     (Self          : access Factory;
+      Specification : not null Node_Access;
+      Aspects       : Node_Access := null;
+      Comment       : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   not overriding function New_Subprogram_Specification
+     (Self          : access Factory;
+      Is_Overriding : Boolean := False;
+      Name          : Node_Access := null;
+      Parameters    : Node_Access := null;
+      Result        : Node_Access := null) return not null Node_Access;
+
+   not overriding function New_Parameter
+     (Self            : access Factory;
+      Name            : not null Node_Access;
+      Type_Definition : not null Node_Access;
+      Initialization  : Node_Access := null;
+      Is_In           : Boolean := False;
+      Is_Out          : Boolean := False;
+      Is_Aliased      : Boolean := False;
+      Comment         : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
 private
    type Node is abstract tagged null record;
 

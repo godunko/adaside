@@ -8,11 +8,13 @@ with Ada_Side.Outputs.Integer_Literals;
 with Ada_Side.Outputs.Joins;
 with Ada_Side.Outputs.Names;
 with Ada_Side.Outputs.Packages;
+with Ada_Side.Outputs.Parameters;
 with Ada_Side.Outputs.Pragmas;
 with Ada_Side.Outputs.Private_Records;
 with Ada_Side.Outputs.Records;
 with Ada_Side.Outputs.Selected_Names;
 with Ada_Side.Outputs.Strings;
+with Ada_Side.Outputs.Subprograms;
 with Ada_Side.Outputs.Type_Declarations;
 with Ada_Side.Outputs.Units;
 with Ada_Side.Outputs.Variables;
@@ -220,6 +222,24 @@ package body Ada_Side.Outputs is
         "Unimplemented function New_Package_Body";
    end New_Package_Body;
 
+   not overriding function New_Parameter
+     (Self            : access Factory;
+      Name            : not null Node_Access;
+      Type_Definition : not null Node_Access;
+      Initialization  : Node_Access := null;
+      Is_In           : Boolean := False;
+      Is_Out          : Boolean := False;
+      Is_Aliased      : Boolean := False;
+      Comment         : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Parameters.New_Parameter
+                             (Name, Type_Definition, Initialization,
+                               Is_In, Is_Out, Is_Aliased, Comment));
+   end New_Parameter;
+
    ----------------
    -- New_Pragma --
    ----------------
@@ -309,6 +329,43 @@ package body Ada_Side.Outputs is
    begin
       return new Node'Class'(Outputs.Strings.New_String (Text));
    end New_String_Literal;
+
+   --------------------------------
+   -- New_Subprogram_Declaration --
+   --------------------------------
+
+   not overriding function New_Subprogram_Declaration
+     (Self          : access Factory;
+      Specification : not null Node_Access;
+      Aspects       : Node_Access := null;
+      Comment       : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Subprograms.New_Declaration
+                             (Specification, Aspects, Comment));
+   end New_Subprogram_Declaration;
+
+   --------------------
+   -- New_Subprogram --
+   --------------------
+
+   not overriding function New_Subprogram_Specification
+     (Self          : access Factory;
+      Is_Overriding : Boolean := False;
+      Name          : Node_Access := null;
+      Parameters    : Node_Access := null;
+      Result        : Node_Access := null) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Subprograms.New_Subprogram
+                             (Is_Overriding,
+                              Name,
+                              Parameters,
+                              Result));
+   end New_Subprogram_Specification;
 
    -----------------
    -- New_Subtype --

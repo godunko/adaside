@@ -129,8 +129,38 @@ procedure Ada_Side.Output_Test is
            (Parent     => F.New_Selected_Name (+"Ada.Finalization.Controlled"),
             Components => F.New_List ((QString_View, Is_Wrapper, Storage))));
 
+      Self : constant Ada_Side.Outputs.Node_Access := F.New_Parameter
+        (Name            => F.New_Name (+"Self"),
+         Is_In           => True,
+         Is_Out          => True,
+         Type_Definition => Q_String);
+
+      Initialize : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Is_Overriding => True,
+              Name          => F.New_Name (+"Initialize"),
+              Parameters    => Self));
+
+      Adjust : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Is_Overriding => True,
+              Name          => F.New_Name (+"Adjust"),
+              Parameters    => Self));
+
+      Finalize : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Is_Overriding => True,
+              Name          => F.New_Name (+"Finalize"),
+              Parameters    => Self));
+
+      Private_Part : constant Ada_Side.Outputs.Node_Access :=
+        F.New_List ((Q_String_Type_Full, Initialize, Adjust, Finalize));
+
       Root : constant Ada_Side.Outputs.Node_Access :=
-        F.New_Package (Name, Q_String_Type, Q_String_Type_Full);
+        F.New_Package (Name, Q_String_Type, Private_Part);
 
       Unit : constant Ada_Side.Outputs.Node_Access :=
         F.New_Compilation_Unit (Root, Clause);
