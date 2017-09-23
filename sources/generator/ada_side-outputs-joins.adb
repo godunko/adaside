@@ -21,6 +21,8 @@ package body Ada_Side.Outputs.Joins is
          Next := Join (Next.all).Right;
       end loop;
 
+      Max := Natural'Max (Max, Next.Max_Pad);
+
       declare
          List : Node_Access_Array (1 .. Count) := (others => Self.Left);
       begin

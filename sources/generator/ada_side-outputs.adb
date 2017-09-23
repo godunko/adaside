@@ -214,13 +214,15 @@ package body Ada_Side.Outputs is
       Name : not null Node_Access;
       List : Node_Access := null) return not null Node_Access
    is
+      pragma Unreferenced (Self);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning
-        (Standard.True, "New_Package_Body unimplemented");
-      return raise Program_Error with
-        "Unimplemented function New_Package_Body";
+      return new Node'Class'(Outputs.Packages.New_Package_Body
+                             (Name, List));
    end New_Package_Body;
+
+   -------------------
+   -- New_Parameter --
+   -------------------
 
    not overriding function New_Parameter
      (Self            : access Factory;

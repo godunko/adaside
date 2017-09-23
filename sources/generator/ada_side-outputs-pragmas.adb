@@ -14,7 +14,7 @@ package body Ada_Side.Outputs.Pragmas is
    begin
       Result.New_Line;
       Result.Put ("pragma ");
-      Result.Append (Self.Name.Document (Printer, Pad));
+      Result.Append (Self.Name.Document (Printer, 0));
 
       if Self.Arguments /= null then
          Result.Put (" (");

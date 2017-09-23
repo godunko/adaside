@@ -56,6 +56,38 @@ package body Ada_Side.Outputs.Packages is
       return Result;
    end Document;
 
+   overriding function Document
+    (Self    : Package_Body;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+      Content : League.Pretty_Printers.Document := Printer.New_Document;
+      Name : constant League.Pretty_Printers.Document :=
+        Self.Name.Document (Printer, Pad);
+   begin
+      Result.New_Line;
+      Result.Put ("package body ");
+      Result.Append (Name);
+      Result.Put (" is");
+
+      if Self.List /= null then
+         Content := Printer.New_Document;
+         Content.Append (Self.List.Document (Printer, Pad));
+         Content.Nest (3);
+
+         Result.Append (Content);
+      end if;
+
+      Result.New_Line;
+      Result.Put ("end ");
+      Result.Append (Name);
+      Result.Put (";");
+
+      return Result;
+   end Document;
+
    -----------------
    -- New_Package --
    -----------------
@@ -69,5 +101,16 @@ package body Ada_Side.Outputs.Packages is
    begin
       return Package_Spec'(Name, Public_Part, Private_Part, Comment);
    end New_Package;
+
+   ----------------------
+   -- New_Package_Body --
+   ----------------------
+
+   function New_Package_Body
+     (Name : not null Node_Access;
+      List : Node_Access) return Node'Class is
+   begin
+      return Package_Body'(Name, List);
+   end New_Package_Body;
 
 end Ada_Side.Outputs.Packages;

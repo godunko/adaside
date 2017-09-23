@@ -17,6 +17,13 @@ private package Ada_Side.Outputs.Parameters is
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
+   overriding function Join
+    (Self    : Parameter;
+     List    : Node_Access_Array;
+     Pad     : Natural;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document;
+
 private
 
    type Parameter is new Node with record

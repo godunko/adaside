@@ -8,9 +8,17 @@ procedure Ada_Side.Output_Test is
                  renames League.Strings.To_Universal_String;
 
    procedure Print_API;
-   procedure Print_Core_Spec;
+   procedure Print_Core_Spec_And_Body;
 
    F : aliased Ada_Side.Outputs.Factory;
+
+   Convention : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
+     (F.New_Name (+"Convention"),
+      F.New_Name (+"C"));
+
+   Import : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
+     (F.New_Name (+"Import"),
+      F.New_Name (+"True"));
 
    ---------------
    -- Print_API --
@@ -27,10 +35,6 @@ procedure Ada_Side.Output_Test is
       Preelaborate : constant Ada_Side.Outputs.Node_Access := F.New_Pragma
         (F.New_Name (+"Preelaborate"));
 
-      Convention : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
-        (F.New_Name (+"Convention"),
-         F.New_Name (+"C"));
-
       QString : constant Ada_Side.Outputs.Node_Access :=
         F.New_Name (+"QString");
 
@@ -43,10 +47,6 @@ procedure Ada_Side.Output_Test is
         (Name       => F.New_Name (+"QString_Access"),
          Definition => F.New_Access (True, QString),
          Aspects    => Convention);
-
-      Import : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
-        (F.New_Name (+"Import"),
-         F.New_Name (+"True"));
 
       Link_Name : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
         (F.New_Name (+"Link_Name"),
@@ -76,11 +76,11 @@ procedure Ada_Side.Output_Test is
       Ada.Wide_Wide_Text_IO.Put_Line (F.To_Text (Unit).To_Wide_Wide_String);
    end Print_API;
 
-   ---------------------
-   -- Print_Core_Spec --
-   ---------------------
+   ------------------------------
+   -- Print_Core_Spec_And_Body --
+   ------------------------------
 
-   procedure Print_Core_Spec is
+   procedure Print_Core_Spec_And_Body is
       Name : constant Ada_Side.Outputs.Node_Access :=
         F.New_Selected_Name (+"Qt5.Qt_Core.Strings");
 
@@ -129,7 +129,7 @@ procedure Ada_Side.Output_Test is
            (Parent     => F.New_Selected_Name (+"Ada.Finalization.Controlled"),
             Components => F.New_List ((QString_View, Is_Wrapper, Storage))));
 
-      Self : constant Ada_Side.Outputs.Node_Access := F.New_Parameter
+      Self_Q_String : constant Ada_Side.Outputs.Node_Access := F.New_Parameter
         (Name            => F.New_Name (+"Self"),
          Is_In           => True,
          Is_Out          => True,
@@ -140,35 +140,106 @@ procedure Ada_Side.Output_Test is
           (F.New_Subprogram_Specification
              (Is_Overriding => True,
               Name          => F.New_Name (+"Initialize"),
-              Parameters    => Self));
+              Parameters    => Self_Q_String));
 
       Adjust : constant Ada_Side.Outputs.Node_Access :=
         F.New_Subprogram_Declaration
           (F.New_Subprogram_Specification
              (Is_Overriding => True,
               Name          => F.New_Name (+"Adjust"),
-              Parameters    => Self));
+              Parameters    => Self_Q_String));
 
       Finalize : constant Ada_Side.Outputs.Node_Access :=
         F.New_Subprogram_Declaration
           (F.New_Subprogram_Specification
              (Is_Overriding => True,
               Name          => F.New_Name (+"Finalize"),
-              Parameters    => Self));
+              Parameters    => Self_Q_String));
 
       Private_Part : constant Ada_Side.Outputs.Node_Access :=
         F.New_List ((Q_String_Type_Full, Initialize, Adjust, Finalize));
 
-      Root : constant Ada_Side.Outputs.Node_Access :=
+      Spec_Root : constant Ada_Side.Outputs.Node_Access :=
         F.New_Package (Name, Q_String_Type, Private_Part);
 
-      Unit : constant Ada_Side.Outputs.Node_Access :=
-        F.New_Compilation_Unit (Root, Clause);
+      Spec_Unit : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Compilation_Unit (Spec_Root, Clause);
+
+      QString_Access : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Selected_Name (+"Qt_Ada.API.Strings.QString_Access");
+
+      Self_QString_Access : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Parameter
+          (Name            => F.New_Name (+"Self"),
+           Is_In           => True,
+           Is_Out          => True,
+           Type_Definition => QString_Access);
+
+      Address : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Selected_Name (+"System.Address");
+
+      Storage_Param : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Parameter
+          (Name            => F.New_Name (+"Storage"),
+           Type_Definition => Address);
+
+      QString_initialize : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Name          => F.New_Name (+"QString_initialize"),
+              Parameters    =>
+                F.New_List (Self_QString_Access, Storage_Param)),
+           Aspects => F.New_List
+             ((Import,
+               Convention,
+               F.New_Aspect
+                (F.New_Name (+"Link_Name"),
+                 F.New_String_Literal (+"QString___initialize")))));
+
+      QString_finalize : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Name          => F.New_Name (+"QString_finalize"),
+              Parameters    => Self_QString_Access),
+           Aspects => F.New_List
+             ((Import,
+               Convention,
+               F.New_Aspect
+                (F.New_Name (+"Link_Name"),
+                 F.New_String_Literal (+"QString__finalize")))));
+
+      QString_adjust : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Name          => F.New_Name (+"QString_adjust"),
+              Parameters    =>
+                F.New_List (Self_QString_Access, Storage_Param)),
+           Aspects => F.New_List
+             ((Import,
+               Convention,
+               F.New_Aspect
+                (F.New_Name (+"Link_Name"),
+                 F.New_String_Literal (+"QString__adjust")))));
+
+      Body_Root : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Package_Body
+          (Name,
+           F.New_List
+             ((QString_initialize,
+               QString_finalize,
+               QString_adjust)));
+
+      Body_Unit : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Compilation_Unit (Body_Root);
    begin
-      Ada.Wide_Wide_Text_IO.Put_Line (F.To_Text (Unit).To_Wide_Wide_String);
-   end Print_Core_Spec;
+      Ada.Wide_Wide_Text_IO.Put_Line
+        (F.To_Text (Spec_Unit).To_Wide_Wide_String);
+
+      Ada.Wide_Wide_Text_IO.Put_Line
+        (F.To_Text (Body_Unit).To_Wide_Wide_String);
+   end Print_Core_Spec_And_Body;
 
 begin
    Print_API;
-   Print_Core_Spec;
+   Print_Core_Spec_And_Body;
 end Ada_Side.Output_Test;

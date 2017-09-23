@@ -10,11 +10,12 @@ package body Ada_Side.Outputs.Type_Declarations is
      Pad     : Natural)
       return League.Pretty_Printers.Document
    is
+      pragma Unreferenced (Pad);
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
       Result.New_Line;
       Result.Put ("type ");
-      Result.Append (Self.Name.Document (Printer, Pad));
+      Result.Append (Self.Name.Document (Printer, 0));
 
       if Self.Discriminants /= null then
          Result.Put (" (");

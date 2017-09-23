@@ -43,6 +43,7 @@ package body Ada_Side.Outputs.Subprograms is
             Profile.Append (Returns);
          end if;
 
+         Profile.Nest (1);
          Profile.Group;
          Result.Append (Profile);
       else
@@ -66,8 +67,8 @@ package body Ada_Side.Outputs.Subprograms is
    begin
       Result.New_Line;
       Result.Append (Self.Specification.Document (Printer, Pad));
-      Result.Put (";");
       Result.Append (Print_Aspect (Self.Aspects, Printer));
+      Result.Put (";");
 
       return Result;
    end Document;

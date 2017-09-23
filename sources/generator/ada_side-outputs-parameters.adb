@@ -38,6 +38,30 @@ package body Ada_Side.Outputs.Parameters is
       return Result;
    end Document;
 
+   ----------
+   -- Join --
+   ----------
+
+   overriding function Join
+    (Self    : Parameter;
+     List    : Node_Access_Array;
+     Pad     : Natural;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.Append (Self.Document (Printer, Pad));
+
+      for J in List'Range loop
+         Result.Put (";");
+         Result.New_Line;
+         Result.Append (List (J).Document (Printer, Pad));
+      end loop;
+
+      return Result;
+   end Join;
+
    -------------------
    -- New_Parameter --
    -------------------
