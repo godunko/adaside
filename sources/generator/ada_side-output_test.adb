@@ -117,10 +117,11 @@ procedure Ada_Side.Output_Test is
          Type_Definition => F.New_Apply
            (F.New_Selected_Name (+"System.Storage_Elements.Storage_Array"),
             F.New_List
-              (F.New_Selected_Name
-                   (+"Qt_Ada.API.Strings.QString_Storage_Size"),
+              (F.New_Literal (1),
                F.New_Infix
-                 (+"..", F.New_Name (+"Aaa")))));
+                 (+"..",
+                  F.New_Selected_Name
+                   (+"Qt_Ada.API.Strings.QString_Storage_Size")))));
 
       QString_Type_Full : constant Ada_Side.Outputs.Node_Access := F.New_Type
         (Name       => QString,

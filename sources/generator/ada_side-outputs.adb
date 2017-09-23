@@ -4,6 +4,7 @@ with Ada_Side.Outputs.Accesses;
 with Ada_Side.Outputs.Applies;
 with Ada_Side.Outputs.Aspects;
 with Ada_Side.Outputs.Infixes;
+with Ada_Side.Outputs.Integer_Literals;
 with Ada_Side.Outputs.Joins;
 with Ada_Side.Outputs.Names;
 with Ada_Side.Outputs.Packages;
@@ -159,15 +160,14 @@ package body Ada_Side.Outputs is
    -----------------
 
    not overriding function New_Literal
-     (Self : access Factory;
-      Name : Natural;
-      Base : Positive := 10)
-      return not null Node_Access
+     (Self  : access Factory;
+      Value : Natural;
+      Base  : Positive := 10) return not null Node_Access
    is
+      pragma Unreferenced (Self);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "New_Literal unimplemented");
-      return raise Program_Error with "Unimplemented function New_Literal";
+      return new Node'Class'(Outputs.Integer_Literals.New_Literal
+                               (Value, Base));
    end New_Literal;
 
    --------------

@@ -35,9 +35,9 @@ package Ada_Side.Outputs is
    --  Identifier, character literal ('X'), operator ("<")
 
    not overriding function New_Literal
-     (Self : access Factory;
-      Name : Natural;
-      Base : Positive := 10) return not null Node_Access;
+     (Self  : access Factory;
+      Value : Natural;
+      Base  : Positive := 10) return not null Node_Access;
 
    not overriding function New_String_Literal
      (Self : access Factory;
