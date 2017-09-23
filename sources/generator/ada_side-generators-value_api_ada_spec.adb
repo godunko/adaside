@@ -110,7 +110,6 @@ package body Ada_Side.Generators.Value_API_Ada_Spec is
       Unit.Set_Package_Name (Generated_Package_Full_Name (Class), False);
 
       Unit.Put_Line (+"with Interfaces.C;");
-      Unit.Put_Line (+"with System;");
       Unit.New_Line;
       Unit.Put_Line ("package " & Generated_Package_Full_Name (Class) & " is");
       Unit.New_Line;
@@ -138,7 +137,7 @@ package body Ada_Side.Generators.Value_API_Ada_Spec is
        ("   type " & API_Storage_Type_Name (Class)
           & " is new Interfaces.C.char_array (1 .. "
           & API_Size_Of_Name (Class) & ")");
-      Unit.Put_Line (+"     with Alignment => System'Maximum_Alignment;");
+      Unit.Put_Line (+"     with Alignment => Standard'Maximum_Alignment;");
       Unit.New_Line;
       Unit.Put_Line ("end " & Generated_Package_Full_Name (Class) & ";");
 
