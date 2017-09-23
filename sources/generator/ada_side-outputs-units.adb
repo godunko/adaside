@@ -5,8 +5,9 @@ package body Ada_Side.Outputs.Units is
    --------------
 
    overriding function Document
-    (Self : Compilation_Unit;
-     Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Compilation_Unit;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document
    is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
@@ -17,11 +18,11 @@ package body Ada_Side.Outputs.Units is
       end if;
 
       if Self.Clauses /= null then
-         Result.Append (Self.Clauses.Document (Printer));
+         Result.Append (Self.Clauses.Document (Printer, Pad));
          Result.New_Line;
       end if;
 
-      Result.Append (Self.Root.Document (Printer));
+      Result.Append (Self.Root.Document (Printer, Pad));
 
       return Result;
    end Document;

@@ -7,8 +7,9 @@ private package Ada_Side.Outputs.Selected_Names is
       Selector : not null Node_Access) return Node'Class;
 
    overriding function Document
-    (Self : Selected_Name;
-     Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Selected_Name;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document;
 
 private

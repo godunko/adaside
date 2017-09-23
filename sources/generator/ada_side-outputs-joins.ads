@@ -7,8 +7,9 @@ private package Ada_Side.Outputs.Joins is
       Right : not null Node_Access) return Node'Class;
 
    overriding function Document
-    (Self : Join;
-     Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Join;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document;
 
 private

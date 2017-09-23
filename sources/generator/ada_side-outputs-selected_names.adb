@@ -5,8 +5,9 @@ package body Ada_Side.Outputs.Selected_Names is
    --------------
 
    overriding function Document
-     (Self : Selected_Name;
-      Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Selected_Name;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document
    is
       --  Format this as
@@ -14,9 +15,9 @@ package body Ada_Side.Outputs.Selected_Names is
       --    .Selector
       Result : League.Pretty_Printers.Document := Printer.New_Document;
       Prefix : League.Pretty_Printers.Document :=
-        Self.Prefix.Document (Printer);
+        Self.Prefix.Document (Printer, Pad);
       Selector : constant League.Pretty_Printers.Document :=
-        Self.Selector.Document (Printer);
+        Self.Selector.Document (Printer, Pad);
    begin
       Result.New_Line (Gap => "");
       Result.Put (".");

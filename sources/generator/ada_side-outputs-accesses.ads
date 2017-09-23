@@ -8,7 +8,8 @@ private package Ada_Side.Outputs.Accesses is
 
    overriding function Document
     (Self    : Access_Definition;
-     Printer : not null access League.Pretty_Printers.Printer'Class)
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document;
 
 private

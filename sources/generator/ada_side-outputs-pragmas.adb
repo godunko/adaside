@@ -5,19 +5,20 @@ package body Ada_Side.Outputs.Pragmas is
    --------------
 
    overriding function Document
-     (Self : Pragma_Node;
-      Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Pragma_Node;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document
    is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
       Result.New_Line;
       Result.Put ("pragma ");
-      Result.Append (Self.Name.Document (Printer));
+      Result.Append (Self.Name.Document (Printer, Pad));
 
       if Self.Arguments /= null then
          Result.Put (" (");
-         Result.Append (Self.Arguments.Document (Printer));
+         Result.Append (Self.Arguments.Document (Printer, Pad));
          Result.Put (")");
       end if;
 

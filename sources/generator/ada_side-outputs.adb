@@ -8,6 +8,7 @@ with Ada_Side.Outputs.Packages;
 with Ada_Side.Outputs.Pragmas;
 with Ada_Side.Outputs.Records;
 with Ada_Side.Outputs.Selected_Names;
+with Ada_Side.Outputs.Strings;
 with Ada_Side.Outputs.Type_Declarations;
 with Ada_Side.Outputs.Units;
 with Ada_Side.Outputs.Variables;
@@ -22,12 +23,35 @@ package body Ada_Side.Outputs is
 
    not overriding function Document
     (Self    : Node;
-     Printer : not null access League.Pretty_Printers.Printer'Class)
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
      return League.Pretty_Printers.Document is
    begin
       raise Program_Error;
       return Printer.New_Document;
    end Document;
+
+   ----------
+   -- Join --
+   ----------
+
+   not overriding function Join
+    (Self    : Node;
+     List    : Node_Access_Array;
+     Pad     : Natural;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+     return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.Append (Node'Class (Self).Document (Printer, Pad));
+
+      for J in List'Range loop
+         Result.Append (List (J).Document (Printer, Pad));
+      end loop;
+
+      return Result;
+   end Join;
 
    ----------------
    -- New_Access --
@@ -219,15 +243,12 @@ package body Ada_Side.Outputs is
 
    not overriding function New_String_Literal
      (Self : access Factory;
-      Name : League.Strings.Universal_String)
+      Text : League.Strings.Universal_String)
       return not null Node_Access
    is
+      pragma Unreferenced (Self);
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning
-        (Standard.True, "New_String_Literal unimplemented");
-      return raise Program_Error with
-        "Unimplemented function New_String_Literal";
+      return new Node'Class'(Outputs.Strings.New_String (Text));
    end New_String_Literal;
 
    -----------------
@@ -263,6 +284,7 @@ package body Ada_Side.Outputs is
         League.Strings.Empty_Universal_String)
       return not null Node_Access
    is
+      pragma Unreferenced (Self);
    begin
       return new Node'Class'(Outputs.Type_Declarations.New_Type
                              (Name,
@@ -312,6 +334,34 @@ package body Ada_Side.Outputs is
       return new Node'Class'(Outputs.With_Clauses.New_With (Name));
    end New_With;
 
+   ------------------
+   -- Print_Aspect --
+   ------------------
+
+   function Print_Aspect
+    (Aspect  : Node_Access;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+     return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+      Pad    : constant Natural := 0;
+   begin
+      if Aspect = null then
+         return Result;
+      end if;
+
+      Result.New_Line;
+      Result.Put ("with ");
+      Result.Append (Aspect.Document (Printer, Pad));
+      Result.Nest (2);
+
+      if Aspect.all in Aspects.Aspect then
+         Result.Group;
+      end if;
+
+      return Result;
+   end Print_Aspect;
+
    -------------
    -- To_Text --
    -------------
@@ -323,7 +373,7 @@ package body Ada_Side.Outputs is
    is
       Printer  : aliased League.Pretty_Printers.Printer;
       Document : League.Pretty_Printers.Document :=
-        Unit.Document (Printer'Access);
+        Unit.Document (Printer'Access, 0);
    begin
       return Printer.Pretty (Width => 79, Input => Document);
    end To_Text;

@@ -5,10 +5,12 @@ package body Ada_Side.Outputs.Strings is
    --------------
 
    overriding function Document
-     (Self    : String;
-      Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : String;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document
    is
+      pragma Unreferenced (Pad);
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
       Result.Put ("""");

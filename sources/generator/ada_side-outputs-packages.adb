@@ -5,14 +5,15 @@ package body Ada_Side.Outputs.Packages is
    --------------
 
    overriding function Document
-     (Self : Package_Spec;
-      Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Package_Spec;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document
    is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
       Content : League.Pretty_Printers.Document := Printer.New_Document;
       Name : constant League.Pretty_Printers.Document :=
-        Self.Name.Document (Printer);
+        Self.Name.Document (Printer, Pad);
    begin
       Result.New_Line;
       Result.Put ("package ");
@@ -29,7 +30,7 @@ package body Ada_Side.Outputs.Packages is
          end if;
 
          if Self.Public_Part /= null then
-            Content.Append (Self.Public_Part.Document (Printer));
+            Content.Append (Self.Public_Part.Document (Printer, Pad));
          end if;
 
          Content.Nest (3);
@@ -39,7 +40,7 @@ package body Ada_Side.Outputs.Packages is
 
       if Self.Private_Part /= null then
          Content := Printer.New_Document;
-         Content.Append (Self.Private_Part.Document (Printer));
+         Content.Append (Self.Private_Part.Document (Printer, Pad));
          Content.Nest (3);
 
          Result.New_Line;

@@ -5,8 +5,9 @@ package body Ada_Side.Outputs.Records is
    --------------
 
    overriding function Document
-     (Self    : Record_Definition;
-      Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Record_Definition;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document
    is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
@@ -15,7 +16,7 @@ package body Ada_Side.Outputs.Records is
          Result.Put ("null record");
       else
          Result.Put ("record");
-         Result.Append (Self.Components.Document (Printer).Nest (3));
+         Result.Append (Self.Components.Document (Printer, Pad).Nest (3));
          Result.New_Line;
          Result.Put ("end record");
       end if;

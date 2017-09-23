@@ -5,11 +5,21 @@ package body Ada_Side.Outputs.Names is
    --------------
 
    overriding function Document
-     (Self    : Name;
-      Printer : not null access League.Pretty_Printers.Printer'Class)
-      return League.Pretty_Printers.Document is
+    (Self    : Name;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural) return League.Pretty_Printers.Document
+   is
+      Result  : League.Pretty_Printers.Document := Printer.New_Document;
+      Padding : constant Wide_Wide_String
+        (Self.Name.Length + 1 .. Pad) := (others => ' ');
    begin
-      return Printer.New_Document.Put (Self.Name);
+      Result.Put (Self.Name);
+
+      if Padding'Length > 0 then
+         Result.Put (Padding);
+      end if;
+
+      return Result;
    end Document;
 
    --------------

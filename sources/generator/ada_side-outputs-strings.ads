@@ -7,7 +7,8 @@ private package Ada_Side.Outputs.Strings is
 
    overriding function Document
     (Self    : String;
-     Printer : not null access League.Pretty_Printers.Printer'Class)
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document;
 
 private

@@ -5,14 +5,15 @@ package body Ada_Side.Outputs.Variables is
    --------------
 
    overriding function Document
-     (Self : Variable;
-      Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Variable;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document
    is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
       Result.New_Line;
-      Result.Append (Self.Name.Document (Printer));
+      Result.Append (Self.Name.Document (Printer, Pad));
       Result.Put (" :");
 
       if Self.Is_Constant then
@@ -25,19 +26,15 @@ package body Ada_Side.Outputs.Variables is
 
       if Self.Type_Definition /= null then
          Result.Put (" ");
-         Result.Append (Self.Type_Definition.Document (Printer));
+         Result.Append (Self.Type_Definition.Document (Printer, 0));
       end if;
 
       if Self.Initialization /= null then
          Result.Put (" := ");
-         Result.Append (Self.Initialization.Document (Printer));
+         Result.Append (Self.Initialization.Document (Printer, 0));
       end if;
 
-      if Self.Aspects /= null then
-         Result.Put (" with ");
-         Result.Append (Self.Aspects.Document (Printer));
-      end if;
-
+      Result.Append (Print_Aspect (Self.Aspects, Printer));
       Result.Put (";");
 
       return Result;

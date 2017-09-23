@@ -4,7 +4,7 @@ private with League.Pretty_Printers;
 package Ada_Side.Outputs is
 
    type Node is abstract tagged private;
-   type Node_Access is access all Node'Class;
+   type Node_Access is access constant Node'Class;
 
    type Factory is tagged private;
 
@@ -36,7 +36,7 @@ package Ada_Side.Outputs is
 
    not overriding function New_String_Literal
      (Self : access Factory;
-      Name : League.Strings.Universal_String) return not null Node_Access;
+      Text : League.Strings.Universal_String) return not null Node_Access;
 
    not overriding function New_Type
      (Self          : access Factory;
@@ -118,9 +118,28 @@ private
 
    not overriding function Document
     (Self    : Node;
-     Printer : not null access League.Pretty_Printers.Printer'Class)
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document;
 
+   not overriding function Max_Pad (Self : Node) return Natural is (0);
+   --  Return maximum lengh of name in Node
+
+   type Node_Access_Array is array (Positive range <>) of not null Node_Access;
+
+   not overriding function Join
+    (Self    : Node;
+     List    : Node_Access_Array;
+     Pad     : Natural;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document;
+   --  Join documents of several nodes in a list
+
    type Factory is tagged null record;
+
+   function Print_Aspect
+    (Aspect  : Node_Access;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document;
 
 end Ada_Side.Outputs;

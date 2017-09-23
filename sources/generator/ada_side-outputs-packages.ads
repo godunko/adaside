@@ -9,8 +9,9 @@ private package Ada_Side.Outputs.Packages is
       Comment      : League.Strings.Universal_String) return Node'Class;
 
    overriding function Document
-    (Self : Package_Spec;
-     Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Package_Spec;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document;
 
 private

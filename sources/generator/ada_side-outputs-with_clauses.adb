@@ -5,15 +5,16 @@ package body Ada_Side.Outputs.With_Clauses is
    --------------
 
    overriding function Document
-     (Self : With_Clause;
-      Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : With_Clause;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document
    is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
       Result.New_Line;
       Result.Put ("with ");
-      Result.Append (Self.Name.Document (Printer));
+      Result.Append (Self.Name.Document (Printer, Pad));
       Result.Put (";");
       return Result;
    end Document;

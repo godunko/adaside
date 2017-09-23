@@ -8,8 +8,9 @@ private package Ada_Side.Outputs.Units is
       License : League.Strings.Universal_String) return Node'Class;
 
    overriding function Document
-    (Self : Compilation_Unit;
-     Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Compilation_Unit;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document;
 
 private

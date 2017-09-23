@@ -6,8 +6,9 @@ private package Ada_Side.Outputs.With_Clauses is
      (Name : not null Node_Access) return Node'Class;
 
    overriding function Document
-    (Self : With_Clause;
-     Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : With_Clause;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document;
 
 private

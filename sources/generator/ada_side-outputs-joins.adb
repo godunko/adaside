@@ -5,16 +5,35 @@ package body Ada_Side.Outputs.Joins is
    --------------
 
    overriding function Document
-     (Self : Join;
-      Printer : not null access League.Pretty_Printers.Printer'Class)
+    (Self    : Join;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
       return League.Pretty_Printers.Document
    is
-      Result : League.Pretty_Printers.Document := Printer.New_Document;
+      pragma Unreferenced (Pad);
+      Count : Positive := 1;
+      Next  : Node_Access := Self.Right;
+      Max   : Natural := Self.Left.Max_Pad;
    begin
-      Result.Append (Self.Left.Document (Printer));
-      Result.Append (Self.Right.Document (Printer));
+      while Next.all in Join loop
+         Count := Count + 1;
+         Max := Natural'Max (Max, Join (Next.all).Left.Max_Pad);
+         Next := Join (Next.all).Right;
+      end loop;
 
-      return Result;
+      declare
+         List : Node_Access_Array (1 .. Count) := (others => Self.Left);
+      begin
+         Next := Self.Right;
+         for J in 1 .. Count - 1 loop
+            List (J) := Join (Next.all).Left;
+            Next := Join (Next.all).Right;
+         end loop;
+
+         List (Count) := Next;
+
+         return Self.Left.Join (List, Max, Printer);
+      end;
    end Document;
 
    --------------
