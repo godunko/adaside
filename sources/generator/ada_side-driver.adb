@@ -52,8 +52,8 @@ begin
    Extractor.Set_Log_Directory
     (Q_Strings.From_Universal_String (Output_Directory));
 
-   if Extractor.Run then
-      null;
+   if not Extractor.Run then
+      raise Program_Error;
    end if;
 
    Classes := Extractor.Classes;
