@@ -12,3 +12,6 @@ extern "C"
     char* QString_toUtf8(QString* self);
 
 }
+
+extern "C" int QString__size(const QString* self);
+extern "C" const ushort* QString__utf16(const QString* self);

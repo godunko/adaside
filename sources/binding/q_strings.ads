@@ -1,5 +1,7 @@
 private with Ada.Finalization;
 
+with League.Strings;
+
 package Q_Strings is
 
    pragma Preelaborate;
@@ -9,6 +11,9 @@ package Q_Strings is
    function From_UTF8 (Item : String) return Q_String;
 
    function To_UTF8 (Self : Q_String'Class) return String;
+
+   function To_Universal_String
+    (Self : Q_String'Class) return League.Strings.Universal_String;
 
    package Internals is
 

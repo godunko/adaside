@@ -1,5 +1,8 @@
 with Interfaces.C.Strings;
 
+with Matreshka.Internals.Strings.C;
+with Matreshka.Internals.Utf16;
+
 package body Q_Strings is
 
    procedure QString_adjust (Self : in out Internals.QString_Access)
@@ -25,6 +28,19 @@ package body Q_Strings is
          with Import     => True,
               Convention => C,
               Link_Name  => "QString_toUtf8";
+
+   function QString_Utf16
+    (Self : not null Internals.QString_Access)
+       return not null Matreshka.Internals.Strings.C.Utf16_Code_Unit_Access
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "QString__utf16";
+
+   function QString_size
+    (Self : not null Internals.QString_Access) return Interfaces.C.int
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "QString__size";
 
    ------------
    -- Adjust --
@@ -74,6 +90,20 @@ package body Q_Strings is
 
    end Internals;
 
+   -------------------------
+   -- To_Universal_String --
+   -------------------------
+
+   function To_Universal_String
+    (Self : Q_String'Class) return League.Strings.Universal_String is
+   begin
+      return
+        Matreshka.Internals.Strings.C.To_Valid_Universal_String
+         (QString_Utf16 (Self.Object),
+          Matreshka.Internals.Utf16.Utf16_String_Index
+           (QString_size (Self.Object)));
+   end To_Universal_String;
+
    -------------
    -- To_UTF8 --
    -------------
@@ -86,4 +116,5 @@ package body Q_Strings is
          Interfaces.C.Strings.Free (Aux);
       end return;
    end To_UTF8;
+
 end Q_Strings;

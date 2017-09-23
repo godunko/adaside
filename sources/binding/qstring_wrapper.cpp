@@ -38,3 +38,13 @@ extern "C"
     }
 
 }
+
+const ushort* QString__utf16(const QString* self)
+{
+    return self->utf16();
+}
+
+int QString__size(const QString* self)
+{
+    return self->size();
+}
