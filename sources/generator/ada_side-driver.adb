@@ -28,9 +28,14 @@ begin
      (Q_Strings.From_Universal_String (Arguments (2)));
 
    for J in 3 .. Arguments.Length loop
-      Extractor.Add_Include_Path
-       (Header_Paths.Create
-         (Q_Strings.From_Universal_String (Arguments (J))));
+      if Arguments (J).Starts_With ("-I") then
+         Extractor.Add_Include_Path
+          (Header_Paths.Create
+            (Q_Strings.From_Universal_String (Arguments (J).Tail_From (3))));
+
+      else
+         raise Program_Error;
+      end if;
    end loop;
 
    if Extractor.Run then
