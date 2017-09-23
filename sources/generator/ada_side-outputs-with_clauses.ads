@@ -3,7 +3,9 @@ private package Ada_Side.Outputs.With_Clauses is
    type With_Clause is new Node with private;
 
    function New_With
-     (Name : not null Node_Access) return Node'Class;
+     (Name : not null Node_Access;
+      Is_Limited : Boolean;
+      Is_Private : Boolean) return Node'Class;
 
    overriding function Document
     (Self    : With_Clause;
@@ -14,7 +16,9 @@ private package Ada_Side.Outputs.With_Clauses is
 private
 
    type With_Clause is new Node with record
-      Name : not null Node_Access;
+      Name       : not null Node_Access;
+      Is_Limited : Boolean;
+      Is_Private : Boolean;
    end record;
 
 end Ada_Side.Outputs.With_Clauses;

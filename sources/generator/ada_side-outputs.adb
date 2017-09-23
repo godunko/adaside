@@ -112,6 +112,23 @@ package body Ada_Side.Outputs is
       return new Node'Class'(Outputs.Joins.New_Join (Head, Tail));
    end New_List;
 
+   --------------
+   -- New_List --
+   --------------
+
+   not overriding function New_List
+     (Self : access Factory;
+      List : Node_Access_Array) return not null Node_Access
+   is
+      Result : Node_Access := List (List'Last);
+   begin
+      for J in reverse List'First .. List'Last - 1 loop
+         Result := Self.New_List (List (J), Result);
+      end loop;
+
+      return Result;
+   end New_List;
+
    -----------------
    -- New_Literal --
    -----------------
@@ -327,11 +344,14 @@ package body Ada_Side.Outputs is
 
    not overriding function New_With
      (Self : access Factory;
-      Name : not null Node_Access) return not null Node_Access
+      Name : not null Node_Access;
+      Is_Limited : Boolean := False;
+      Is_Private : Boolean := False) return not null Node_Access
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.With_Clauses.New_With (Name));
+      return new Node'Class'(Outputs.With_Clauses.New_With
+                               (Name, Is_Limited, Is_Private));
    end New_With;
 
    ------------------

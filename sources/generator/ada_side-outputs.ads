@@ -5,6 +5,7 @@ package Ada_Side.Outputs is
 
    type Node is abstract tagged private;
    type Node_Access is access constant Node'Class;
+   type Node_Access_Array is array (Positive range <>) of not null Node_Access;
 
    type Factory is tagged private;
 
@@ -23,6 +24,10 @@ package Ada_Side.Outputs is
      (Self : access Factory;
       Head : not null Node_Access;
       Tail : not null Node_Access) return not null Node_Access;
+
+   not overriding function New_List
+     (Self : access Factory;
+      List : Node_Access_Array) return not null Node_Access;
 
    not overriding function New_Name
      (Self : access Factory;
@@ -96,8 +101,10 @@ package Ada_Side.Outputs is
         League.Strings.Empty_Universal_String) return not null Node_Access;
 
    not overriding function New_With
-     (Self : access Factory;
-      Name : not null Node_Access) return not null Node_Access;
+     (Self       : access Factory;
+      Name       : not null Node_Access;
+      Is_Limited : Boolean := False;
+      Is_Private : Boolean := False) return not null Node_Access;
 
    not overriding function New_Record
      (Self : access Factory;
@@ -124,8 +131,6 @@ private
 
    not overriding function Max_Pad (Self : Node) return Natural is (0);
    --  Return maximum lengh of name in Node
-
-   type Node_Access_Array is array (Positive range <>) of not null Node_Access;
 
    not overriding function Join
     (Self    : Node;

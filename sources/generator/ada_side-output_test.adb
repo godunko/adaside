@@ -7,67 +7,105 @@ procedure Ada_Side.Output_Test is
                  return League.Strings.Universal_String
                  renames League.Strings.To_Universal_String;
 
+   procedure Print_API;
+   procedure Print_Core_Spec;
+
    F : aliased Ada_Side.Outputs.Factory;
 
-   Aaa  : constant League.Strings.Universal_String :=
-     League.Strings.To_Universal_String ("Aaa");
+   ---------------
+   -- Print_API --
+   ---------------
 
-   Name : constant Ada_Side.Outputs.Node_Access :=
-     F.New_Selected_Name (+"Qt_Ada.API.Strings");
+   procedure Print_API is
 
-   Clause : constant Ada_Side.Outputs.Node_Access := F.New_With
-     (F.New_Selected_Name (+"System.Storage_Elements"));
+      Name : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Selected_Name (+"Qt_Ada.API.Strings");
 
-   Preelaborate : constant Ada_Side.Outputs.Node_Access := F.New_Pragma
-     (F.New_Name (+"Preelaborate"));
+      Clause : constant Ada_Side.Outputs.Node_Access := F.New_With
+        (F.New_Selected_Name (+"System.Storage_Elements"));
 
-   Convention : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
-     (F.New_Name (+"Convention"),
-      F.New_Name (+"C"));
+      Preelaborate : constant Ada_Side.Outputs.Node_Access := F.New_Pragma
+        (F.New_Name (+"Preelaborate"));
 
-   QString : constant Ada_Side.Outputs.Node_Access := F.New_Name (+"QString");
+      Convention : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
+        (F.New_Name (+"Convention"),
+         F.New_Name (+"C"));
 
-   QString_Type : constant Ada_Side.Outputs.Node_Access := F.New_Type
-     (Name       => QString,
-      Definition => F.New_Record,
-      Aspects    => Convention);
+      QString : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Name (+"QString");
 
-   QString_Access : constant Ada_Side.Outputs.Node_Access := F.New_Type
-     (Name       => F.New_Name (+"QString_Access"),
-      Definition => F.New_Access (True, QString),
-      Aspects    => Convention);
+      QString_Type : constant Ada_Side.Outputs.Node_Access := F.New_Type
+        (Name       => QString,
+         Definition => F.New_Record,
+         Aspects    => Convention);
 
-   Import : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
-     (F.New_Name (+"Import"),
-      F.New_Name (+"True"));
+      QString_Access : constant Ada_Side.Outputs.Node_Access := F.New_Type
+        (Name       => F.New_Name (+"QString_Access"),
+         Definition => F.New_Access (True, QString),
+         Aspects    => Convention);
 
-   Link_Name : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
-     (F.New_Name (+"Link_Name"),
-      F.New_String_Literal (+"__qtada__QString__storage_size"));
+      Import : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
+        (F.New_Name (+"Import"),
+         F.New_Name (+"True"));
 
-   Aspect_List : constant Ada_Side.Outputs.Node_Access :=
-     F.New_List (Import,
-      F.New_List (Convention, Link_Name));
+      Link_Name : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
+        (F.New_Name (+"Link_Name"),
+         F.New_String_Literal (+"__qtada__QString__storage_size"));
 
-   QString_Storage_Size : constant Ada_Side.Outputs.Node_Access :=
-     F.New_Variable
-       (Name            => F.New_Name (+"QString_Storage_Size"),
-        Type_Definition => F.New_Selected_Name
-          (+"System.Storage_Elements.Storage_Offset"),
-        Is_Constant     => True,
-        Aspects         => Aspect_List);
+      Aspect_List : constant Ada_Side.Outputs.Node_Access :=
+        F.New_List (Import,
+          F.New_List (Convention, Link_Name));
 
-   Public : constant Ada_Side.Outputs.Node_Access :=
-     F.New_List (Preelaborate,
-      F.New_List (QString_Type,
-        F.New_List (QString_Access, QString_Storage_Size)));
+      QString_Storage_Size : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Variable
+          (Name            => F.New_Name (+"QString_Storage_Size"),
+           Type_Definition => F.New_Selected_Name
+             (+"System.Storage_Elements.Storage_Offset"),
+           Is_Constant     => True,
+           Aspects         => Aspect_List);
 
-   Root : constant Ada_Side.Outputs.Node_Access := F.New_Package
-     (Name, Public, Comment => Aaa);
+      Public : constant Ada_Side.Outputs.Node_Access := F.New_List
+        ((Preelaborate, QString_Type, QString_Access, QString_Storage_Size));
 
-   Unit : constant Ada_Side.Outputs.Node_Access :=
-     F.New_Compilation_Unit (Root, Clause, License => Aaa);
+      Root : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Package (Name, Public);
+
+      Unit : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Compilation_Unit (Root, Clause);
+   begin
+      Ada.Wide_Wide_Text_IO.Put_Line (F.To_Text (Unit).To_Wide_Wide_String);
+   end Print_API;
+
+   ---------------------
+   -- Print_Core_Spec --
+   ---------------------
+
+   procedure Print_Core_Spec is
+      Name : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Selected_Name (+"Qt5.Qt_Core.Strings");
+
+      With_1 : constant Ada_Side.Outputs.Node_Access := F.New_With
+        (F.New_Selected_Name (+"Ada.Finalization"), Is_Private => True);
+
+      With_2 : constant Ada_Side.Outputs.Node_Access := F.New_With
+        (F.New_Selected_Name (+"System.Storage_Elements"), Is_Private => True);
+
+      With_3 : constant Ada_Side.Outputs.Node_Access := F.New_With
+        (F.New_Selected_Name (+"Qt_Ada.API.Strings"), Is_Private => True);
+
+      Clause : constant Ada_Side.Outputs.Node_Access :=
+        F.New_List ((With_1, With_2, With_3));
+
+      Root : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Package (Name);
+
+      Unit : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Compilation_Unit (Root, Clause);
+   begin
+      Ada.Wide_Wide_Text_IO.Put_Line (F.To_Text (Unit).To_Wide_Wide_String);
+   end Print_Core_Spec;
+
 begin
-   Ada.Wide_Wide_Text_IO.Put_Line (F.To_Text (Unit).To_Wide_Wide_String);
-
+   Print_API;
+   Print_Core_Spec;
 end Ada_Side.Output_Test;
