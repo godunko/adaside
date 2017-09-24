@@ -8,14 +8,7 @@ package body Ada_Side.Generators.Adas.Value_Body is
     (Item : Wide_Wide_String) return League.Strings.Universal_String
        renames League.Strings.To_Universal_String;
 
-   type Protocol_Subprograms is (Adjust, Finalize, Initialize);
-
    function API_Subprogram_Name
-    (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
-     Subprogram : Protocol_Subprograms)
-       return League.Strings.Universal_String;
-
-   function API_Subprogram_Link_Name
     (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
      Subprogram : Protocol_Subprograms)
        return League.Strings.Universal_String;
@@ -24,27 +17,6 @@ package body Ada_Side.Generators.Adas.Value_Body is
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
    --  Name of "view" component.
-
-   ------------------------------
-   -- API_Subprogram_Link_Name --
-   ------------------------------
-
-   function API_Subprogram_Link_Name
-    (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
-     Subprogram : Protocol_Subprograms)
-       return League.Strings.Universal_String is
-   begin
-      case Subprogram is
-         when Adjust =>
-            return Class.Name.To_Universal_String & "___adjust";
-
-         when Finalize =>
-            return Class.Name.To_Universal_String & "___finalize";
-
-         when Initialize =>
-            return Class.Name.To_Universal_String & "___initialize";
-      end case;
-   end API_Subprogram_Link_Name;
 
    -------------------------
    -- API_Subprogram_Name --

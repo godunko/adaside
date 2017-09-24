@@ -30,4 +30,11 @@ private
       Output_Directory : League.Strings.Universal_String;
    end record;
 
+   type Protocol_Subprograms is (Adjust, Finalize, Initialize);
+
+   function API_Subprogram_Link_Name
+    (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Subprogram : Protocol_Subprograms)
+       return League.Strings.Universal_String;
+
 end Ada_Side.Generators;
