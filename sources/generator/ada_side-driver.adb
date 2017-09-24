@@ -60,9 +60,19 @@ begin
            (Ada_Side.Config.Clang_Builtin_Includes_Dir)));
    end if;
 
+   --  Run extractor.
+
    if not Extractor.Run then
       raise Program_Error;
    end if;
+
+   --  Setup generators.
+
+   for Generator of Generators loop
+      Generator.Setup (Output_Directory);
+   end loop;
+
+   --  Run generators.
 
    Classes := Extractor.Classes;
 

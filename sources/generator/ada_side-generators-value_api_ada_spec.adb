@@ -102,8 +102,6 @@ package body Ada_Side.Generators.Value_API_Ada_Spec is
     (Self  : in out Value_API_Ada_Spec_Generator;
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
    is
-      pragma Unreferenced (Self);
-
       Unit : Ada_Side.Units.Ada_Spec_Unit;
 
    begin
@@ -141,7 +139,7 @@ package body Ada_Side.Generators.Value_API_Ada_Spec is
       Unit.New_Line;
       Unit.Put_Line ("end " & Generated_Package_Full_Name (Class) & ";");
 
-      Unit.Save (+".");
+      Unit.Save (Self.Output_Directory);
    end Generate;
 
    ---------------------------------

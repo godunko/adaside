@@ -1,3 +1,5 @@
+with League.Strings;
+
 with Abstract_Meta_Classes;
 
 package Ada_Side.Generators is
@@ -17,10 +19,15 @@ package Ada_Side.Generators is
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class) is abstract;
    --  Generates code.
 
+   not overriding procedure Setup
+    (Self             : in out Abstract_Generator;
+     Output_Directory : League.Strings.Universal_String);
+   --  Initialize generator.
+
 private
 
    type Abstract_Generator is abstract tagged limited record
-      null;
+      Output_Directory : League.Strings.Universal_String;
    end record;
 
 end Ada_Side.Generators;
