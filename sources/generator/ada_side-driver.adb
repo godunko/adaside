@@ -16,7 +16,7 @@ with Ada_Side.Setup;
 
 procedure Ada_Side.Driver is
    Output_Directory_Switch : constant League.Strings.Universal_String
-     := League.Strings.To_Universal_String ("--output-directory");
+     := League.Strings.To_Universal_String ("--output-directory=");
 
    Output_Directory : League.Strings.Universal_String
      := League.Strings.To_Universal_String (".");
