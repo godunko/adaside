@@ -15,10 +15,6 @@ package body Ada_Side.Generators.Adas.Value_Spec is
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
 
-   function Generated_Package_Full_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
-       return League.Strings.Universal_String;
-
    function Tagged_Type_Name
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
@@ -42,13 +38,13 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       Unit : Ada_Side.Units.Ada_Spec_Unit;
 
    begin
-      Unit.Set_Package_Name (Generated_Package_Full_Name (Class));
+      Unit.Set_Package_Name (User_Package_Full_Name (Class));
 
       Unit.Put_Line (+"private with Ada.Finalization;");
       Unit.New_Line;
       Unit.Put_Line ("private with " & API_Package_Full_Name (Class) & ";");
       Unit.New_Line;
-      Unit.Put_Line ("package " & Generated_Package_Full_Name (Class) & " is");
+      Unit.Put_Line ("package " & User_Package_Full_Name (Class) & " is");
       Unit.New_Line;
       Unit.Put_Line (+"   pragma Preelaborate;");
       Unit.New_Line;
@@ -67,21 +63,22 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       Unit.Put_Line (+"      Storage : Boolean;");
       Unit.Put_Line (+"   end record;");
       Unit.New_Line;
-      Unit.Put_Line ("end " & Generated_Package_Full_Name (Class) & ";");
+      Unit.Put_Line
+       ("   overriding procedure Initialize (Self : in out "
+          & Tagged_Type_Name (Class) & ");");
+      Unit.New_Line;
+      Unit.Put_Line
+       ("   overriding procedure Adjust (Self : in out "
+          & Tagged_Type_Name (Class) & ");");
+      Unit.New_Line;
+      Unit.Put_Line
+       ("   overriding procedure Finalize (Self : in out "
+          & Tagged_Type_Name (Class) & ");");
+      Unit.New_Line;
+      Unit.Put_Line ("end " & User_Package_Full_Name (Class) & ";");
 
       Unit.Save (Self.Output_Directory);
    end Generate;
-
-   ---------------------------------
-   -- Generated_Package_Full_Name --
-   ---------------------------------
-
-   function Generated_Package_Full_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
-       return League.Strings.Universal_String is
-   begin
-      return "Qt5.Qt_Core." & Generated_Package_Name (Class);
-   end Generated_Package_Full_Name;
 
    ----------------------------
    -- Generated_Package_Name --
@@ -169,5 +166,16 @@ package body Ada_Side.Generators.Adas.Value_Spec is
          end loop;
       end return;
    end To_Ada_Identifier;
+
+   ----------------------------
+   -- User_Package_Full_Name --
+   ----------------------------
+
+   function User_Package_Full_Name
+    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
+       return League.Strings.Universal_String is
+   begin
+      return "Qt5.Qt_Core." & Generated_Package_Name (Class);
+   end User_Package_Full_Name;
 
 end Ada_Side.Generators.Adas.Value_Spec;

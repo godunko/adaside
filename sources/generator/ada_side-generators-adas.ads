@@ -15,4 +15,8 @@ private
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
 
+   function User_Package_Full_Name
+    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
+       return League.Strings.Universal_String;
+
 end Ada_Side.Generators.Adas;

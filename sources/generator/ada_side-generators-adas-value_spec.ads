@@ -3,6 +3,10 @@ package Ada_Side.Generators.Adas.Value_Spec is
 
    type Value_Ada_Spec_Generator is new Abstract_Generator with private;
 
+   function User_Package_Full_Name
+    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
+       return League.Strings.Universal_String;
+
 private
 
    type Value_Ada_Spec_Generator is new Abstract_Generator with record
