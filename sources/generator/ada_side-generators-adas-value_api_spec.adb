@@ -104,7 +104,7 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
       Unit : Ada_Side.Units.Ada_Spec_Unit;
 
    begin
-      Unit.Set_Package_Name (API_Package_Full_Name (Class), False);
+      Unit.Set_Package_Name (API_Package_Full_Name (Class));
 
       Unit.Put_Line (+"with Interfaces.C;");
       Unit.New_Line;

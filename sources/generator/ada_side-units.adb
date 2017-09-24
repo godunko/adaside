@@ -8,7 +8,7 @@ package body Ada_Side.Units is
    -- Finalize --
    --------------
 
-   overriding procedure Finalize (Self : in out Ada_Spec_Unit) is
+   overriding procedure Finalize (Self : in out Abstract_Ada_Unit) is
    begin
       if not Self.Flushed then
          for J in 1 .. Self.Text.Length loop
@@ -19,11 +19,21 @@ package body Ada_Side.Units is
       Self.Text.Clear;
    end Finalize;
 
+   -------------------------
+   -- Generated_File_Name --
+   -------------------------
+
+   overriding function Generated_File_Name
+    (Self : Ada_Spec_Unit) return League.Strings.Universal_String is
+   begin
+      return Self.Name.To_Lowercase.Split ('.').Join ('-') & ".ads";
+   end Generated_File_Name;
+
    ----------------
    -- Initialize --
    ----------------
 
-   overriding procedure Initialize (Self : in out Ada_Spec_Unit) is
+   overriding procedure Initialize (Self : in out Abstract_Ada_Unit) is
    begin
       Self.Text.Append (League.Strings.Empty_Universal_String);
       Self.Flushed := True;
@@ -33,7 +43,7 @@ package body Ada_Side.Units is
    -- New_Line --
    --------------
 
-   procedure New_Line (Self : in out Ada_Spec_Unit) is
+   procedure New_Line (Self : in out Abstract_Ada_Unit'Class) is
    begin
       Self.Text.Append (League.Strings.Empty_Universal_String);
       Self.Flushed := False;
@@ -44,7 +54,8 @@ package body Ada_Side.Units is
    ---------
 
    procedure Put
-    (Self : in out Ada_Spec_Unit; Item : League.Strings.Universal_String)
+    (Self : in out Abstract_Ada_Unit'Class;
+     Item : League.Strings.Universal_String)
    is
       Last : constant Natural := Self.Text.Length;
 
@@ -58,7 +69,8 @@ package body Ada_Side.Units is
    --------------
 
    procedure Put_Line
-    (Self : in out Ada_Spec_Unit; Item : League.Strings.Universal_String)
+    (Self : in out Abstract_Ada_Unit'Class;
+     Item : League.Strings.Universal_String)
    is
       Last : constant Natural := Self.Text.Length;
 
@@ -73,14 +85,13 @@ package body Ada_Side.Units is
    ----------
 
    procedure Save
-    (Self      : in out Ada_Spec_Unit;
+    (Self      : in out Abstract_Ada_Unit'Class;
      Directory : League.Strings.Universal_String)
    is
       Name : constant String
         := Directory.To_UTF_8_String
              & '/'
-             & Self.Name.To_Lowercase.Split ('.').Join ('-').To_UTF_8_String
-             & (if Self.Is_Body then ".adb" else ".ads");
+             & Self.Generated_File_Name.To_UTF_8_String;
       File : Ada.Wide_Wide_Text_IO.File_Type;
 
    begin
@@ -110,12 +121,10 @@ package body Ada_Side.Units is
    ----------------------
 
    procedure Set_Package_Name
-    (Self    : in out Ada_Spec_Unit;
-     Name    : League.Strings.Universal_String;
-     Is_Body : Boolean) is
+    (Self : in out Abstract_Ada_Unit'Class;
+     Name : League.Strings.Universal_String) is
    begin
-      Self.Name    := Name;
-      Self.Is_Body := Is_Body;
+      Self.Name := Name;
    end Set_Package_Name;
 
 end Ada_Side.Units;
