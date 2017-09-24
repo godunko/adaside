@@ -10,3 +10,5 @@ extern "C"
     ComplexTypeEntry* AbstractMetaClass_typeEntry (AbstractMetaClass* self);
 
 }
+
+extern "C" void AbstractMetaClass_functions(AbstractMetaFunctionList* _return, AbstractMetaClass* self);

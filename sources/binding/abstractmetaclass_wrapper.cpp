@@ -25,3 +25,8 @@ extern "C"
     }
 
 }
+
+void AbstractMetaClass_functions(AbstractMetaFunctionList* _return, AbstractMetaClass* self)
+{
+    *_return = self->functions();
+}

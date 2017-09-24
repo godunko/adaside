@@ -17,6 +17,14 @@ package body Abstract_Meta_Classes is
             Convention => C,
             Link_Name  => "AbstractMetaClass_fullName";
 
+   procedure AbstractMetaClass_functions
+    (Result : not null
+       Abstract_Meta_Function_Lists.Internals.AbstractMetaFunctionList_Access;
+     Self   : not null AbstractMetaClass_Access)
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaClass_functions";
+
    procedure AbstractMetaClass_name
     (Result : not null Q_Strings.Internals.QString_Access;
      Self   : not null AbstractMetaClass_Access)
@@ -43,6 +51,23 @@ package body Abstract_Meta_Classes is
           (Q_Strings.Internals.Internal (Result), Self.Object);
       end return;
    end Full_Name;
+
+   ---------------
+   -- Functions --
+   ---------------
+
+   function Functions
+    (Self : Abstract_Meta_Class'Class)
+       return Abstract_Meta_Function_Lists.Abstract_Meta_Function_List is
+   begin
+      return Result :
+               Abstract_Meta_Function_Lists.Abstract_Meta_Function_List
+      do
+         AbstractMetaClass_functions
+          (Abstract_Meta_Function_Lists.Internals.Internal (Result),
+           Self.Object);
+      end return;
+   end Functions;
 
    --------------
    -- Internal --

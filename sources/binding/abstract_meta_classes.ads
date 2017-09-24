@@ -1,7 +1,7 @@
 
 with Abstract_Meta_Attributes;
+with Abstract_Meta_Function_Lists;
 with Complex_Type_Entries;
-pragma Unreferenced (Complex_Type_Entries);
 with Q_Strings;
 
 package Abstract_Meta_Classes is
@@ -15,11 +15,6 @@ package Abstract_Meta_Classes is
    pragma Style_Checks (Off);
    --    AbstractMetaClass *extractInterface();
    --    void fixFunctions();
-   --
-   --    AbstractMetaFunctionList functions() const
-   --    {
-   --        return m_functions;
-   --    }
    --
    --    void setFunctions(const AbstractMetaFunctionList &functions);
    --    void addFunction(AbstractMetaFunction *function);
@@ -385,6 +380,11 @@ package Abstract_Meta_Classes is
    function Full_Name
     (Self : Abstract_Meta_Class'Class) return Q_Strings.Q_String;
    --    QString fullName() const
+
+   function Functions
+    (Self : Abstract_Meta_Class'Class)
+       return Abstract_Meta_Function_Lists.Abstract_Meta_Function_List;
+   --    AbstractMetaFunctionList functions() const
 
    function Name (Self : Abstract_Meta_Class'Class) return Q_Strings.Q_String;
    --  Retrieves the class name without any namespace/scope information.
