@@ -24,6 +24,16 @@ package body Ada_Side.Units is
    -------------------------
 
    overriding function Generated_File_Name
+    (Self : Ada_Body_Unit) return League.Strings.Universal_String is
+   begin
+      return Self.Name.To_Lowercase.Split ('.').Join ('-') & ".adb";
+   end Generated_File_Name;
+
+   -------------------------
+   -- Generated_File_Name --
+   -------------------------
+
+   overriding function Generated_File_Name
     (Self : Ada_Spec_Unit) return League.Strings.Universal_String is
    begin
       return Self.Name.To_Lowercase.Split ('.').Join ('-') & ".ads";

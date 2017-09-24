@@ -32,6 +32,8 @@ package Ada_Side.Units is
 
    type Ada_Spec_Unit is new Abstract_Ada_Unit with private;
 
+   type Ada_Body_Unit is new Abstract_Ada_Unit with private;
+
 private
 
    type Abstract_Ada_Unit is
@@ -50,5 +52,10 @@ private
 
    overriding function Generated_File_Name
     (Self : Ada_Spec_Unit) return League.Strings.Universal_String;
+
+   type Ada_Body_Unit is new Abstract_Ada_Unit with null record;
+
+   overriding function Generated_File_Name
+    (Self : Ada_Body_Unit) return League.Strings.Universal_String;
 
 end Ada_Side.Units;
