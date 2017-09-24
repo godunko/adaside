@@ -15,3 +15,8 @@ extern "C"
     }
 
 }
+
+bool AbstractMetaFunction_isConstructor(AbstractMetaFunction* self)
+{
+    return self->isConstructor();
+}

@@ -9,3 +9,5 @@ extern "C"
     void AbstractMetaFunction_fullName(QString* _return, AbstractMetaFunction* self);
 
 }
+
+extern "C" bool AbstractMetaFunction_isConstructor(AbstractMetaFunction* self);

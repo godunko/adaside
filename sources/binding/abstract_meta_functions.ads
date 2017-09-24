@@ -188,12 +188,6 @@ package Abstract_Meta_Functions is
    --    {
    --        return functionType() == DestructorFunction;
    --    }
-   --    bool isConstructor() const
-   --    {
-   --        return m_functionType == ConstructorFunction
-   --            || m_functionType == CopyConstructorFunction
-   --            || m_functionType == MoveConstructorFunction;
-   --    }
    --    bool isNormal() const
    --    {
    --        return functionType() == NormalFunction || isSlot() ||
@@ -363,6 +357,10 @@ package Abstract_Meta_Functions is
    --    }
    --
    --    bool isCallOperator() const;
+
+   function Is_Constructor
+    (Self : Abstract_Meta_Function'Class) return Boolean;
+   --    bool isConstructor() const
 
    function Name (Self : Abstract_Meta_Function'Class)
      return Q_Strings.Q_String;
