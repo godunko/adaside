@@ -1,5 +1,26 @@
 package body Ada_Side.Outputs.With_Clauses is
 
+   overriding function Document
+    (Self    : Use_Clause;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.New_Line;
+
+      Result.Put ("use ");
+
+      if Self.Use_Type then
+         Result.Put ("type ");
+      end if;
+
+      Result.Append (Self.Name.Document (Printer, Pad));
+      Result.Put (";");
+      return Result;
+   end Document;
+
    --------------
    -- Document --
    --------------
@@ -27,6 +48,17 @@ package body Ada_Side.Outputs.With_Clauses is
       Result.Put (";");
       return Result;
    end Document;
+
+   -------------
+   -- New_Use --
+   -------------
+
+   function New_Use
+     (Name     : not null Node_Access;
+      Use_Type : Boolean) return Node'Class is
+   begin
+      return Use_Clause'(Name, Use_Type);
+   end New_Use;
 
    --------------
    -- New_With --

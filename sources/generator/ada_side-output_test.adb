@@ -240,6 +240,15 @@ procedure Ada_Side.Output_Test is
            Statements =>
              F.New_List (Adjust_Stmt_1, Adjust_Stmt_2));
 
+      Finalize_Body : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Body
+          (Finalize,
+           Declarations => F.New_Use
+             (F.New_Selected_Name (+"Qt_Ada.API.Strings.QString_Access"),
+              Use_Type => True),
+           Statements =>
+             F.New_List (Adjust_Stmt_1, Adjust_Stmt_2));
+
       Body_Root : constant Ada_Side.Outputs.Node_Access :=
         F.New_Package_Body
           (Name,
@@ -247,7 +256,8 @@ procedure Ada_Side.Output_Test is
              ((QString_initialize,
                QString_finalize,
                QString_adjust,
-               Adjust_Body)));
+               Adjust_Body,
+               Finalize_Body)));
 
       Body_Unit : constant Ada_Side.Outputs.Node_Access :=
         F.New_Compilation_Unit (Body_Root);

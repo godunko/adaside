@@ -88,12 +88,12 @@ package body Ada_Side.Outputs.Subprograms is
       Result.New_Line;
       Result.Append (Self.Specification.Document (Printer, Pad));
       Result.Put (" is");
-      Result.New_Line;
 
       if Self.Declarations /= null then
          Result.Append (Self.Declarations.Document (Printer, Pad).Nest (3));
       end if;
 
+      Result.New_Line;
       Result.Put ("begin");
 
       if Self.Statements /= null then

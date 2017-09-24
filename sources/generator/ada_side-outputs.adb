@@ -488,6 +488,20 @@ package body Ada_Side.Outputs is
                               Comment));
    end New_Type;
 
+   -------------
+   -- New_Use --
+   -------------
+
+   not overriding function New_Use
+     (Self       : access Factory;
+      Name       : not null Node_Access;
+      Use_Type   : Boolean := False) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.With_Clauses.New_Use (Name, Use_Type));
+   end New_Use;
+
    ------------------
    -- New_Variable --
    ------------------

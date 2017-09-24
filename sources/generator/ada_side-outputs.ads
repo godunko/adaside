@@ -106,6 +106,11 @@ package Ada_Side.Outputs is
       Is_Limited : Boolean := False;
       Is_Private : Boolean := False) return not null Node_Access;
 
+   not overriding function New_Use
+     (Self       : access Factory;
+      Name       : not null Node_Access;
+      Use_Type   : Boolean := False) return not null Node_Access;
+
    not overriding function New_Record
      (Self       : access Factory;
       Parent     : Node_Access := null;
