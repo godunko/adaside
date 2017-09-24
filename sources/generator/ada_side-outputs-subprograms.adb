@@ -66,6 +66,7 @@ package body Ada_Side.Outputs.Subprograms is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
       Result.New_Line;
+      Result.New_Line;
       Result.Append (Self.Specification.Document (Printer, Pad));
       Result.Append (Print_Aspect (Self.Aspects, Printer));
       Result.Put (";");
@@ -85,6 +86,7 @@ package body Ada_Side.Outputs.Subprograms is
    is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
+      Result.New_Line;
       Result.New_Line;
       Result.Append (Self.Specification.Document (Printer, Pad));
       Result.Put (" is");
@@ -106,7 +108,10 @@ package body Ada_Side.Outputs.Subprograms is
       end if;
 
       Result.New_Line;
-      Result.Put ("end;");
+      Result.Put ("end ");
+      Result.Append
+        (Subprogram (Self.Specification.all).Name.Document (Printer, 0));
+      Result.Put (";");
 
       return Result;
    end Document;

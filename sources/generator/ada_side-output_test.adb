@@ -265,6 +265,20 @@ procedure Ada_Side.Output_Test is
               Use_Type => True),
            Statements => Finalize_Stmt);
 
+      Initialize_Stmt_1  : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Statement
+          (F.New_Apply
+             (F.New_Name (+"QString_initialize"),
+              F.New_List
+                (Self_QString_View,
+                 F.New_Selected_Name (+"Self.Storage'Address"))));
+
+      Initialize_Body : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Body
+          (Initialize,
+           Statements =>
+             F.New_List (Initialize_Stmt_1, Adjust_Stmt_2));
+
       Body_Root : constant Ada_Side.Outputs.Node_Access :=
         F.New_Package_Body
           (Name,
@@ -273,7 +287,8 @@ procedure Ada_Side.Output_Test is
                QString_finalize,
                QString_adjust,
                Adjust_Body,
-               Finalize_Body)));
+               Finalize_Body,
+               Initialize_Body)));
 
       Body_Unit : constant Ada_Side.Outputs.Node_Access :=
         F.New_Compilation_Unit (Body_Root);

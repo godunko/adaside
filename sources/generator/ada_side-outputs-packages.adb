@@ -49,6 +49,7 @@ package body Ada_Side.Outputs.Packages is
       end if;
 
       Result.New_Line;
+      Result.New_Line;
       Result.Put ("end ");
       Result.Append (Name);
       Result.Put (";");
@@ -80,6 +81,7 @@ package body Ada_Side.Outputs.Packages is
          Result.Append (Content);
       end if;
 
+      Result.New_Line;
       Result.New_Line;
       Result.Put ("end ");
       Result.Append (Name);

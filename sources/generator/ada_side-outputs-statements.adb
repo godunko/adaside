@@ -13,6 +13,7 @@ package body Ada_Side.Outputs.Statements is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
       Result.New_Line;
+      Result.New_Line;
       Result.Put ("elsif ");
       Result.Append (Self.Condition.Document (Printer, Pad));
       Result.Put (" then");
