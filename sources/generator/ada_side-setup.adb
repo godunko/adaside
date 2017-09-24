@@ -1,14 +1,14 @@
-with Ada_Side.Generators.Value_API_Ada_Spec;
-with Ada_Side.Generators.Value_Ada_Body;
-with Ada_Side.Generators.Value_Ada_Spec;
+with Ada_Side.Generators.Adas.Value_API_Spec;
+with Ada_Side.Generators.Adas.Value_Body;
+with Ada_Side.Generators.Adas.Value_Spec;
 
 package body Ada_Side.Setup is
 
    Configured_Generators : constant Generator_Array
-     := (new Ada_Side.Generators.Value_API_Ada_Spec
+     := (new Ada_Side.Generators.Adas.Value_API_Spec
                .Value_API_Ada_Spec_Generator,
-         new Ada_Side.Generators.Value_Ada_Spec.Value_Ada_Spec_Generator,
-         new Ada_Side.Generators.Value_Ada_Body.Value_Ada_Body_Generator);
+         new Ada_Side.Generators.Adas.Value_Spec.Value_Ada_Spec_Generator,
+         new Ada_Side.Generators.Adas.Value_Body.Value_Ada_Body_Generator);
 
    ----------------
    -- Generators --

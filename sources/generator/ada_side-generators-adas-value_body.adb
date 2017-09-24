@@ -1,5 +1,5 @@
 
-package body Ada_Side.Generators.Value_Ada_Body is
+package body Ada_Side.Generators.Adas.Value_Body is
 
    --------------
    -- Generate --
@@ -26,4 +26,4 @@ package body Ada_Side.Generators.Value_Ada_Body is
       return Class.Type_Entry.Is_Value;
    end Should_Generate;
 
-end Ada_Side.Generators.Value_Ada_Body;
+end Ada_Side.Generators.Adas.Value_Body;

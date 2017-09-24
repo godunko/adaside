@@ -3,7 +3,7 @@ with League.Strings;
 
 with Ada_Side.Units;
 
-package body Ada_Side.Generators.Value_Ada_Spec is
+package body Ada_Side.Generators.Adas.Value_Spec is
 
    use type League.Strings.Universal_String;
 
@@ -164,4 +164,4 @@ package body Ada_Side.Generators.Value_Ada_Spec is
       end return;
    end To_Ada_Identifier;
 
-end Ada_Side.Generators.Value_Ada_Spec;
+end Ada_Side.Generators.Adas.Value_Spec;

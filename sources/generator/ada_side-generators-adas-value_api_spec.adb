@@ -2,7 +2,7 @@ with League.Strings;
 
 with Ada_Side.Units;
 
-package body Ada_Side.Generators.Value_API_Ada_Spec is
+package body Ada_Side.Generators.Adas.Value_API_Spec is
 
    use type League.Strings.Universal_String;
 
@@ -183,4 +183,4 @@ package body Ada_Side.Generators.Value_API_Ada_Spec is
       return Class.Type_Entry.Is_Value;
    end Should_Generate;
 
-end Ada_Side.Generators.Value_API_Ada_Spec;
+end Ada_Side.Generators.Adas.Value_API_Spec;

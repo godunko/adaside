@@ -1,5 +1,5 @@
 
-package Ada_Side.Generators.Value_API_Ada_Spec is
+package Ada_Side.Generators.Adas.Value_API_Spec is
 
    type Value_API_Ada_Spec_Generator is new Abstract_Generator with private;
 
@@ -17,4 +17,4 @@ private
     (Self  : in out Value_API_Ada_Spec_Generator;
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class);
 
-end Ada_Side.Generators.Value_API_Ada_Spec;
+end Ada_Side.Generators.Adas.Value_API_Spec;
