@@ -1,5 +1,6 @@
 with Abstract_Meta_Argument_Lists;
 with Abstract_Meta_Attributes;
+with Abstract_Meta_Types;
 with Q_Strings;
 
 package Abstract_Meta_Functions is
@@ -120,10 +121,6 @@ package Abstract_Meta_Functions is
    --
    --    bool isModifiedRemoved(int types = TypeSystem::All) const;
    --
-   --    AbstractMetaType *type() const
-   --    {
-   --        return m_type;
-   --    }
    --    void setType(AbstractMetaType *type)
    --    {
    --        Q_ASSERT(m_type == 0);
@@ -366,6 +363,10 @@ package Abstract_Meta_Functions is
    function Name (Self : Abstract_Meta_Function'Class)
      return Q_Strings.Q_String;
    --   QString name() const;
+
+   function Get_Type (Self : Abstract_Meta_Function'Class)
+     return Abstract_Meta_Types.Abstract_Meta_Type;
+   --   AbstractMetaType *type() const
 
    package Internals is
 

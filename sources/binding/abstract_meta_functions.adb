@@ -39,6 +39,13 @@ package body Abstract_Meta_Functions is
             Convention => C,
             Link_Name  => "AbstractMetaFunction_name";
 
+   function AbstractMetaFunction_type
+    (This : AbstractMetaFunction_Access)
+       return Abstract_Meta_Types.AbstractMetaType_Access
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaFunction_type";
+
    ---------------
    -- Arguments --
    ---------------
@@ -55,6 +62,18 @@ package body Abstract_Meta_Functions is
            Self.Object);
       end return;
    end Arguments;
+
+   --------------
+   -- Get_Type --
+   --------------
+
+   function Get_Type (Self : Abstract_Meta_Function'Class)
+     return Abstract_Meta_Types.Abstract_Meta_Type is
+   begin
+      return
+        Abstract_Meta_Types.Internals.Wrap
+         (AbstractMetaFunction_type (Self.Object));
+   end Get_Type;
 
    --------------
    -- Internal --

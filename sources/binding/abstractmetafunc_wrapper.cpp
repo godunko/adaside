@@ -30,3 +30,8 @@ bool AbstractMetaFunction_isConstructor(AbstractMetaFunction* self)
 {
     return self->isConstructor();
 }
+
+AbstractMetaType* AbstractMetaFunction_type(AbstractMetaFunction* self)
+{
+    return self->type();
+}
