@@ -22,7 +22,6 @@ with Ada_Side.Outputs.Variables;
 with Ada_Side.Outputs.With_Clauses;
 
 package body Ada_Side.Outputs is
-   pragma Warnings (Off);
 
    --------------
    -- Document --
@@ -76,8 +75,11 @@ package body Ada_Side.Outputs is
       Result.Append (Node'Class (Self).Document (Printer, Pad));
 
       for J in List'Range loop
-         Result.Put (",");
-         Result.New_Line;
+         if List (J).all not in Infixes.Infix then
+            Result.Put (",");
+            Result.New_Line;
+         end if;
+
          Result.Append (List (J).Document (Printer, Pad));
       end loop;
 
@@ -97,7 +99,7 @@ package body Ada_Side.Outputs is
       pragma Unreferenced (Self);
    begin
       return new Node'Class'(Outputs.Accesses.New_Access
-                             (Is_All => True, Target => Target));
+                             (Is_All => Is_All, Target => Target));
    end New_Access;
 
    ---------------
@@ -159,6 +161,41 @@ package body Ada_Side.Outputs is
       return new Node'Class'(Outputs.Units.New_Compilation_Unit
                              (Root, Clauses, License));
    end New_Compilation_Unit;
+
+   ---------------
+   -- New_Elsif --
+   ---------------
+
+   not overriding function New_Elsif
+     (Self       : access Factory;
+      Condition  : not null Node_Access;
+      List       : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Statements.New_Elsif (Condition, List));
+   end New_Elsif;
+
+   ----------------------
+   -- New_If_Statement --
+   ----------------------
+
+   not overriding function New_If
+     (Self       : access Factory;
+      Condition  : not null Node_Access;
+      Then_Path  : not null Node_Access;
+      Elsif_List : Node_Access := null;
+      Else_Path  : Node_Access := null) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Statements.New_If
+                             (Condition, Then_Path, Elsif_List, Else_Path));
+   end New_If;
+
+   ---------------
+   -- New_Infix --
+   ---------------
 
    not overriding function New_Infix
      (Self     : access Factory;
@@ -298,7 +335,7 @@ package body Ada_Side.Outputs is
         League.Strings.Empty_Universal_String)
       return not null Node_Access
    is
-      pragma Unreferenced (Self);
+      pragma Unreferenced (Self, Comment);
    begin
       return new Node'Class'(Outputs.Pragmas.New_Pragma (Name, Arguments));
    end New_Pragma;
@@ -341,6 +378,7 @@ package body Ada_Side.Outputs is
       Selector : not null Node_Access)
       return not null Node_Access
    is
+      pragma Unreferenced (Self);
    begin
       return new Node'Class'(Outputs.Selected_Names.New_Selected_Name
                              (Prefix, Selector));
@@ -350,7 +388,7 @@ package body Ada_Side.Outputs is
      (Self : access Factory;
       Name : League.Strings.Universal_String) return not null Node_Access
    is
-      List : League.String_Vectors.Universal_String_Vector :=
+      List : constant League.String_Vectors.Universal_String_Vector :=
         Name.Split ('.');
       Result : Node_Access := Self.New_Name (List.Element (1));
    begin
@@ -449,6 +487,7 @@ package body Ada_Side.Outputs is
    -- New_Subtype --
    -----------------
 
+   pragma Warnings (Off);
    not overriding function New_Subtype
      (Self          : access Factory;
       Name          : not null Node_Access;
@@ -463,6 +502,7 @@ package body Ada_Side.Outputs is
       pragma Compile_Time_Warning (Standard.True, "New_Subtype unimplemented");
       return raise Program_Error with "Unimplemented function New_Subtype";
    end New_Subtype;
+   pragma Warnings (On);
 
    --------------
    -- New_Type --
@@ -582,8 +622,9 @@ package body Ada_Side.Outputs is
       Unit : not null Node_Access)
       return League.Strings.Universal_String
    is
+      pragma Unreferenced (Self);
       Printer  : aliased League.Pretty_Printers.Printer;
-      Document : League.Pretty_Printers.Document :=
+      Document : constant League.Pretty_Printers.Document :=
         Unit.Document (Printer'Access, 0);
    begin
       return Printer.Pretty (Width => 79, Input => Document);

@@ -221,12 +221,15 @@ procedure Ada_Side.Output_Test is
                 (F.New_Name (+"Link_Name"),
                  F.New_String_Literal (+"QString__adjust")))));
 
+      Self_QString_View : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Selected_Name (+"Self.QString_View");
+
       Adjust_Stmt_1 : constant Ada_Side.Outputs.Node_Access :=
         F.New_Statement
           (F.New_Apply
              (F.New_Name (+"QString_adjust"),
               F.New_List
-                (F.New_Selected_Name (+"Self.QString_View"),
+                (Self_QString_View,
                  F.New_Selected_Name (+"Self.Storage'Address"))));
 
       Adjust_Stmt_2 : constant Ada_Side.Outputs.Node_Access :=
@@ -240,14 +243,27 @@ procedure Ada_Side.Output_Test is
            Statements =>
              F.New_List (Adjust_Stmt_1, Adjust_Stmt_2));
 
+      Finalize_Stmt : constant Ada_Side.Outputs.Node_Access :=
+        F.New_If
+          (Condition => F.New_Selected_Name (+"Self.Is_Wrapper"),
+           Then_Path => F.New_Assignment
+             (Self_QString_View, F.New_Name (+"null")),
+           Elsif_List => F.New_Elsif
+             (Condition => F.New_List
+                (Self_QString_View,
+                 F.New_Infix (+"/=", F.New_Name (+"null"))),
+              List      => F.New_Statement
+                (F.New_Apply
+                     (F.New_Name (+"QString_finalize"),
+                      Self_QString_View))));
+
       Finalize_Body : constant Ada_Side.Outputs.Node_Access :=
         F.New_Subprogram_Body
           (Finalize,
            Declarations => F.New_Use
              (F.New_Selected_Name (+"Qt_Ada.API.Strings.QString_Access"),
               Use_Type => True),
-           Statements =>
-             F.New_List (Adjust_Stmt_1, Adjust_Stmt_2));
+           Statements => Finalize_Stmt);
 
       Body_Root : constant Ada_Side.Outputs.Node_Access :=
         F.New_Package_Body

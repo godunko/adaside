@@ -184,6 +184,18 @@ package Ada_Side.Outputs is
       Left  : not null Node_Access;
       Right : not null Node_Access) return not null Node_Access;
 
+   not overriding function New_If
+     (Self       : access Factory;
+      Condition  : not null Node_Access;
+      Then_Path  : not null Node_Access;
+      Elsif_List : Node_Access := null;
+      Else_Path  : Node_Access := null) return not null Node_Access;
+
+   not overriding function New_Elsif
+     (Self       : access Factory;
+      Condition  : not null Node_Access;
+      List       : not null Node_Access) return not null Node_Access;
+
 private
    type Node is abstract tagged null record;
 
