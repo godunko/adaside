@@ -1,4 +1,4 @@
-
+with Abstract_Meta_Argument_Lists;
 with Abstract_Meta_Attributes;
 with Q_Strings;
 
@@ -169,10 +169,6 @@ package Abstract_Meta_Functions is
    --
    --    bool needsCallThrough() const;
    --
-   --    AbstractMetaArgumentList arguments() const
-   --    {
-   --        return m_arguments;
-   --    }
    --    void setArguments(const AbstractMetaArgumentList &arguments)
    --    {
    --        m_arguments = arguments;
@@ -353,6 +349,11 @@ package Abstract_Meta_Functions is
    --    }
    --
    --    bool isCallOperator() const;
+
+   function Arguments
+    (Self : Abstract_Meta_Function'Class)
+       return Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List;
+   --   AbstractMetaArgumentList arguments() const
 
    function Is_Constant
     (Self : Abstract_Meta_Function'Class) return Boolean;

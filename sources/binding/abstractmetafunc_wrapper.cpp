@@ -16,6 +16,11 @@ extern "C"
 
 }
 
+void AbstractMetaFunction_arguments(AbstractMetaArgumentList* _return, AbstractMetaFunction* self)
+{
+    *_return = self->arguments();
+}
+
 bool AbstractMetaFunction_isConstant(AbstractMetaFunction* self)
 {
     return self->isConstant();

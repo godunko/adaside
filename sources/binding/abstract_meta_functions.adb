@@ -12,6 +12,14 @@ package body Abstract_Meta_Functions is
               Link_Name  =>
                "dynamic_cast__AbstractMetaFunction__AbstractMetaAttributes";
 
+   procedure AbstractMetaFunction_arguments
+    (Result : not null
+       Abstract_Meta_Argument_Lists.Internals.AbstractMetaArgumentList_Access;
+     Self   : not null AbstractMetaFunction_Access)
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaFunction_arguments";
+
    function AbstractMetaFunction_isConstant
     (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
        with Import     => True,
@@ -30,6 +38,23 @@ package body Abstract_Meta_Functions is
        with Import     => True,
             Convention => C,
             Link_Name  => "AbstractMetaFunction_name";
+
+   ---------------
+   -- Arguments --
+   ---------------
+
+   function Arguments
+    (Self : Abstract_Meta_Function'Class)
+       return Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List is
+   begin
+      return Result :
+               Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+      do
+         AbstractMetaFunction_arguments
+          (Abstract_Meta_Argument_Lists.Internals.Internal (Result),
+           Self.Object);
+      end return;
+   end Arguments;
 
    --------------
    -- Internal --
