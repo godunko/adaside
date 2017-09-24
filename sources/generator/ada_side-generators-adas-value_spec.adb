@@ -46,6 +46,8 @@ package body Ada_Side.Generators.Adas.Value_Spec is
 
       Unit.Put_Line (+"private with Ada.Finalization;");
       Unit.New_Line;
+      Unit.Put_Line ("private with " & API_Package_Full_Name (Class) & ";");
+      Unit.New_Line;
       Unit.Put_Line ("package " & Generated_Package_Full_Name (Class) & " is");
       Unit.New_Line;
       Unit.Put_Line (+"   pragma Preelaborate;");
@@ -58,7 +60,11 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       Unit.Put_Line
        ("   type " & Tagged_Type_Name (Class)
           & " is new Ada.Finalization.Controlled with record");
-      Unit.Put_Line (+"      null;");
+      Unit.Put_Line
+      ("      " & Class.Name.To_Universal_String
+         & "_View : " & API_Access_Type_Full_Name (Class) & ";");
+      Unit.Put_Line (+"      Wrapper : Boolean;");
+      Unit.Put_Line (+"      Storage : Boolean;");
       Unit.Put_Line (+"   end record;");
       Unit.New_Line;
       Unit.Put_Line ("end " & Generated_Package_Full_Name (Class) & ";");

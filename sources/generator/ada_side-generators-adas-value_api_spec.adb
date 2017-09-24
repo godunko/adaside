@@ -14,15 +14,7 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
 
-   function Generated_Package_Full_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
-       return League.Strings.Universal_String;
-
    function API_Record_Type_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
-       return League.Strings.Universal_String;
-
-   function API_Access_Type_Name
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
 
@@ -31,10 +23,6 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
        return League.Strings.Universal_String;
 
    function API_Size_Of_Link_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
-       return League.Strings.Universal_String;
-
-   function API_Storage_Type_Name
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
 
@@ -48,6 +36,17 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
    begin
       return API_Record_Type_Name (Class) & "_Access";
    end API_Access_Type_Name;
+
+   ---------------------------
+   -- API_Package_Full_Name --
+   ---------------------------
+
+   function API_Package_Full_Name
+    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
+       return League.Strings.Universal_String is
+   begin
+      return +"Qt_Ada.API." & Generated_Package_Name (Class);
+   end API_Package_Full_Name;
 
    --------------------------
    -- API_Record_Type_Name --
@@ -105,11 +104,11 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
       Unit : Ada_Side.Units.Ada_Spec_Unit;
 
    begin
-      Unit.Set_Package_Name (Generated_Package_Full_Name (Class), False);
+      Unit.Set_Package_Name (API_Package_Full_Name (Class), False);
 
       Unit.Put_Line (+"with Interfaces.C;");
       Unit.New_Line;
-      Unit.Put_Line ("package " & Generated_Package_Full_Name (Class) & " is");
+      Unit.Put_Line ("package " & API_Package_Full_Name (Class) & " is");
       Unit.New_Line;
       Unit.Put_Line (+"   pragma Preelaborate;");
       Unit.New_Line;
@@ -137,21 +136,10 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
           & API_Size_Of_Name (Class) & ")");
       Unit.Put_Line (+"     with Alignment => Standard'Maximum_Alignment;");
       Unit.New_Line;
-      Unit.Put_Line ("end " & Generated_Package_Full_Name (Class) & ";");
+      Unit.Put_Line ("end " & API_Package_Full_Name (Class) & ";");
 
       Unit.Save (Self.Output_Directory);
    end Generate;
-
-   ---------------------------------
-   -- Generated_Package_Full_Name --
-   ---------------------------------
-
-   function Generated_Package_Full_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
-       return League.Strings.Universal_String is
-   begin
-      return +"Qt_Ada.API." & Generated_Package_Name (Class);
-   end Generated_Package_Full_Name;
 
    ----------------------------
    -- Generated_Package_Name --
