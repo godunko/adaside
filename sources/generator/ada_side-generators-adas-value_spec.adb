@@ -15,10 +15,6 @@ package body Ada_Side.Generators.Adas.Value_Spec is
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
 
-   function Tagged_Type_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
-       return League.Strings.Universal_String;
-
    function To_Ada_Identifier
     (Name : League.Strings.Universal_String)
        return League.Strings.Universal_String;
@@ -49,12 +45,12 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       Unit.Put_Line (+"   pragma Preelaborate;");
       Unit.New_Line;
       Unit.Put_Line
-       ("   type " & Tagged_Type_Name (Class) & " is tagged private;");
+       ("   type " & User_Tagged_Type_Name (Class) & " is tagged private;");
       Unit.New_Line;
       Unit.Put_Line (+"private");
       Unit.New_Line;
       Unit.Put_Line
-       ("   type " & Tagged_Type_Name (Class)
+       ("   type " & User_Tagged_Type_Name (Class)
           & " is new Ada.Finalization.Controlled with record");
       Unit.Put_Line
       ("      " & Class.Name.To_Universal_String
@@ -65,15 +61,15 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       Unit.New_Line;
       Unit.Put_Line
        ("   overriding procedure Initialize (Self : in out "
-          & Tagged_Type_Name (Class) & ");");
+          & User_Tagged_Type_Name (Class) & ");");
       Unit.New_Line;
       Unit.Put_Line
        ("   overriding procedure Adjust (Self : in out "
-          & Tagged_Type_Name (Class) & ");");
+          & User_Tagged_Type_Name (Class) & ");");
       Unit.New_Line;
       Unit.Put_Line
        ("   overriding procedure Finalize (Self : in out "
-          & Tagged_Type_Name (Class) & ");");
+          & User_Tagged_Type_Name (Class) & ");");
       Unit.New_Line;
       Unit.Put_Line ("end " & User_Package_Full_Name (Class) & ";");
 
@@ -120,19 +116,6 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       return Class.Type_Entry.Is_Value;
    end Should_Generate;
 
-   ----------------------
-   -- Tagged_Type_Name --
-   ----------------------
-
-   function Tagged_Type_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
-       return League.Strings.Universal_String is
-   begin
-      return
-       To_Ada_Identifier
-        (League.Strings.From_UTF_8_String (Class.Type_Entry.Name.To_UTF8));
-   end Tagged_Type_Name;
-
    -----------------------
    -- To_Ada_Identifier --
    -----------------------
@@ -177,5 +160,18 @@ package body Ada_Side.Generators.Adas.Value_Spec is
    begin
       return "Qt5.Qt_Core." & Generated_Package_Name (Class);
    end User_Package_Full_Name;
+
+   ---------------------------
+   -- User_Tagged_Type_Name --
+   ---------------------------
+
+   function User_Tagged_Type_Name
+    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
+       return League.Strings.Universal_String is
+   begin
+      return
+       To_Ada_Identifier
+        (League.Strings.From_UTF_8_String (Class.Type_Entry.Name.To_UTF8));
+   end User_Tagged_Type_Name;
 
 end Ada_Side.Generators.Adas.Value_Spec;

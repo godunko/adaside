@@ -53,4 +53,13 @@ package body Ada_Side.Generators.Adas is
        return League.Strings.Universal_String
          renames Ada_Side.Generators.Adas.Value_Spec.User_Package_Full_Name;
 
+   ---------------------------
+   -- User_Tagged_Type_Name --
+   ---------------------------
+
+   function User_Tagged_Type_Name
+    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
+       return League.Strings.Universal_String
+         renames Ada_Side.Generators.Adas.Value_Spec.User_Tagged_Type_Name;
+
 end Ada_Side.Generators.Adas;
