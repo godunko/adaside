@@ -12,6 +12,12 @@ package body Abstract_Meta_Functions is
               Link_Name  =>
                "dynamic_cast__AbstractMetaFunction__AbstractMetaAttributes";
 
+   function AbstractMetaFunction_isConstant
+    (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaFunction_isConstant";
+
    function AbstractMetaFunction_isConstructor
     (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
        with Import     => True,
@@ -53,6 +59,16 @@ package body Abstract_Meta_Functions is
       end Wrap;
 
    end Internals;
+
+   -----------------
+   -- Is_Constant --
+   -----------------
+
+   function Is_Constant
+    (Self : Abstract_Meta_Function'Class) return Boolean is
+   begin
+      return AbstractMetaFunction_isConstant (Self.Object) /= 0;
+   end Is_Constant;
 
    --------------------
    -- Is_Constructor --

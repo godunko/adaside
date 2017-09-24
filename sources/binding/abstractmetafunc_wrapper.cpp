@@ -16,6 +16,11 @@ extern "C"
 
 }
 
+bool AbstractMetaFunction_isConstant(AbstractMetaFunction* self)
+{
+    return self->isConstant();
+}
+
 bool AbstractMetaFunction_isConstructor(AbstractMetaFunction* self)
 {
     return self->isConstructor();

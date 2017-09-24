@@ -232,10 +232,6 @@ package Abstract_Meta_Functions is
    --        return QLatin1String("void") == argumentReplaced(0);
    --    }
    --
-   --    bool isConstant() const
-   --    {
-   --        return m_constant;
-   --    }
    --    void setConstant(bool constant)
    --    {
    --        m_constant = constant;
@@ -358,13 +354,17 @@ package Abstract_Meta_Functions is
    --
    --    bool isCallOperator() const;
 
+   function Is_Constant
+    (Self : Abstract_Meta_Function'Class) return Boolean;
+   --   bool isConstant() const
+
    function Is_Constructor
     (Self : Abstract_Meta_Function'Class) return Boolean;
-   --    bool isConstructor() const
+   --   bool isConstructor() const
 
    function Name (Self : Abstract_Meta_Function'Class)
      return Q_Strings.Q_String;
-   --    QString name() const;
+   --   QString name() const;
 
    package Internals is
 
