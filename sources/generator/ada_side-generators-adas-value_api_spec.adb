@@ -22,10 +22,6 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
 
-   function API_Size_Of_Link_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
-       return League.Strings.Universal_String;
-
    --------------------------
    -- API_Access_Type_Name --
    --------------------------
@@ -59,17 +55,6 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
       return
         League.Strings.From_UTF_8_String (Class.Type_Entry.Name.To_UTF8);
    end API_Record_Type_Name;
-
-   ---------------------------
-   -- API_Size_Of_Link_Name --
-   ---------------------------
-
-   function API_Size_Of_Link_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
-       return League.Strings.Universal_String is
-   begin
-      return "__qtada__sizeof__" & API_Record_Type_Name (Class);
-   end API_Size_Of_Link_Name;
 
    ----------------------
    -- API_Size_Of_Name --
