@@ -229,8 +229,16 @@ procedure Ada_Side.Output_Test is
                 (F.New_Selected_Name (+"Self.QString_View"),
                  F.New_Selected_Name (+"Self.Storage'Address"))));
 
+      Adjust_Stmt_2 : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Assignment
+          (F.New_Selected_Name (+"Self.Is_Wrapper"),
+           F.New_Name (+"False"));
+
       Adjust_Body : constant Ada_Side.Outputs.Node_Access :=
-        F.New_Subprogram_Body (Adjust, Statements => Adjust_Stmt_1);
+        F.New_Subprogram_Body
+          (Adjust,
+           Statements =>
+             F.New_List (Adjust_Stmt_1, Adjust_Stmt_2));
 
       Body_Root : constant Ada_Side.Outputs.Node_Access :=
         F.New_Package_Body

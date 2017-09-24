@@ -174,6 +174,11 @@ package Ada_Side.Outputs is
      (Self       : access Factory;
       Expression : Node_Access := null) return not null Node_Access;
 
+   not overriding function New_Assignment
+     (Self  : access Factory;
+      Left  : not null Node_Access;
+      Right : not null Node_Access) return not null Node_Access;
+
 private
    type Node is abstract tagged null record;
 

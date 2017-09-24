@@ -22,6 +22,38 @@ package body Ada_Side.Outputs.Statements is
       return Result;
    end Document;
 
+   --------------
+   -- Document --
+   --------------
+
+   overriding function Document
+    (Self    : Assignment;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.New_Line;
+      Result.Append (Self.Left.Document (Printer, Pad));
+      Result.Put (" := ");
+      Result.Append (Self.Right.Document (Printer, Pad));
+
+      Result.Put (";");
+      return Result;
+   end Document;
+
+   --------------------
+   -- New_Assignment --
+   --------------------
+
+   function New_Assignment
+     (Left  : not null Node_Access;
+      Right : not null Node_Access) return Node'Class is
+   begin
+      return Assignment'(Left, Right);
+   end New_Assignment;
+
    -------------------
    -- New_Statement --
    -------------------

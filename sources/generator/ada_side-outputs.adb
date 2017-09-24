@@ -107,7 +107,9 @@ package body Ada_Side.Outputs is
    not overriding function New_Apply
      (Self      : access Factory;
       Prefix    : not null Node_Access;
-      Arguments : not null Node_Access) return not null Node_Access is
+      Arguments : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
    begin
       return new Node'Class'(Outputs.Applies.New_Apply (Prefix, Arguments));
    end New_Apply;
@@ -119,10 +121,26 @@ package body Ada_Side.Outputs is
    not overriding function New_Aspect
      (Self  : access Factory;
       Name  : not null Node_Access;
-      Value : Node_Access := null) return not null Node_Access is
+      Value : Node_Access := null) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
    begin
       return new Node'Class'(Outputs.Aspects.New_Aspect (Name, Value));
    end New_Aspect;
+
+   --------------------
+   -- New_Assignment --
+   --------------------
+
+   not overriding function New_Assignment
+     (Self  : access Factory;
+      Left  : not null Node_Access;
+      Right : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Statements.New_Assignment (Left, Right));
+   end New_Assignment;
 
    --------------------------
    -- New_Compilation_Unit --
