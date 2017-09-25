@@ -41,6 +41,15 @@ package body Type_Entries is
          return Self.TypeEntry_View;
       end Internal;
 
+      ----------
+      -- Wrap --
+      ----------
+
+      function Wrap (View : TypeEntry_Access) return Type_Entry is
+      begin
+         return (TypeEntry_View => View);
+      end Wrap;
+
    end Internals;
 
    --------------

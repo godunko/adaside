@@ -19,6 +19,8 @@ package Type_Entries is
 
       function Internal (Self : Type_Entry'Class) return TypeEntry_Access;
 
+      function Wrap (View : TypeEntry_Access) return Type_Entry;
+
    end Internals;
 
 private
