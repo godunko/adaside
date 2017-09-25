@@ -15,3 +15,8 @@ extern "C"
     }
 
 }
+
+const TypeEntry* AbstractMetaType_typeEntry(AbstractMetaType* self)
+{
+    return self->typeEntry();
+}

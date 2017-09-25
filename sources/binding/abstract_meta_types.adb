@@ -16,6 +16,13 @@ package body Abstract_Meta_Types is
             Convention => C,
             Link_Name  => "AbstractMetaType_name";
 
+   function AbstractMetaType_typeEntry
+    (Self : not null AbstractMetaType_Access)
+       return Type_Entries.TypeEntry_Access
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaType_typeEntry";
+
    ---------------
    -- Full_Name --
    ---------------
@@ -59,5 +66,16 @@ package body Abstract_Meta_Types is
           (Q_Strings.Internals.Internal (Result), Self.Object);
       end return;
    end Name;
+
+   ----------------
+   -- Type_Entry --
+   ----------------
+
+   function Type_Entry
+    (Self : Abstract_Meta_Type'Class) return Type_Entries.Type_Entry is
+   begin
+      return
+        Type_Entries.Internals.Wrap (AbstractMetaType_typeEntry (Self.Object));
+   end Type_Entry;
 
 end Abstract_Meta_Types;

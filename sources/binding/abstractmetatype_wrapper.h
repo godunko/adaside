@@ -8,3 +8,5 @@ extern "C"
     void AbstractMetaType_fullName(QString* _return, AbstractMetaType* self);
 
 }
+
+extern "C" const TypeEntry* AbstractMetaType_typeEntry(AbstractMetaType* self);
