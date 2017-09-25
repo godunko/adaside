@@ -32,6 +32,15 @@ package body Type_Entries is
          Self.TypeEntry_View := View;
       end Initialize;
 
+      --------------
+      -- Internal --
+      --------------
+
+      function Internal (Self : Type_Entry'Class) return TypeEntry_Access is
+      begin
+         return Self.TypeEntry_View;
+      end Internal;
+
    end Internals;
 
    --------------

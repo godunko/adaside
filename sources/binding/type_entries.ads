@@ -17,6 +17,8 @@ package Type_Entries is
        (Self : in out Type_Entry'Class;
         View : TypeEntry_Access);
 
+      function Internal (Self : Type_Entry'Class) return TypeEntry_Access;
+
    end Internals;
 
 private
