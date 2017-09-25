@@ -1,6 +1,7 @@
 with League.Strings;
 
 with Abstract_Meta_Classes;
+with Abstract_Meta_Class_Lists;
 
 package Ada_Side.Generators is
 
@@ -21,13 +22,15 @@ package Ada_Side.Generators is
 
    not overriding procedure Setup
     (Self             : in out Abstract_Generator;
-     Output_Directory : League.Strings.Universal_String);
+     Output_Directory : League.Strings.Universal_String;
+     Classes          : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List);
    --  Initialize generator.
 
 private
 
    type Abstract_Generator is abstract tagged limited record
       Output_Directory : League.Strings.Universal_String;
+      Classes          : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List;
    end record;
 
    type Protocol_Subprograms is (Adjust, Finalize, Initialize);

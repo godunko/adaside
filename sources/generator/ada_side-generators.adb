@@ -43,9 +43,11 @@ package body Ada_Side.Generators is
 
    not overriding procedure Setup
     (Self             : in out Abstract_Generator;
-     Output_Directory : League.Strings.Universal_String) is
+     Output_Directory : League.Strings.Universal_String;
+     Classes          : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List) is
    begin
       Self.Output_Directory := Output_Directory;
+      Self.Classes          := Classes;
    end Setup;
 
 end Ada_Side.Generators;

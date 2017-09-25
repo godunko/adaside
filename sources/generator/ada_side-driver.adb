@@ -68,13 +68,13 @@ begin
 
    --  Setup generators.
 
+   Classes := Extractor.Classes;
+
    for Generator of Generators loop
-      Generator.Setup (Output_Directory);
+      Generator.Setup (Output_Directory, Classes);
    end loop;
 
    --  Run generators.
-
-   Classes := Extractor.Classes;
 
    Ada.Wide_Wide_Text_IO.Put_Line
     (Interfaces.C.int'Wide_Wide_Image (Classes.Size));
