@@ -16,6 +16,11 @@ extern "C"
 
 }
 
+ReferenceType AbstractMetaType_referenceType(AbstractMetaType* self)
+{
+    return self->referenceType();
+}
+
 const TypeEntry* AbstractMetaType_typeEntry(AbstractMetaType* self)
 {
     return self->typeEntry();

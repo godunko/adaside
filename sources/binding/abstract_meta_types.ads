@@ -4,6 +4,9 @@ with Q_Strings;
 
 package Abstract_Meta_Types is
 
+   type Reference_Types is (No_Reference, L_Value_Reference, R_Value_Reference)
+     with Convention => C;
+
    type AbstractMetaType is null record with Convention => C;
    type AbstractMetaType_Access is access all AbstractMetaType;
 
@@ -176,7 +179,6 @@ package Abstract_Meta_Types is
    --        m_constant = constant;
    --    }
    --
-   --    ReferenceType referenceType() const { return m_referenceType; }
    --    void setReferenceType(ReferenceType ref) { m_referenceType = ref; }
    --
    --    /**
@@ -292,6 +294,16 @@ package Abstract_Meta_Types is
 
    function Name (Self : Abstract_Meta_Type'Class) return Q_Strings.Q_String;
    --  QString name() const;
+
+   function Reference_Type
+    (Self : Abstract_Meta_Type'Class) return Reference_Types;
+   --  ReferenceType referenceType() const
+
+   function Is_Reference (Self : Abstract_Meta_Type'Class) return Boolean;
+   function Is_L_Value_Reference
+    (Self : Abstract_Meta_Type'Class) return Boolean;
+   function Is_R_Value_Reference
+    (Self : Abstract_Meta_Type'Class) return Boolean;
 
    function Type_Entry
     (Self : Abstract_Meta_Type'Class) return Type_Entries.Type_Entry;

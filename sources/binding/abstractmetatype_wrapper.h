@@ -9,4 +9,5 @@ extern "C"
 
 }
 
+extern "C" ReferenceType AbstractMetaType_referenceType(AbstractMetaType* self);
 extern "C" const TypeEntry* AbstractMetaType_typeEntry(AbstractMetaType* self);
