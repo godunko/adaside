@@ -1,6 +1,8 @@
-
+with Interfaces.C.Extensions;
 
 package body Abstract_Meta_Types is
+
+   use type Interfaces.C.Extensions.bool;
 
    procedure AbstractMetaType_fullName
     (Result : not null Q_Strings.Internals.QString_Access;
@@ -8,6 +10,13 @@ package body Abstract_Meta_Types is
        with Import     => True,
             Convention => C,
             Link_Name  => "AbstractMetaType_fullName";
+
+   function AbstractMetaType_isValue
+    (Self : not null AbstractMetaType_Access)
+       return Interfaces.C.Extensions.bool
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaType_isValue";
 
    procedure AbstractMetaType_name
     (Result : not null Q_Strings.Internals.QString_Access;
@@ -88,6 +97,15 @@ package body Abstract_Meta_Types is
    begin
       return Self.Reference_Type /= No_Reference;
    end Is_Reference;
+
+   --------------
+   -- Is_Value --
+   --------------
+
+   function Is_Value (Self : Abstract_Meta_Type'Class) return Boolean is
+   begin
+      return AbstractMetaType_isValue (Self.Object) /= 0;
+   end Is_Value;
 
    ----------
    -- Name --

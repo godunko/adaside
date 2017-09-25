@@ -16,6 +16,11 @@ extern "C"
 
 }
 
+bool AbstractMetaType_isValue(AbstractMetaType* self)
+{
+    return self->isValue();
+}
+
 ReferenceType AbstractMetaType_referenceType(AbstractMetaType* self)
 {
     return self->referenceType();

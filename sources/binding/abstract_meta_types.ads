@@ -98,12 +98,6 @@ package Abstract_Meta_Types is
    --        return m_pattern == ArrayPattern;
    --    }
    --
-   --    // returns true if the type is used as a value type (X or const X &)
-   --    bool isValue() const
-   --    {
-   --        return m_pattern == ValuePattern;
-   --    }
-   --
    --    bool isValuePointer() const
    --    {
    --        return m_pattern == ValuePointerPattern;
@@ -291,6 +285,10 @@ package Abstract_Meta_Types is
    function Full_Name
     (Self : Abstract_Meta_Type'Class) return Q_Strings.Q_String;
    --  QString fullName() const
+
+   function Is_Value (Self : Abstract_Meta_Type'Class) return Boolean;
+   --  bool isValue() const
+   --  Returns true if the type is used as a value type (X or const X &)
 
    function Name (Self : Abstract_Meta_Type'Class) return Q_Strings.Q_String;
    --  QString name() const;
