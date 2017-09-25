@@ -30,3 +30,8 @@ void AbstractMetaClass_functions(AbstractMetaFunctionList* _return, AbstractMeta
 {
     *_return = self->functions();
 }
+
+AbstractMetaClass* AbstractMetaClass_findClass(const AbstractMetaClassList* classes, const TypeEntry* typeEntry)
+{
+    return AbstractMetaClass::findClass(*classes, typeEntry);
+}

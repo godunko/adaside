@@ -1,4 +1,4 @@
-
+with Abstract_Meta_Class_Lists;
 
 package body Abstract_Meta_Classes is
 
@@ -9,6 +9,15 @@ package body Abstract_Meta_Classes is
               Convention => C,
               Link_Name  =>
                "dynamic_cast__AbstractMetaClass__AbstractMetaAttributes";
+
+   function AbstractMetaClass_findClass
+    (Classes    : not null
+       Abstract_Meta_Class_Lists.Internals.AbstractMetaClassList_Access;
+     Type_Entry : not null Type_Entries.TypeEntry_Access)
+       return AbstractMetaClass_Access
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaClass_findClass";
 
    procedure AbstractMetaClass_fullName
     (Result : not null Q_Strings.Internals.QString_Access;
@@ -38,6 +47,22 @@ package body Abstract_Meta_Classes is
          with Import     => True,
               Convention => C,
               Link_Name  => "AbstractMetaClass_typeEntry";
+
+   ----------------
+   -- Find_Class --
+   ----------------
+
+   function Find_Class
+    (Classes : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List'Class;
+     Type_Entry : Type_Entries.Type_Entry'Class)
+       return Abstract_Meta_Class is
+   begin
+      return
+       (Object =>
+          AbstractMetaClass_findClass
+           (Abstract_Meta_Class_Lists.Internals.Internal (Classes),
+            Type_Entries.Internals.Internal (Type_Entry)));
+   end Find_Class;
 
    ---------------
    -- Full_Name --

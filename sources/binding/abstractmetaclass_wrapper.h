@@ -12,3 +12,5 @@ extern "C"
 }
 
 extern "C" void AbstractMetaClass_functions(AbstractMetaFunctionList* _return, AbstractMetaClass* self);
+extern "C" AbstractMetaClass* AbstractMetaClass_findClass(const AbstractMetaClassList* classes, const TypeEntry* typeEntry);
+

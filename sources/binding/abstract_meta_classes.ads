@@ -1,8 +1,10 @@
 
 with Abstract_Meta_Attributes;
+limited with Abstract_Meta_Class_Lists;
 with Abstract_Meta_Function_Lists;
 with Complex_Type_Entries;
 with Q_Strings;
+with Type_Entries;
 
 package Abstract_Meta_Classes is
 
@@ -369,8 +371,6 @@ package Abstract_Meta_Classes is
    --
    --    static AbstractMetaClass *findClass(const AbstractMetaClassList &classes,
    --                                        const QString &name);
-   --    static AbstractMetaClass *findClass(const AbstractMetaClassList &classes,
-   --                                        const TypeEntry* typeEntry);
    --    static AbstractMetaEnumValue *findEnumValue(const AbstractMetaClassList &classes,
    --                                                const QString &string);
    --    static AbstractMetaEnum *findEnum(const AbstractMetaClassList &classes,
@@ -395,6 +395,14 @@ package Abstract_Meta_Classes is
     (Self : Abstract_Meta_Class'Class)
        return Complex_Type_Entries.Complex_Type_Entry;
    --    ComplexTypeEntry *typeEntry()
+
+   function Find_Class
+    (Classes : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List'Class;
+     Type_Entry : Type_Entries.Type_Entry'Class)
+       return Abstract_Meta_Class;
+   --  static AbstractMetaClass *findClass(
+   --    const AbstractMetaClassList &classes,
+   --    const TypeEntry* typeEntry);
 
    package Internals is
 
