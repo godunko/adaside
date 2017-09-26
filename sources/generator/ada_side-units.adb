@@ -4,6 +4,69 @@ package body Ada_Side.Units is
 
    use type League.Strings.Universal_String;
 
+   -----------------------------
+   -- Add_Limited_With_Clause --
+   -----------------------------
+
+   procedure Add_Limited_With_Clause
+    (Self : in out Abstract_Ada_Unit'Class;
+     Name : League.Strings.Universal_String)
+   is
+      Position : constant Context_Maps.Cursor
+        := Self.Context.Records.Find (Name);
+
+   begin
+      if not Context_Maps.Has_Element (Position) then
+         Self.Context.Records.Insert
+          (Name,
+           new Context_Record'
+                (Name => Name, Is_Private => False, Is_Limited => True));
+      end if;
+   end Add_Limited_With_Clause;
+
+   -----------------------------
+   -- Add_Private_With_Clause --
+   -----------------------------
+
+   procedure Add_Private_With_Clause
+    (Self : in out Abstract_Ada_Unit'Class;
+     Name : League.Strings.Universal_String)
+   is
+      Position : constant Context_Maps.Cursor
+        := Self.Context.Records.Find (Name);
+
+   begin
+      if not Context_Maps.Has_Element (Position) then
+         Self.Context.Records.Insert
+          (Name,
+           new Context_Record'
+                (Name => Name, Is_Private => True, Is_Limited => False));
+      end if;
+   end Add_Private_With_Clause;
+
+   ---------------------
+   -- Add_With_Clause --
+   ---------------------
+
+   procedure Add_With_Clause
+    (Self : in out Abstract_Ada_Unit'Class;
+     Name : League.Strings.Universal_String)
+   is
+      Position : constant Context_Maps.Cursor
+        := Self.Context.Records.Find (Name);
+
+   begin
+      if not Context_Maps.Has_Element (Position) then
+         Self.Context.Records.Insert
+          (Name,
+           new Context_Record'
+                (Name => Name, Is_Private => False, Is_Limited => False));
+
+      else
+         Context_Maps.Element (Position).Is_Private := False;
+      end if;
+   end Add_With_Clause;
+
    --------------
    -- Finalize --
    --------------
@@ -18,6 +81,42 @@ package body Ada_Side.Units is
 
       Self.Text.Clear;
    end Finalize;
+
+   -----------------------------------
+   -- Generate_Unit_Context_Clauses --
+   -----------------------------------
+
+   function Generate_Unit_Context_Clauses
+    (Self : Ada_Context) return League.String_Vectors.Universal_String_Vector
+   is
+      Position : Context_Maps.Cursor := Self.Records.First;
+      Result   : League.String_Vectors.Universal_String_Vector;
+
+   begin
+      while Context_Maps.Has_Element (Position) loop
+         declare
+            Name : constant League.Strings.Universal_String
+              := Context_Maps.Key (Position);
+            Info : constant Context_Record_Access
+              := Context_Maps.Element (Position);
+
+         begin
+            if Info.Is_Private then
+               Result.Append ("private with " & Name & ";");
+
+            elsif Info.Is_Limited then
+               Result.Append ("limited with " & Name & ";");
+
+            else
+               Result.Append ("with " & Name & ";");
+            end if;
+
+            Context_Maps.Next (Position);
+         end;
+      end loop;
+
+      return Result;
+   end Generate_Unit_Context_Clauses;
 
    -------------------------
    -- Generated_File_Name --
@@ -58,6 +157,31 @@ package body Ada_Side.Units is
    begin
       return Self.Name.To_Lowercase & "_wrapper.h";
    end Generated_File_Name;
+
+   -----------------
+   -- Get_Context --
+   -----------------
+
+   not overriding function Get_Context
+    (Self : Abstract_Unit)
+       return League.String_Vectors.Universal_String_Vector
+   is
+      pragma Unreferenced (Self);
+
+   begin
+      return League.String_Vectors.Empty_Universal_String_Vector;
+   end Get_Context;
+
+   -----------------
+   -- Get_Context --
+   -----------------
+
+   overriding function Get_Context
+    (Self : Abstract_Ada_Unit)
+       return League.String_Vectors.Universal_String_Vector is
+   begin
+      return Self.Context.Generate_Unit_Context_Clauses;
+   end Get_Context;
 
    ----------------
    -- Initialize --
@@ -127,6 +251,17 @@ package body Ada_Side.Units is
    begin
       Ada.Wide_Wide_Text_IO.Create
        (File, Ada.Wide_Wide_Text_IO.Out_File, Name, "wcem=8");
+
+      declare
+         Context : constant League.String_Vectors.Universal_String_Vector
+           := Self.Get_Context;
+
+      begin
+         for J in 1 .. Context.Length loop
+            Ada.Wide_Wide_Text_IO.Put_Line
+             (File, Context (J).To_Wide_Wide_String);
+         end loop;
+      end;
 
       for J in 1 .. Self.Text.Length loop
          if J /= Self.Text.Length
