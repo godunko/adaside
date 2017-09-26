@@ -67,12 +67,13 @@ package body Ada_Side.Generators.CXXs.Value_H is
                 ("Skipping "
                    & Method.Name.To_Universal_String.To_Wide_Wide_String);
 
-            elsif Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                    = Return_Class
-              and Method.Is_Constant
-              and Method.Arguments.Size = 0
-              and Method.Get_Type.Is_Value
-              and not Method.Get_Type.Is_Reference
+            elsif not Return_Type.Is_Null
+              and then Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                         = Return_Class
+              and then Method.Is_Constant
+              and then Method.Arguments.Size = 0
+              and then Method.Get_Type.Is_Value
+              and then not Method.Get_Type.Is_Reference
             then
                Unit.Put_Line
                 ("extern ""C"" void "
