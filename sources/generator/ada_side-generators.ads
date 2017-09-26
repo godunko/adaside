@@ -2,6 +2,7 @@ with League.Strings;
 
 with Abstract_Meta_Classes;
 with Abstract_Meta_Class_Lists;
+private with Type_Entries;
 
 package Ada_Side.Generators is
 
@@ -32,6 +33,11 @@ private
       Output_Directory : League.Strings.Universal_String;
       Classes          : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List;
    end record;
+
+   function Find_Class
+    (Self       : Abstract_Generator'Class;
+     Type_Entry : Type_Entries.Type_Entry)
+       return Abstract_Meta_Classes.Abstract_Meta_Class;
 
    type Protocol_Subprograms is (Adjust, Finalize, Initialize);
 

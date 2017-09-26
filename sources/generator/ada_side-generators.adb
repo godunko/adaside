@@ -37,6 +37,18 @@ package body Ada_Side.Generators is
       end case;
    end API_Subprogram_Link_Name;
 
+   ----------------
+   -- Find_Class --
+   ----------------
+
+   function Find_Class
+    (Self       : Abstract_Generator'Class;
+     Type_Entry : Type_Entries.Type_Entry)
+       return Abstract_Meta_Classes.Abstract_Meta_Class is
+   begin
+      return Abstract_Meta_Classes.Find_Class (Self.Classes, Type_Entry);
+   end Find_Class;
+
    -----------
    -- Setup --
    -----------

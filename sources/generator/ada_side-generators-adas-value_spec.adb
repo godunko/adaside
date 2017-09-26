@@ -29,18 +29,6 @@ package body Ada_Side.Generators.Adas.Value_Spec is
    Q_Underline_Prefix : constant League.Strings.Universal_String
      := League.Strings.To_Universal_String ("Q_");
 
-   ----------------
-   -- Find_Class --
-   ----------------
-
-   function Find_Class
-    (Self       : Value_Ada_Spec_Generator;
-     Type_Entry : Type_Entries.Type_Entry)
-       return Abstract_Meta_Classes.Abstract_Meta_Class is
-   begin
-      return Abstract_Meta_Classes.Find_Class (Self.Classes, Type_Entry);
-   end Find_Class;
-
    --------------
    -- Generate --
    --------------

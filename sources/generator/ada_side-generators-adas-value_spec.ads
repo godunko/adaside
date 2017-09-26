@@ -1,4 +1,3 @@
-private with Type_Entries;
 
 package Ada_Side.Generators.Adas.Value_Spec is
 
@@ -25,10 +24,5 @@ private
    overriding procedure Generate
     (Self  : in out Value_Ada_Spec_Generator;
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class);
-
-   function Find_Class
-    (Self       : Value_Ada_Spec_Generator;
-     Type_Entry : Type_Entries.Type_Entry)
-       return Abstract_Meta_Classes.Abstract_Meta_Class;
 
 end Ada_Side.Generators.Adas.Value_Spec;
