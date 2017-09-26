@@ -196,15 +196,12 @@ package body Ada_Side.Generators.Adas.Value_Body is
        (+"      use type " & API_Access_Type_Full_Name (Class) & ";");
       Unit.New_Line;
       Unit.Put_Line (+"   begin");
-      Unit.Put_Line ("      if Self." & View_Name (Class) & " /= null then");
-      Unit.Put_Line (+"         if Self.Wrapper then");
-      Unit.Put_Line ("             Self." & View_Name (Class) & " := null;");
-      Unit.New_Line;
-      Unit.Put_Line (+"         else");
+      Unit.Put_Line ("      if Self." & View_Name (Class) & " /= null");
+      Unit.Put_Line (+"        and not Self.Wrapper");
+      Unit.Put_Line (+"      then");
       Unit.Put_Line
-       ("            " & API_Subprogram_Name (Class, Finalize)
+       ("         " & API_Subprogram_Name (Class, Finalize)
           & " (Self." & View_Name (Class) & ");");
-      Unit.Put_Line (+"         end if;");
       Unit.Put_Line (+"      end if;");
       Unit.Put_Line (+"   end Finalize;");
 
