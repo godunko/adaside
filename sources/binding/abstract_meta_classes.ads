@@ -14,6 +14,8 @@ package Abstract_Meta_Classes is
    type Abstract_Meta_Class is
      new Abstract_Meta_Attributes.Abstract_Meta_Attributes with private;
 
+   Null_Abstract_Meta_Class : constant Abstract_Meta_Class;
+
    pragma Style_Checks (Off);
    --    AbstractMetaClass *extractInterface();
    --    void fixFunctions();
@@ -422,5 +424,7 @@ private
    overriding function Internal
     (Self : Abstract_Meta_Class)
        return Abstract_Meta_Attributes.AbstractMetaAttributes_Access;
+
+   Null_Abstract_Meta_Class : constant Abstract_Meta_Class := (Object => null);
 
 end Abstract_Meta_Classes;
