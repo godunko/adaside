@@ -12,6 +12,8 @@ package Abstract_Meta_Types is
 
    type Abstract_Meta_Type is tagged private;
 
+   function Is_Null (Self : Abstract_Meta_Type'Class) return Boolean;
+
    --    QString package() const;
    --
    --    void setTypeUsagePattern(TypeUsagePattern pattern)

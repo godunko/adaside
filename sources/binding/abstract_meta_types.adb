@@ -79,6 +79,15 @@ package body Abstract_Meta_Types is
       return Self.Reference_Type = L_Value_Reference;
    end Is_L_Value_Reference;
 
+   -------------
+   -- Is_Null --
+   -------------
+
+   function Is_Null (Self : Abstract_Meta_Type'Class) return Boolean is
+   begin
+      return Self.Object = null;
+   end Is_Null;
+
    --------------------------
    -- Is_R_Value_Reference --
    --------------------------
