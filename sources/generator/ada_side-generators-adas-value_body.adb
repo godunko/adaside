@@ -1,3 +1,11 @@
+with Ada.Wide_Wide_Text_IO;
+with Interfaces.C;
+
+with Abstract_Meta_Function_Lists;
+with Abstract_Meta_Functions;
+with Abstract_Meta_Types;
+
+with Ada_Side.Generators.Adas.Values;
 with Ada_Side.Units;
 
 package body Ada_Side.Generators.Adas.Value_Body is
@@ -11,6 +19,11 @@ package body Ada_Side.Generators.Adas.Value_Body is
    function API_Subprogram_Name
     (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
      Subprogram : Protocol_Subprograms)
+       return League.Strings.Universal_String;
+
+   function API_Subprogram_Name
+    (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
        return League.Strings.Universal_String;
 
    function View_Name
@@ -39,6 +52,21 @@ package body Ada_Side.Generators.Adas.Value_Body is
       end case;
    end API_Subprogram_Name;
 
+   -------------------------
+   -- API_Subprogram_Name --
+   -------------------------
+
+   function API_Subprogram_Name
+    (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
+       return League.Strings.Universal_String is
+   begin
+      return
+        Class.Name.To_Universal_String
+          & "_"
+          & Subprogram.Name.To_Universal_String;
+   end API_Subprogram_Name;
+
    --------------
    -- Generate --
    --------------
@@ -47,9 +75,14 @@ package body Ada_Side.Generators.Adas.Value_Body is
     (Self  : in out Value_Ada_Body_Generator;
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
    is
-      Unit : Ada_Side.Units.Ada_Body_Unit;
+      use type Abstract_Meta_Classes.Abstract_Meta_Class;
+
+      Unit      : Ada_Side.Units.Ada_Body_Unit;
+      Functions : Abstract_Meta_Function_Lists.Abstract_Meta_Function_List;
 
    begin
+      Functions := Class.Functions;
+
       Unit.Set_Package_Name (User_Package_Full_Name (Class));
 
       Unit.Put_Line (+"with System;");
@@ -90,6 +123,58 @@ package body Ada_Side.Generators.Adas.Value_Body is
       Unit.Put_Line
        ("            Link_Name  => """
           & API_Subprogram_Link_Name (Class, Initialize) & """;");
+
+      for Method of Functions loop
+         declare
+            use type Interfaces.C.int;
+
+            Return_Type  : constant Abstract_Meta_Types.Abstract_Meta_Type
+              := Method.Get_Type;
+            Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
+              := (if Return_Type.Is_Null
+                    then Abstract_Meta_Classes.Null_Abstract_Meta_Class
+                    else Self.Find_Class (Return_Type.Type_Entry));
+
+         begin
+            if Method.Is_Constructor then
+               --  XXX Not supported yet.
+
+               Ada.Wide_Wide_Text_IO.Put_Line
+                ("Skipping "
+                   & Method.Name.To_Universal_String.To_Wide_Wide_String);
+
+            elsif Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                    = Return_Class
+              and Method.Is_Constant
+              and Method.Arguments.Size = 0
+              and Method.Get_Type.Is_Value
+              and not Method.Get_Type.Is_Reference
+            then
+               Unit.New_Line;
+               Unit.Put_Line
+                ("   procedure " & API_Subprogram_Name (Class, Method));
+               Unit.Put_Line
+                ("    (View    : in out "
+                   & API_Access_Type_Full_Name (Class) & ";");
+               Unit.Put_Line (+"     Storage : System.Address;");
+               Unit.Put_Line
+                ("    Self     : not null "
+                   & API_Access_Type_Full_Name (Class) & ")");
+               Unit.Put_Line (+"       with Import     => True,");
+               Unit.Put_Line (+"            Convention => C,");
+               Unit.Put_Line
+                ("            Link_Name  => """
+                   & API_Subprogram_Link_Name (Class, Method) & """;");
+
+            else
+               --  XXX Not supported yet.
+
+               Ada.Wide_Wide_Text_IO.Put_Line
+                ("Skipping "
+                   & Method.Name.To_Universal_String.To_Wide_Wide_String);
+            end if;
+         end;
+      end loop;
 
       Unit.New_Line;
       Unit.Put_Line
@@ -134,6 +219,68 @@ package body Ada_Side.Generators.Adas.Value_Body is
           & ", Self.Storage'Address);");
       Unit.Put_Line (+"      Self.Wrapper := False;");
       Unit.Put_Line (+"   end Initialize;");
+
+      for Method of Functions loop
+         declare
+            use type Interfaces.C.int;
+
+            Return_Type  : constant Abstract_Meta_Types.Abstract_Meta_Type
+              := Method.Get_Type;
+            Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
+              := (if Return_Type.Is_Null
+                    then Abstract_Meta_Classes.Null_Abstract_Meta_Class
+                    else Self.Find_Class (Return_Type.Type_Entry));
+
+         begin
+            if Method.Is_Constructor then
+               --  XXX Not supported yet.
+
+               Ada.Wide_Wide_Text_IO.Put_Line
+                ("Skipping "
+                   & Method.Name.To_Universal_String.To_Wide_Wide_String);
+
+            elsif Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                    = Return_Class
+              and Method.Is_Constant
+              and Method.Arguments.Size = 0
+              and Method.Get_Type.Is_Value
+              and not Method.Get_Type.Is_Reference
+            then
+               Unit.New_Line;
+               Unit.Put_Line
+                ("   function "
+                   & Values.To_Ada_Identifier (Method.Name));
+               Unit.Put_Line
+                ("    (Self : "
+                   & User_Tagged_Type_Name (Class) & "'Class)");
+               Unit.Put_Line
+                ("       return "
+                   & User_Tagged_Type_Name (Return_Class) & " is");
+               Unit.Put_Line (+"   begin");
+               Unit.Put_Line
+                ("      return QtAda_Result : "
+                   & User_Tagged_Type_Name (Class)
+                   & " := (Ada.Finalization.Controlled with others => <>) do");
+               Unit.Put_Line
+                ("         " & API_Subprogram_Name (Class, Method));
+               Unit.Put_Line
+                ("          (QtAda_Result." & View_Name (Class)
+                   & ", QtAda_Result.Storage'Address, Self."
+                   & View_Name (Class) & ");");
+               Unit.Put_Line (+"         QtAda_Result.Wrapper := False;");
+               Unit.Put_Line (+"      end return;");
+               Unit.Put_Line
+                ("   end " & Values.To_Ada_Identifier (Method.Name) & ";");
+
+            else
+               --  XXX Not supported yet.
+
+               Ada.Wide_Wide_Text_IO.Put_Line
+                ("Skipping "
+                   & Method.Name.To_Universal_String.To_Wide_Wide_String);
+            end if;
+         end;
+      end loop;
 
       Unit.New_Line;
       Unit.Put_Line ("end " & User_Package_Full_Name (Class) & ";");

@@ -2,6 +2,7 @@ with League.Strings;
 
 with Abstract_Meta_Classes;
 with Abstract_Meta_Class_Lists;
+private with Abstract_Meta_Functions;
 private with Type_Entries;
 
 package Ada_Side.Generators is
@@ -44,6 +45,11 @@ private
    function API_Subprogram_Link_Name
     (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
      Subprogram : Protocol_Subprograms)
+       return League.Strings.Universal_String;
+
+   function API_Subprogram_Link_Name
+    (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
        return League.Strings.Universal_String;
 
    function API_Size_Of_Link_Name

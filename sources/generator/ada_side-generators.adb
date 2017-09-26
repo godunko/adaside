@@ -37,6 +37,22 @@ package body Ada_Side.Generators is
       end case;
    end API_Subprogram_Link_Name;
 
+   ------------------------------
+   -- API_Subprogram_Link_Name --
+   ------------------------------
+
+   function API_Subprogram_Link_Name
+    (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
+       return League.Strings.Universal_String is
+   begin
+      return
+        "__qtada__"
+          & Class.Name.To_Universal_String
+          & "__"
+          & Subprogram.Name.To_Universal_String;
+   end API_Subprogram_Link_Name;
+
    ----------------
    -- Find_Class --
    ----------------
