@@ -2,6 +2,12 @@ with Interfaces.C.Extensions;
 
 package body Type_Entries is
 
+   function TypeEntry_isPrimitive
+    (Self : not null TypeEntry_Access) return Interfaces.C.Extensions.bool
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "TypeEntry_isPrimitive";
+
    function TypeEntry_isValue
     (Self : not null TypeEntry_Access) return Interfaces.C.Extensions.bool
        with Import     => True,
@@ -51,6 +57,17 @@ package body Type_Entries is
       end Wrap;
 
    end Internals;
+
+   ------------------
+   -- Is_Primitive --
+   ------------------
+
+   function Is_Primitive (Self : Type_Entry'Class) return Boolean is
+      use type Interfaces.C.Extensions.bool;
+
+   begin
+      return TypeEntry_isPrimitive (Self.TypeEntry_View) /= 0;
+   end Is_Primitive;
 
    --------------
    -- Is_Value --

@@ -8,3 +8,5 @@ extern "C"
     bool TypeEntry_isValue(TypeEntry* self);
 
 }
+
+extern "C" bool TypeEntry_isPrimitive(TypeEntry* self);

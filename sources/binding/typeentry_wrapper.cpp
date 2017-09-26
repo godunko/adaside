@@ -15,3 +15,8 @@ extern "C"
     }
 
 }
+
+extern "C" bool TypeEntry_isPrimitive(TypeEntry* self)
+{
+    return self->isPrimitive();
+}
