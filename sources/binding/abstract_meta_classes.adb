@@ -53,7 +53,7 @@ package body Abstract_Meta_Classes is
    ----------------
 
    function Find_Class
-    (Classes : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List'Class;
+    (Classes    : Abstract_Meta_Class_Lists.Abstract_Meta_Class_List'Class;
      Type_Entry : Type_Entries.Type_Entry'Class)
        return Abstract_Meta_Class is
    begin
