@@ -21,6 +21,13 @@ package body Type_Entries is
             Convention => C,
             Link_Name  => "TypeEntry_name";
 
+   procedure TypeEntry_targetLangName
+    (Result : not null Q_Strings.Internals.QString_Access;
+     Self   : not null TypeEntry_Access)
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "TypeEntry_targetLangName";
+
    ---------------
    -- Internals --
    ---------------
@@ -91,5 +98,18 @@ package body Type_Entries is
           (Q_Strings.Internals.Internal (Result), Self.TypeEntry_View);
       end return;
    end Name;
+
+   ----------------------
+   -- Target_Lang_Name --
+   ----------------------
+
+   not overriding function Target_Lang_Name
+    (Self : Type_Entry) return Q_Strings.Q_String is
+   begin
+      return Result : Q_Strings.Q_String do
+         TypeEntry_targetLangName
+          (Q_Strings.Internals.Internal (Result), Self.TypeEntry_View);
+      end return;
+   end Target_Lang_Name;
 
 end Type_Entries;

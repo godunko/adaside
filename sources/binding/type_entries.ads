@@ -156,12 +156,6 @@ package Type_Entries is
    --        return m_name;
    --    }
    --
-   --    // The type's name in TargetLang
-   --    virtual QString targetLangName() const
-   --    {
-   --        return m_name;
-   --    }
-   --
    --    // The type to lookup when converting to TargetLang
    --    virtual QString lookupName() const
    --    {
@@ -318,6 +312,11 @@ package Type_Entries is
    function Name (Self : Type_Entry'Class) return Q_Strings.Q_String;
    --  The type's name in C++, fully qualified
    --  QString name() const
+
+   not overriding function Target_Lang_Name
+    (Self : Type_Entry) return Q_Strings.Q_String;
+   --  The type's name in TargetLang
+   --  virtual QString targetLangName() const
 
    package Internals is
 
