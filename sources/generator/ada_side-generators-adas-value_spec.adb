@@ -1,12 +1,12 @@
 with Ada.Wide_Wide_Text_IO;
 with Interfaces.C;
 
-with League.Characters;
 with League.Strings;
 
 with Abstract_Meta_Function_Lists;
 with Abstract_Meta_Types;
 
+with Ada_Side.Generators.Adas.Values;
 with Ada_Side.Units;
 
 package body Ada_Side.Generators.Adas.Value_Spec is
@@ -20,11 +20,6 @@ package body Ada_Side.Generators.Adas.Value_Spec is
    function Generated_Package_Name
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
-
-   function To_Ada_Identifier
-    (Name : League.Strings.Universal_String)
-       return League.Strings.Universal_String;
-   --  Converts identifier from C++ to Ada conventions.
 
    Q_Underline_Prefix : constant League.Strings.Universal_String
      := League.Strings.To_Universal_String ("Q_");
@@ -87,7 +82,7 @@ package body Ada_Side.Generators.Adas.Value_Spec is
                Unit.New_Line;
                Unit.Put_Line
                 ("   function "
-                   & To_Ada_Identifier (Method.Name.To_Universal_String));
+                   & Values.To_Ada_Identifier (Method.Name));
                Unit.Put_Line
                 ("    (Self : "
                    & User_Tagged_Type_Name (Class) & "'Class)");
@@ -144,9 +139,7 @@ package body Ada_Side.Generators.Adas.Value_Spec is
        return League.Strings.Universal_String
    is
       Type_Name : constant League.Strings.Universal_String
-        := To_Ada_Identifier
-            (League.Strings.From_UTF_8_String
-              (Class.Type_Entry.Name.To_UTF8));
+        := Values.To_Ada_Identifier (Class.Type_Entry.Name);
 
    begin
       return Result : League.Strings.Universal_String do
@@ -175,43 +168,6 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       return Class.Type_Entry.Is_Value;
    end Should_Generate;
 
-   -----------------------
-   -- To_Ada_Identifier --
-   -----------------------
-
-   function To_Ada_Identifier
-    (Name : League.Strings.Universal_String)
-       return League.Strings.Universal_String
-   is
-      use type League.Characters.Universal_Character;
-
-   begin
-      return Result : League.Strings.Universal_String do
-         for J in 1 .. Name.Length loop
-            if J = 1 then
-               Result.Append (Name (J).Simple_Uppercase_Mapping);
-
-            else
-               if J = 2
-                 and Name (J - 1) = 'Q'
-                 and Name (J).Uppercase
-               then
-                  --  Special exception to translate Qt Classes' names, for
-                  --  example, 'QRect' -> 'Q_Rect'.
-                  Result.Append ('_');
-
-               elsif Name (J).Uppercase
-                 and Name (J - 1).Lowercase
-               then
-                  Result.Append ('_');
-               end if;
-
-               Result.Append (Name (J));
-            end if;
-         end loop;
-      end return;
-   end To_Ada_Identifier;
-
    ----------------------------
    -- User_Package_Full_Name --
    ----------------------------
@@ -231,9 +187,7 @@ package body Ada_Side.Generators.Adas.Value_Spec is
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String is
    begin
-      return
-       To_Ada_Identifier
-        (League.Strings.From_UTF_8_String (Class.Type_Entry.Name.To_UTF8));
+      return Values.To_Ada_Identifier (Class.Type_Entry.Name);
    end User_Tagged_Type_Name;
 
 end Ada_Side.Generators.Adas.Value_Spec;
