@@ -110,7 +110,8 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       ("      " & Class.Name.To_Universal_String
          & "_View : " & API_Access_Type_Full_Name (Class) & ";");
       Unit.Put_Line (+"      Wrapper : Boolean;");
-      Unit.Put_Line (+"      Storage : Boolean;");
+      Unit.Put_Line
+       ("      Storage : " & API_Storage_Type_Full_Name (Class) & ";");
       Unit.Put_Line (+"   end record;");
       Unit.New_Line;
       Unit.Put_Line
