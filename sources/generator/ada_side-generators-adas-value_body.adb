@@ -148,36 +148,55 @@ package body Ada_Side.Generators.Adas.Value_Body is
             elsif not Return_Type.Is_Null
               and then Method.Is_Constant
               and then Method.Arguments.Size = 0
-              and then Method.Get_Type.Is_Value
               and then not Method.Get_Type.Is_Reference
             then
-               Unit.New_Line;
-               Unit.Put_Line
-                ("   procedure " & API_Subprogram_Name (Class, Method));
-
-               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                    = Return_Class
-               then
+               if Return_Type.Type_Entry.Is_Primitive then
+                  Unit.New_Line;
                   Unit.Put_Line
-                   ("    (View    : in out "
-                   & API_Access_Type_Full_Name (Return_Class) & ";");
-                  Unit.Put_Line (+"     Storage : System.Address;");
-
-               else
-                  Unit.Add_With_Clause (API_Package_Full_Name (Return_Class));
+                   ("   function " & API_Subprogram_Name (Class, Method));
                   Unit.Put_Line
-                   ("    (View    : not null "
-                      & API_Access_Type_Full_Name (Return_Class) & ";");
+                   ("    (Self    : not null "
+                      & API_Access_Type_Full_Name (Class) & ")");
+                  Unit.Put_Line
+                   ("       return "
+                      & Return_Type.Type_Entry.Target_Lang_Name
+                          .To_Universal_String);
+                  Unit.Put_Line (+"         with Import     => True,");
+                  Unit.Put_Line (+"              Convention => C,");
+                  Unit.Put_Line
+                   ("              Link_Name  => """
+                      & API_Subprogram_Link_Name (Class, Method) & """;");
+
+               elsif Method.Get_Type.Is_Value then
+                  Unit.New_Line;
+                  Unit.Put_Line
+                   ("   procedure " & API_Subprogram_Name (Class, Method));
+
+                  if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                       = Return_Class
+                  then
+                     Unit.Put_Line
+                      ("    (View    : in out "
+                         & API_Access_Type_Full_Name (Return_Class) & ";");
+                     Unit.Put_Line (+"     Storage : System.Address;");
+
+                  else
+                     Unit.Add_With_Clause
+                      (API_Package_Full_Name (Return_Class));
+                     Unit.Put_Line
+                      ("    (View    : not null "
+                         & API_Access_Type_Full_Name (Return_Class) & ";");
+                  end if;
+
+                  Unit.Put_Line
+                   ("     Self    : not null "
+                      & API_Access_Type_Full_Name (Class) & ")");
+                  Unit.Put_Line (+"       with Import     => True,");
+                  Unit.Put_Line (+"            Convention => C,");
+                  Unit.Put_Line
+                   ("            Link_Name  => """
+                      & API_Subprogram_Link_Name (Class, Method) & """;");
                end if;
-
-               Unit.Put_Line
-                ("     Self    : not null "
-                   & API_Access_Type_Full_Name (Class) & ")");
-               Unit.Put_Line (+"       with Import     => True,");
-               Unit.Put_Line (+"            Convention => C,");
-               Unit.Put_Line
-                ("            Link_Name  => """
-                   & API_Subprogram_Link_Name (Class, Method) & """;");
 
             else
                --  XXX Not supported yet.
@@ -253,59 +272,82 @@ package body Ada_Side.Generators.Adas.Value_Body is
             elsif not Return_Type.Is_Null
               and then Method.Is_Constant
               and then Method.Arguments.Size = 0
-              and then Method.Get_Type.Is_Value
               and then not Method.Get_Type.Is_Reference
             then
-               Unit.New_Line;
-               Unit.Put_Line
-                ("   function "
-                   & Values.To_Ada_Identifier (Method.Name));
-               Unit.Put_Line
-                ("    (Self : "
-                   & User_Tagged_Type_Name (Class) & "'Class)");
-               Unit.Put_Line
-                ("       return "
-                   & User_Tagged_Type_Full_Name (Return_Class) & " is");
-               Unit.Put_Line (+"   begin");
-
-               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                    = Return_Class
-               then
+               if Return_Type.Type_Entry.Is_Primitive then
+                  Unit.New_Line;
                   Unit.Put_Line
-                   ("      return QtAda_Result : "
-                      & User_Tagged_Type_Full_Name (Return_Class)
-                      & " := (Ada.Finalization.Controlled with"
-                      & " others => <>) do");
-
-               else
+                   ("   function "
+                      & Values.To_Ada_Identifier (Method.Name));
                   Unit.Put_Line
-                   ("      return QtAda_Result : "
-                      & User_Tagged_Type_Full_Name (Return_Class)
-                      & " do");
+                   ("    (Self : "
+                      & User_Tagged_Type_Name (Class) & "'Class)");
+                  Unit.Put_Line
+                   ("       return "
+                      & Return_Type.Type_Entry.Target_Lang_Name
+                          .To_Universal_String & " is");
+                  Unit.Put_Line (+"   begin");
+                  Unit.Put_Line
+                   ("      return "
+                      & API_Subprogram_Name (Class, Method)
+                      & " (" & View_Expression (Class, Class, +"Self") & ");");
+                  Unit.Put_Line
+                   ("   end "
+                      & Values.To_Ada_Identifier (Method.Name) & ";");
+
+               elsif Return_Type.Is_Value then
+                  Unit.New_Line;
+                  Unit.Put_Line
+                   ("   function "
+                      & Values.To_Ada_Identifier (Method.Name));
+                  Unit.Put_Line
+                   ("    (Self : "
+                      & User_Tagged_Type_Name (Class) & "'Class)");
+                  Unit.Put_Line
+                   ("       return "
+                      & User_Tagged_Type_Full_Name (Return_Class) & " is");
+                  Unit.Put_Line (+"   begin");
+
+                  if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                       = Return_Class
+                  then
+                     Unit.Put_Line
+                      ("      return QtAda_Result : "
+                         & User_Tagged_Type_Full_Name (Return_Class)
+                         & " := (Ada.Finalization.Controlled with"
+                         & " others => <>) do");
+
+                  else
+                     Unit.Put_Line
+                      ("      return QtAda_Result : "
+                         & User_Tagged_Type_Full_Name (Return_Class)
+                         & " do");
+                  end if;
+
+                  Unit.Put_Line
+                   ("         " & API_Subprogram_Name (Class, Method));
+                  Unit.Put
+                   ("          ("
+                      & View_Expression
+                         (Class, Return_Class, +"QtAda_Result"));
+
+                  if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                       = Return_Class
+                  then
+                     Unit.Put (+", QtAda_Result.Storage'Address");
+
+                  else
+                     Unit.Add_With_Clause
+                      (User_Package_Full_Name (Return_Class) & ".Internals");
+                  end if;
+
+                  Unit.Put_Line
+                   (", " & View_Expression (Class, Class, +"Self") & ");");
+
+                  Unit.Put_Line (+"      end return;");
+                  Unit.Put_Line
+                   ("   end " & Values.To_Ada_Identifier (Method.Name) & ";");
                end if;
-
-               Unit.Put_Line
-                ("         " & API_Subprogram_Name (Class, Method));
-               Unit.Put
-                ("          ("
-                   & View_Expression (Class, Return_Class, +"QtAda_Result"));
-
-               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                    = Return_Class
-               then
-                  Unit.Put (+", QtAda_Result.Storage'Address");
-
-               else
-                  Unit.Add_With_Clause
-                   (User_Package_Full_Name (Return_Class) & ".Internals");
-               end if;
-
-               Unit.Put_Line
-                (", " & View_Expression (Class, Class, +"Self") & ");");
-
-               Unit.Put_Line (+"      end return;");
-               Unit.Put_Line
-                ("   end " & Values.To_Ada_Identifier (Method.Name) & ";");
 
             else
                --  XXX Not supported yet.

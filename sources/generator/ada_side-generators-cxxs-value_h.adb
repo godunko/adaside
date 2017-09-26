@@ -70,28 +70,39 @@ package body Ada_Side.Generators.CXXs.Value_H is
             elsif not Return_Type.Is_Null
               and then Method.Is_Constant
               and then Method.Arguments.Size = 0
-              and then Method.Get_Type.Is_Value
               and then not Method.Get_Type.Is_Reference
             then
-               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                    = Return_Class
-               then
+               if Return_Type.Type_Entry.Is_Primitive then
                   Unit.Put_Line
-                   ("extern ""C"" void "
+                   ("extern ""C"" "
+                      & Return_Type.Type_Entry.Name.To_Universal_String
+                      & " "
                       & API_Subprogram_Link_Name (Class, Method)
-                      & "(" & Return_Class.Name.To_Universal_String
-                      & "** ___view, void* ___storage, const "
+                      & "("
                       & Class.Name.To_Universal_String
                       & "* self);");
 
-               else
-                  Unit.Put_Line
-                   ("extern ""C"" void "
-                      & API_Subprogram_Link_Name (Class, Method)
-                      & "(" & Return_Class.Name.To_Universal_String
-                      & "* ___view, const "
-                      & Class.Name.To_Universal_String
-                      & "* self);");
+               elsif Method.Get_Type.Is_Value then
+                  if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                       = Return_Class
+                  then
+                     Unit.Put_Line
+                      ("extern ""C"" void "
+                         & API_Subprogram_Link_Name (Class, Method)
+                         & "(" & Return_Class.Name.To_Universal_String
+                         & "** ___view, void* ___storage, const "
+                         & Class.Name.To_Universal_String
+                         & "* self);");
+
+                  else
+                     Unit.Put_Line
+                      ("extern ""C"" void "
+                         & API_Subprogram_Link_Name (Class, Method)
+                         & "(" & Return_Class.Name.To_Universal_String
+                         & "* ___view, const "
+                         & Class.Name.To_Universal_String
+                         & "* self);");
+                  end if;
                end if;
 
             else

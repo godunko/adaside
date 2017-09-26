@@ -75,25 +75,40 @@ package body Ada_Side.Generators.Adas.Value_Spec is
             elsif not Return_Type.Is_Null
               and then Method.Is_Constant
               and then Method.Arguments.Size = 0
-              and then Return_Type.Is_Value
               and then not Method.Get_Type.Is_Reference
             then
-               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                    /= Return_Class
-               then
-                  Unit.Add_With_Clause (User_Package_Full_Name (Return_Class));
-               end if;
+               if Return_Type.Type_Entry.Is_Primitive then
+                  Unit.New_Line;
+                  Unit.Put_Line
+                   ("   function "
+                      & Values.To_Ada_Identifier (Method.Name));
+                  Unit.Put_Line
+                   ("    (Self : "
+                      & User_Tagged_Type_Name (Class) & "'Class)");
+                  Unit.Put_Line
+                   ("       return "
+                      & Return_Type.Type_Entry.Target_Lang_Name
+                          .To_Universal_String & ";");
 
-               Unit.New_Line;
-               Unit.Put_Line
-                ("   function "
-                   & Values.To_Ada_Identifier (Method.Name));
-               Unit.Put_Line
-                ("    (Self : "
-                   & User_Tagged_Type_Name (Class) & "'Class)");
-               Unit.Put_Line
-                ("       return "
-                   & User_Tagged_Type_Full_Name (Return_Class) & ";");
+               elsif Return_Type.Is_Value then
+                  if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                       /= Return_Class
+                  then
+                     Unit.Add_With_Clause
+                      (User_Package_Full_Name (Return_Class));
+                  end if;
+
+                  Unit.New_Line;
+                  Unit.Put_Line
+                   ("   function "
+                      & Values.To_Ada_Identifier (Method.Name));
+                  Unit.Put_Line
+                   ("    (Self : "
+                      & User_Tagged_Type_Name (Class) & "'Class)");
+                  Unit.Put_Line
+                   ("       return "
+                      & User_Tagged_Type_Full_Name (Return_Class) & ";");
+               end if;
 
             else
                --  XXX Not supported yet.
