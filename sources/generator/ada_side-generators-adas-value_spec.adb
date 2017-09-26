@@ -40,9 +40,9 @@ package body Ada_Side.Generators.Adas.Value_Spec is
    begin
       Unit.Set_Package_Name (User_Package_Full_Name (Class));
 
-      Unit.Put_Line (+"private with Ada.Finalization;");
-      Unit.New_Line;
-      Unit.Put_Line ("private with " & API_Package_Full_Name (Class) & ";");
+      Unit.Add_Private_With_Clause (+"Ada.Finalization");
+      Unit.Add_Private_With_Clause (API_Package_Full_Name (Class));
+
       Unit.New_Line;
       Unit.Put_Line ("package " & User_Package_Full_Name (Class) & " is");
       Unit.New_Line;
@@ -73,13 +73,17 @@ package body Ada_Side.Generators.Adas.Value_Spec is
                    & Method.Name.To_Universal_String.To_Wide_Wide_String);
 
             elsif not Return_Type.Is_Null
-              and then Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                         = Return_Class
               and then Method.Is_Constant
               and then Method.Arguments.Size = 0
               and then Return_Type.Is_Value
               and then not Method.Get_Type.Is_Reference
             then
+               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                    /= Return_Class
+               then
+                  Unit.Add_With_Clause (User_Package_Full_Name (Return_Class));
+               end if;
+
                Unit.New_Line;
                Unit.Put_Line
                 ("   function "
@@ -89,7 +93,7 @@ package body Ada_Side.Generators.Adas.Value_Spec is
                    & User_Tagged_Type_Name (Class) & "'Class)");
                Unit.Put_Line
                 ("       return "
-                   & User_Tagged_Type_Name (Return_Class) & ";");
+                   & User_Tagged_Type_Full_Name (Return_Class) & ";");
 
             else
                --  XXX Not supported yet.

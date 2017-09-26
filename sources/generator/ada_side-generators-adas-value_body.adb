@@ -26,10 +26,12 @@ package body Ada_Side.Generators.Adas.Value_Body is
      Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
        return League.Strings.Universal_String;
 
-   function View_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
+   function View_Expression
+    (Generated_Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Class           : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Name            : League.Strings.Universal_String)
        return League.Strings.Universal_String;
-   --  Name of "view" component.
+   --  Returns texf expression to access "view" component.
 
    -------------------------
    -- API_Subprogram_Name --
@@ -144,8 +146,6 @@ package body Ada_Side.Generators.Adas.Value_Body is
                    & Method.Name.To_Universal_String.To_Wide_Wide_String);
 
             elsif not Return_Type.Is_Null
-              and then Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                         = Return_Class
               and then Method.Is_Constant
               and then Method.Arguments.Size = 0
               and then Method.Get_Type.Is_Value
@@ -154,12 +154,24 @@ package body Ada_Side.Generators.Adas.Value_Body is
                Unit.New_Line;
                Unit.Put_Line
                 ("   procedure " & API_Subprogram_Name (Class, Method));
+
+               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                    = Return_Class
+               then
+                  Unit.Put_Line
+                   ("    (View    : in out "
+                   & API_Access_Type_Full_Name (Return_Class) & ";");
+                  Unit.Put_Line (+"     Storage : System.Address;");
+
+               else
+                  Unit.Add_With_Clause (API_Package_Full_Name (Return_Class));
+                  Unit.Put_Line
+                   ("    (View    : not null "
+                      & API_Access_Type_Full_Name (Return_Class) & ";");
+               end if;
+
                Unit.Put_Line
-                ("    (View    : in out "
-                   & API_Access_Type_Full_Name (Class) & ";");
-               Unit.Put_Line (+"     Storage : System.Address;");
-               Unit.Put_Line
-                ("    Self     : not null "
+                ("     Self    : not null "
                    & API_Access_Type_Full_Name (Class) & ")");
                Unit.Put_Line (+"       with Import     => True,");
                Unit.Put_Line (+"            Convention => C,");
@@ -184,7 +196,7 @@ package body Ada_Side.Generators.Adas.Value_Body is
       Unit.Put_Line (+"   begin");
       Unit.Put_Line
        ("      " & API_Subprogram_Name (Class, Adjust)
-          & " (Self." & View_Name (Class)
+          & " (" & View_Expression (Class, Class, +"Self")
           & ", Self.Storage'Address);");
       Unit.Put_Line (+"      Self.Wrapper := False;");
       Unit.Put_Line (+"   end Adjust;");
@@ -197,12 +209,13 @@ package body Ada_Side.Generators.Adas.Value_Body is
        (+"      use type " & API_Access_Type_Full_Name (Class) & ";");
       Unit.New_Line;
       Unit.Put_Line (+"   begin");
-      Unit.Put_Line ("      if Self." & View_Name (Class) & " /= null");
+      Unit.Put_Line
+       ("      if " & View_Expression (Class, Class, +"Self") & " /= null");
       Unit.Put_Line (+"        and not Self.Wrapper");
       Unit.Put_Line (+"      then");
       Unit.Put_Line
        ("         " & API_Subprogram_Name (Class, Finalize)
-          & " (Self." & View_Name (Class) & ");");
+          & " (" & View_Expression (Class, Class, +"Self") & ");");
       Unit.Put_Line (+"      end if;");
       Unit.Put_Line (+"   end Finalize;");
 
@@ -213,7 +226,7 @@ package body Ada_Side.Generators.Adas.Value_Body is
       Unit.Put_Line (+"   begin");
       Unit.Put_Line
        ("      " & API_Subprogram_Name (Class, Initialize)
-          & " (Self." & View_Name (Class)
+          & " (" & View_Expression (Class, Class, +"Self")
           & ", Self.Storage'Address);");
       Unit.Put_Line (+"      Self.Wrapper := False;");
       Unit.Put_Line (+"   end Initialize;");
@@ -238,8 +251,6 @@ package body Ada_Side.Generators.Adas.Value_Body is
                    & Method.Name.To_Universal_String.To_Wide_Wide_String);
 
             elsif not Return_Type.Is_Null
-              and then Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                         = Return_Class
               and then Method.Is_Constant
               and then Method.Arguments.Size = 0
               and then Method.Get_Type.Is_Value
@@ -254,19 +265,44 @@ package body Ada_Side.Generators.Adas.Value_Body is
                    & User_Tagged_Type_Name (Class) & "'Class)");
                Unit.Put_Line
                 ("       return "
-                   & User_Tagged_Type_Name (Return_Class) & " is");
+                   & User_Tagged_Type_Full_Name (Return_Class) & " is");
                Unit.Put_Line (+"   begin");
-               Unit.Put_Line
-                ("      return QtAda_Result : "
-                   & User_Tagged_Type_Name (Class)
-                   & " := (Ada.Finalization.Controlled with others => <>) do");
+
+               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                    = Return_Class
+               then
+                  Unit.Put_Line
+                   ("      return QtAda_Result : "
+                      & User_Tagged_Type_Full_Name (Return_Class)
+                      & " := (Ada.Finalization.Controlled with"
+                      & " others => <>) do");
+
+               else
+                  Unit.Put_Line
+                   ("      return QtAda_Result : "
+                      & User_Tagged_Type_Full_Name (Return_Class)
+                      & " do");
+               end if;
+
                Unit.Put_Line
                 ("         " & API_Subprogram_Name (Class, Method));
+               Unit.Put
+                ("          ("
+                   & View_Expression (Class, Return_Class, +"QtAda_Result"));
+
+               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                    = Return_Class
+               then
+                  Unit.Put (+", QtAda_Result.Storage'Address");
+
+               else
+                  Unit.Add_With_Clause
+                   (User_Package_Full_Name (Return_Class) & ".Internals");
+               end if;
+
                Unit.Put_Line
-                ("          (QtAda_Result." & View_Name (Class)
-                   & ", QtAda_Result.Storage'Address, Self."
-                   & View_Name (Class) & ");");
-               Unit.Put_Line (+"         QtAda_Result.Wrapper := False;");
+                (", " & View_Expression (Class, Class, +"Self") & ");");
+
                Unit.Put_Line (+"      end return;");
                Unit.Put_Line
                 ("   end " & Values.To_Ada_Identifier (Method.Name) & ";");
@@ -301,15 +337,25 @@ package body Ada_Side.Generators.Adas.Value_Body is
       return Class.Type_Entry.Is_Value;
    end Should_Generate;
 
-   ---------------
-   -- View_Name --
-   ---------------
+   ---------------------
+   -- View_Expression --
+   ---------------------
 
-   function View_Name
-    (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
+   function View_Expression
+    (Generated_Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Class           : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Name            : League.Strings.Universal_String)
        return League.Strings.Universal_String is
    begin
-      return Class.Name.To_Universal_String & "_View";
-   end View_Name;
+      if Generated_Class = Class then
+         return Name & '.' & Class.Name.To_Universal_String & "_View";
+
+      else
+         return
+           User_Package_Full_Name (Class)
+             & ".Internals."
+             & Class.Name.To_Universal_String & "_View (" & Name & ')';
+      end if;
+   end View_Expression;
 
 end Ada_Side.Generators.Adas.Value_Body;

@@ -95,28 +95,47 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                    & Method.Name.To_Universal_String.To_Wide_Wide_String);
 
             elsif not Return_Type.Is_Null
-              and then Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                         = Return_Class
               and then Method.Is_Constant
               and then Method.Arguments.Size = 0
               and then Method.Get_Type.Is_Value
               and then not Method.Get_Type.Is_Reference
             then
                Unit.New_Line;
-               Unit.Put_Line
-                ("extern ""C"" void "
-                   & API_Subprogram_Link_Name (Class, Method)
-                   & "(" & Class.Name.To_Universal_String
-                   & "** ___view, void* ___storage, const "
-                   & Class.Name.To_Universal_String
-                   & "* self)");
-               Unit.Put_Line (+"{");
-               Unit.Put_Line
-                ("    *___view = new (___storage) "
-                   & Class.Name.To_Universal_String
-                   & "(self->"
-                   & Method.Name.To_Universal_String
-                   & "());");
+
+               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                    = Return_Class
+               then
+                  Unit.Put_Line
+                   ("extern ""C"" void "
+                      & API_Subprogram_Link_Name (Class, Method)
+                      & "(" & Return_Class.Name.To_Universal_String
+                      & "** ___view, void* ___storage, const "
+                      & Class.Name.To_Universal_String
+                      & "* self)");
+                  Unit.Put_Line (+"{");
+                  Unit.Put_Line
+                   ("    *___view = new (___storage) "
+                      & Class.Name.To_Universal_String
+                      & "(self->"
+                      & Method.Name.To_Universal_String
+                      & "());");
+
+               else
+                  Unit.Put_Line
+                   ("extern ""C"" void "
+                      & API_Subprogram_Link_Name (Class, Method)
+                      & "(" & Return_Class.Name.To_Universal_String
+                      & "* ___view, const "
+                      & Class.Name.To_Universal_String
+                      & "* self)");
+                  Unit.Put_Line (+"{");
+                  Unit.Put_Line
+                   ("    *___view = "
+                      & "self->"
+                      & Method.Name.To_Universal_String
+                      & "();");
+               end if;
+
                Unit.Put_Line (+"}");
 
             else
