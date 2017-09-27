@@ -67,13 +67,14 @@ package body Ada_Side.Generators.Adas is
               else Generator.Find_Class (Return_Type.Type_Entry));
 
    begin
+      Unit.New_Line;
+      Unit.Put_Line
+       ("   function " & Values.To_Ada_Identifier (Subprogram.Name));
+      Unit.Put_Line
+       ("    (Self : "
+          & User_Tagged_Type_Name (Class) & "'Class)");
+
       if Return_Type.Type_Entry.Is_Primitive then
-         Unit.New_Line;
-         Unit.Put_Line
-          ("   function " & Values.To_Ada_Identifier (Subprogram.Name));
-         Unit.Put_Line
-          ("    (Self : "
-             & User_Tagged_Type_Name (Class) & "'Class)");
          Unit.Put
           ("       return "
              & Return_Type.Type_Entry.Target_Lang_Name
@@ -87,13 +88,6 @@ package body Ada_Side.Generators.Adas is
              (User_Package_Full_Name (Return_Class));
          end if;
 
-         Unit.New_Line;
-         Unit.Put_Line
-          ("   function "
-             & Values.To_Ada_Identifier (Subprogram.Name));
-         Unit.Put_Line
-          ("    (Self : "
-             & User_Tagged_Type_Name (Class) & "'Class)");
          Unit.Put
           ("       return "
              & User_Tagged_Type_Full_Name (Return_Class));
