@@ -34,6 +34,7 @@ package body Ada_Side.Generators.CXXs is
              & " "
              & API_Subprogram_Link_Name (Class, Subprogram)
              & "("
+             & (if Subprogram.Is_Constant then "const " else "")
              & Class.Name.To_Universal_String
              & "* self");
 
@@ -45,7 +46,8 @@ package body Ada_Side.Generators.CXXs is
              ("void "
                 & API_Subprogram_Link_Name (Class, Subprogram)
                 & "(" & Return_Class.Name.To_Universal_String
-                & "** ___view, void* ___storage, const "
+                & "** ___view, void* ___storage, "
+                & (if Subprogram.Is_Constant then "const " else "")
                 & Class.Name.To_Universal_String
                 & "* self");
 
@@ -54,7 +56,8 @@ package body Ada_Side.Generators.CXXs is
              ("void "
                 & API_Subprogram_Link_Name (Class, Subprogram)
                 & "(" & Return_Class.Name.To_Universal_String
-                & "* ___view, const "
+                & "* ___view, "
+                & (if Subprogram.Is_Constant then "const " else "")
                 & Class.Name.To_Universal_String
                 & "* self");
          end if;

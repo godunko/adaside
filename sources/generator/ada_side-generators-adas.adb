@@ -80,6 +80,7 @@ package body Ada_Side.Generators.Adas is
       Unit.Put_Line (Values.To_Ada_Identifier (Subprogram.Name));
       Unit.Put
        ("    (Self : "
+          & (if Subprogram.Is_Constant then "" else "in out ")
           & User_Tagged_Type_Name (Class) & "'Class");
 
       declare
