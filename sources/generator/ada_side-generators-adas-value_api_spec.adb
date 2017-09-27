@@ -1,5 +1,3 @@
-with Ada.Characters.Wide_Wide_Latin_1;
-
 with League.Strings;
 with League.String_Vectors;
 
@@ -171,7 +169,7 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
         F.New_Compilation_Unit (Package_Spec, With_Clause);
 
       Lines : constant League.String_Vectors.Universal_String_Vector :=
-        F.To_Text (Spec_Unit).Split (Ada.Characters.Wide_Wide_Latin_1.LF);
+        F.To_Text (Spec_Unit);
    begin
       Unit.Set_Package_Name (Package_Name);
 

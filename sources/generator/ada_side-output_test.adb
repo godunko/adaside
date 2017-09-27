@@ -1,4 +1,6 @@
+with Ada.Characters.Wide_Wide_Latin_1;
 with Ada.Wide_Wide_Text_IO;
+
 with League.Strings;
 with Ada_Side.Outputs;
 
@@ -19,6 +21,8 @@ procedure Ada_Side.Output_Test is
    Import : constant Ada_Side.Outputs.Node_Access := F.New_Aspect
      (F.New_Name (+"Import"),
       F.New_Name (+"True"));
+
+   LF : constant Wide_Wide_Character := Ada.Characters.Wide_Wide_Latin_1.LF;
 
    ---------------
    -- Print_API --
@@ -72,8 +76,10 @@ procedure Ada_Side.Output_Test is
 
       Unit : constant Ada_Side.Outputs.Node_Access :=
         F.New_Compilation_Unit (Root, Clause);
+
    begin
-      Ada.Wide_Wide_Text_IO.Put_Line (F.To_Text (Unit).To_Wide_Wide_String);
+      Ada.Wide_Wide_Text_IO.Put_Line
+        (F.To_Text (Unit).Join (LF).To_Wide_Wide_String);
    end Print_API;
 
    ------------------------------
@@ -294,10 +300,10 @@ procedure Ada_Side.Output_Test is
         F.New_Compilation_Unit (Body_Root);
    begin
       Ada.Wide_Wide_Text_IO.Put_Line
-        (F.To_Text (Spec_Unit).To_Wide_Wide_String);
+        (F.To_Text (Spec_Unit).Join (LF).To_Wide_Wide_String);
 
       Ada.Wide_Wide_Text_IO.Put_Line
-        (F.To_Text (Body_Unit).To_Wide_Wide_String);
+        (F.To_Text (Body_Unit).Join (LF).To_Wide_Wide_String);
    end Print_Core_Spec_And_Body;
 
 begin

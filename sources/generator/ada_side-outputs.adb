@@ -1,5 +1,3 @@
-with League.String_Vectors;
-
 with Ada_Side.Outputs.Definitions;
 with Ada_Side.Outputs.Clauses;
 with Ada_Side.Outputs.Declarations;
@@ -622,7 +620,7 @@ package body Ada_Side.Outputs is
    not overriding function To_Text
      (Self : access Factory;
       Unit : not null Node_Access)
-      return League.Strings.Universal_String
+      return League.String_Vectors.Universal_String_Vector
    is
       pragma Unreferenced (Self);
       Printer  : aliased League.Pretty_Printers.Printer;

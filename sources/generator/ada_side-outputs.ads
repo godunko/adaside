@@ -1,3 +1,4 @@
+with League.String_Vectors;
 with League.Strings;
 private with League.Pretty_Printers;
 
@@ -11,7 +12,8 @@ package Ada_Side.Outputs is
 
    not overriding function To_Text
      (Self : access Factory;
-      Unit : not null Node_Access) return League.Strings.Universal_String;
+      Unit : not null Node_Access)
+      return League.String_Vectors.Universal_String_Vector;
 
    not overriding function New_Compilation_Unit
      (Self    : access Factory;
