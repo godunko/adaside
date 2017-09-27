@@ -85,16 +85,11 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
 
          begin
             if Self.Can_Be_Generated (Class, Method) then
+               Generate_Declaration (Self, Unit, Class, Method);
+               Unit.New_Line;
+               Unit.Put_Line (+"{");
+
                if Return_Type.Type_Entry.Is_Primitive then
-                  Unit.Put_Line
-                   ("extern ""C"" "
-                      & Return_Type.Type_Entry.Name.To_Universal_String
-                      & " "
-                      & API_Subprogram_Link_Name (Class, Method)
-                      & "("
-                      & Class.Name.To_Universal_String
-                      & "* self)");
-                  Unit.Put_Line (+"{");
                   Unit.Put_Line
                       ("    return "
                          & "self->"
@@ -109,14 +104,6 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                        = Return_Class
                   then
                      Unit.Put_Line
-                      ("extern ""C"" void "
-                         & API_Subprogram_Link_Name (Class, Method)
-                         & "(" & Return_Class.Name.To_Universal_String
-                         & "** ___view, void* ___storage, const "
-                         & Class.Name.To_Universal_String
-                         & "* self)");
-                     Unit.Put_Line (+"{");
-                     Unit.Put_Line
                       ("    *___view = new (___storage) "
                          & Class.Name.To_Universal_String
                          & "(self->"
@@ -124,14 +111,6 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                          & "());");
 
                   else
-                     Unit.Put_Line
-                      ("extern ""C"" void "
-                         & API_Subprogram_Link_Name (Class, Method)
-                         & "(" & Return_Class.Name.To_Universal_String
-                         & "* ___view, const "
-                         & Class.Name.To_Universal_String
-                         & "* self)");
-                     Unit.Put_Line (+"{");
                      Unit.Put_Line
                       ("    *___view = "
                          & "self->"
