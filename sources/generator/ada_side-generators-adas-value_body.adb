@@ -1,5 +1,6 @@
 with Ada.Wide_Wide_Text_IO;
 
+with Abstract_Meta_Argument_Lists;
 with Abstract_Meta_Function_Lists;
 with Abstract_Meta_Functions;
 with Abstract_Meta_Types;
@@ -140,9 +141,34 @@ package body Ada_Side.Generators.Adas.Value_Body is
                   Unit.New_Line;
                   Unit.Put_Line
                    ("   function " & API_Subprogram_Name (Class, Method));
-                  Unit.Put_Line
+                  Unit.Put
                    ("    (Self    : not null "
-                      & API_Access_Type_Full_Name (Class) & ")");
+                      & API_Access_Type_Full_Name (Class));
+
+                  declare
+                     Parameters :
+                       Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+                         := Method.Arguments;
+
+                  begin
+                     for Parameter of Parameters loop
+                        if Parameter.Get_Type.Is_Constant then
+                           Unit.Put_Line (+";");
+                           Unit.Put
+                            ("     "
+                               & Parameter.Name.To_Universal_String
+                               & " : not null "
+                               & API_Access_Type_Full_Name
+                                  (Self.Find_Class
+                                    (Parameter.Get_Type.Type_Entry)));
+
+                        else
+                           raise Program_Error;
+                        end if;
+                     end loop;
+                  end;
+
+                  Unit.Put_Line (+")");
                   Unit.Put_Line
                    ("       return "
                       & Return_Type.Type_Entry.Target_Lang_Name
@@ -174,9 +200,34 @@ package body Ada_Side.Generators.Adas.Value_Body is
                          & API_Access_Type_Full_Name (Return_Class) & ";");
                   end if;
 
-                  Unit.Put_Line
+                  Unit.Put
                    ("     Self    : not null "
-                      & API_Access_Type_Full_Name (Class) & ")");
+                      & API_Access_Type_Full_Name (Class));
+
+                  declare
+                     Parameters :
+                       Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+                         := Method.Arguments;
+
+                  begin
+                     for Parameter of Parameters loop
+                        if Parameter.Get_Type.Is_Constant then
+                           Unit.Put_Line (+";");
+                           Unit.Put
+                            ("     "
+                               & Parameter.Name.To_Universal_String
+                               & " : not null "
+                               & API_Access_Type_Full_Name
+                                  (Self.Find_Class
+                                    (Parameter.Get_Type.Type_Entry)));
+
+                        else
+                           raise Program_Error;
+                        end if;
+                     end loop;
+                  end;
+
+                  Unit.Put_Line (+")");
                   Unit.Put_Line (+"       with Import     => True,");
                   Unit.Put_Line (+"            Convention => C,");
                   Unit.Put_Line
@@ -244,25 +295,21 @@ package body Ada_Side.Generators.Adas.Value_Body is
               := (if Return_Type.Is_Null
                     then Abstract_Meta_Classes.Null_Abstract_Meta_Class
                     else Self.Find_Class (Return_Type.Type_Entry));
+            End_Return   : Boolean := False;
 
          begin
             if Self.Can_Be_Generated (Class, Method) then
                Generate_User_Declaration (Self, Unit, Class, Method);
                Unit.Put_Line (+" is");
+               Unit.Put_Line (+"   begin");
 
                if Return_Type.Type_Entry.Is_Primitive then
-                  Unit.Put_Line (+"   begin");
-                  Unit.Put_Line
+                  Unit.Put
                    ("      return "
                       & API_Subprogram_Name (Class, Method)
-                      & " (" & View_Expression (Class, Class, +"Self") & ");");
-                  Unit.Put_Line
-                   ("   end "
-                      & Values.To_Ada_Identifier (Method.Name) & ";");
+                      & " (" & View_Expression (Class, Class, +"Self"));
 
                elsif Return_Type.Is_Value then
-                  Unit.Put_Line (+"   begin");
-
                   if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
                        = Return_Class
                   then
@@ -296,13 +343,41 @@ package body Ada_Side.Generators.Adas.Value_Body is
                       (User_Package_Full_Name (Return_Class) & ".Internals");
                   end if;
 
-                  Unit.Put_Line
-                   (", " & View_Expression (Class, Class, +"Self") & ");");
+                  Unit.Put
+                   (", " & View_Expression (Class, Class, +"Self"));
 
-                  Unit.Put_Line (+"      end return;");
-                  Unit.Put_Line
-                   ("   end " & Values.To_Ada_Identifier (Method.Name) & ";");
+                  End_Return := True;
                end if;
+
+               declare
+                  Parameters :
+                    Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+                      := Method.Arguments;
+
+               begin
+                  for Parameter of Parameters loop
+                     if Parameter.Get_Type.Is_Constant then
+                        Unit.Put (+", ");
+                        Unit.Put
+                         (View_Expression
+                           (Class,
+                            Self.Find_Class (Parameter.Get_Type.Type_Entry),
+                            Parameter.Name.To_Universal_String));
+
+                     else
+                        raise Program_Error;
+                     end if;
+                  end loop;
+               end;
+
+               Unit.Put_Line (+");");
+
+               if End_Return then
+                  Unit.Put_Line (+"      end return;");
+               end if;
+
+               Unit.Put_Line
+                ("   end " & Values.To_Ada_Identifier (Method.Name) & ";");
 
             else
                --  XXX Not supported yet.
