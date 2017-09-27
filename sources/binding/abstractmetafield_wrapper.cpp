@@ -14,9 +14,4 @@ extern "C"
         return dynamic_cast<AbstractMetaVariable*>(self);
     }
 
-    void AbstractMetaField_name(QString* _return, AbstractMetaField* self)
-    {
-        *_return = self->name();
-    }
-
 }

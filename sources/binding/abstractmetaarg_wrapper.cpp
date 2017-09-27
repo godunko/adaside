@@ -9,9 +9,4 @@ extern "C"
         return dynamic_cast<AbstractMetaVariable*>(self);
     }
 
-    void AbstractMetaArgument_name(QString* _return, AbstractMetaArgument* self)
-    {
-        *_return = self->name();
-    }
-
 }

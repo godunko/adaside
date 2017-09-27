@@ -1,7 +1,6 @@
 
 with Abstract_Meta_Attributes;
 with Abstract_Meta_Variables;
-with Q_Strings;
 
 package Abstract_Meta_Fields is
 
@@ -11,10 +10,6 @@ package Abstract_Meta_Fields is
    type Abstract_Meta_Field is
      new Abstract_Meta_Attributes.Abstract_Meta_Attributes
        and Abstract_Meta_Variables.Abstract_Meta_Variable with private;
-
-   overriding function Name (Self : Abstract_Meta_Field)
-     return Q_Strings.Q_String;
-   --    QString name() const;
 
    package Internals is
 
@@ -36,8 +31,8 @@ private
     (Self : Abstract_Meta_Field)
        return Abstract_Meta_Attributes.AbstractMetaAttributes_Access;
 
-   overriding function Internal
+   overriding function AbstractMetaVariable_View
     (Self : Abstract_Meta_Field)
-       return Abstract_Meta_Variables.AbstractMetaVariable_Access;
+       return not null Abstract_Meta_Variables.AbstractMetaVariable_Access;
 
 end Abstract_Meta_Fields;

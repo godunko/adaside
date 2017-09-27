@@ -1,6 +1,4 @@
-
 with Abstract_Meta_Variables;
-with Q_Strings;
 
 package Abstract_Meta_Arguments is
 
@@ -9,10 +7,6 @@ package Abstract_Meta_Arguments is
 
    type Abstract_Meta_Argument is
      new Abstract_Meta_Variables.Abstract_Meta_Variable with private;
-
-   overriding function Name (Self : Abstract_Meta_Argument)
-     return Q_Strings.Q_String;
-   --    QString name() const;
 
    package Internals is
 
@@ -29,8 +23,8 @@ private
       Object : AbstractMetaArgument_Access;
    end record;
 
-   overriding function Internal
+   overriding function AbstractMetaVariable_View
     (Self : Abstract_Meta_Argument)
-       return Abstract_Meta_Variables.AbstractMetaVariable_Access;
+       return not null Abstract_Meta_Variables.AbstractMetaVariable_Access;
 
 end Abstract_Meta_Arguments;
