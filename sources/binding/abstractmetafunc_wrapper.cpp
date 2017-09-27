@@ -26,6 +26,11 @@ bool AbstractMetaFunction_isArithmeticOperator(AbstractMetaFunction* self)
     return self->isArithmeticOperator();
 }
 
+bool AbstractMetaFunction_isBitwiseOperator(AbstractMetaFunction* self)
+{
+    return self->isBitwiseOperator();
+}
+
 bool AbstractMetaFunction_isConstant(AbstractMetaFunction* self)
 {
     return self->isConstant();

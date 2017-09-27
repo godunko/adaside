@@ -26,6 +26,12 @@ package body Abstract_Meta_Functions is
             Convention => C,
             Link_Name  => "AbstractMetaFunction_isArithmeticOperator";
 
+   function AbstractMetaFunction_isBitwiseOperator
+    (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaFunction_isBitwiseOperator";
+
    function AbstractMetaFunction_isConstant
     (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
        with Import     => True,
@@ -119,6 +125,16 @@ package body Abstract_Meta_Functions is
    begin
       return AbstractMetaFunction_isArithmeticOperator (Self.Object) /= 0;
    end Is_Arithmetic_Operator;
+
+   -------------------------
+   -- Is_Bitwise_Operator --
+   -------------------------
+
+   function Is_Bitwise_Operator
+    (Self : Abstract_Meta_Function'Class) return Boolean is
+   begin
+      return AbstractMetaFunction_isBitwiseOperator (Self.Object) /= 0;
+   end Is_Bitwise_Operator;
 
    -----------------
    -- Is_Constant --
