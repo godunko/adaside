@@ -46,13 +46,24 @@ package body Ada_Side.Generators is
    function API_Subprogram_Link_Name
     (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
      Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
-       return League.Strings.Universal_String is
+       return League.Strings.Universal_String
+   is
+      Parameters : Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+        := Subprogram.Arguments;
+
    begin
-      return
-        "__qtada__"
-          & Class.Name.To_Universal_String
-          & "__"
-          & Subprogram.Name.To_Universal_String;
+      return Result : League.Strings.Universal_String
+        := "__qtada__"
+             & Class.Name.To_Universal_String
+             & "__"
+             & Subprogram.Name.To_Universal_String
+      do
+         for Parameter of Parameters loop
+            Result.Append ('_');
+            Result.Append
+             (Parameter.Get_Type.Type_Entry.Name.To_Universal_String);
+         end loop;
+      end return;
    end API_Subprogram_Link_Name;
 
    ----------------------
