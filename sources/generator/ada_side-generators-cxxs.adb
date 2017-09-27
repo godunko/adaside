@@ -78,7 +78,14 @@ package body Ada_Side.Generators.CXXs is
 
       begin
          for Parameter of Parameters loop
-            if Parameter.Get_Type.Is_Constant then
+            if Parameter.Get_Type.Is_Primitive then
+               Unit.Put
+                (", "
+                   & Parameter.Get_Type.Type_Entry.Name.To_Universal_String
+                   & " "
+                   & Parameter.Name.To_Universal_String);
+
+            elsif Parameter.Get_Type.Is_Constant then
                Unit.Put
                 (", const "
                    & Parameter.Get_Type.Name.To_Universal_String

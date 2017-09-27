@@ -89,7 +89,16 @@ package body Ada_Side.Generators.Adas is
 
       begin
          for Parameter of Parameters loop
-            if Parameter.Get_Type.Is_Constant then
+            if Parameter.Get_Type.Is_Primitive then
+               Unit.Put_Line (+";");
+               Unit.Put
+                ("     "
+                   & Parameter.Name.To_Universal_String
+                   & " : "
+                   & Parameter.Get_Type.Type_Entry.Target_Lang_Name
+                       .To_Universal_String);
+
+            elsif Parameter.Get_Type.Is_Constant then
                Unit.Put_Line (+";");
                Unit.Put
                 ("     "

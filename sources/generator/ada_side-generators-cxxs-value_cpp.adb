@@ -142,7 +142,10 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                         Unit.Put (+", ");
                      end if;
 
-                     if Parameter.Get_Type.Is_Constant then
+                     if Parameter.Get_Type.Is_Primitive then
+                        Unit.Put (Parameter.Name.To_Universal_String);
+
+                     elsif Parameter.Get_Type.Is_Constant then
                         Unit.Put ("*" & Parameter.Name.To_Universal_String);
 
                      else

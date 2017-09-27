@@ -105,7 +105,12 @@ package body Ada_Side.Generators is
 
       begin
          for Parameter of Parameters loop
-            if not Parameter.Get_Type.Is_Value
+            if Parameter.Get_Type.Is_Primitive then
+               --  XXX Primitive means no & or *
+
+               null;
+
+            elsif not Parameter.Get_Type.Is_Value
               or not Parameter.Get_Type.Is_Constant
               or not Parameter.Get_Type.Is_L_Value_Reference
             then
