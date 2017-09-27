@@ -21,6 +21,11 @@ bool AbstractMetaType_isConstant(AbstractMetaType* self)
     return self->isConstant();
 }
 
+bool AbstractMetaType_isPrimitive(AbstractMetaType* self)
+{
+    return self->isPrimitive();
+}
+
 bool AbstractMetaType_isValue(AbstractMetaType* self)
 {
     return self->isValue();

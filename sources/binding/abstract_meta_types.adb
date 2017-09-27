@@ -18,6 +18,13 @@ package body Abstract_Meta_Types is
               Convention => C,
               Link_Name  => "AbstractMetaType_isConstant";
 
+   function AbstractMetaType_isPrimitive
+    (Self : not null AbstractMetaType_Access)
+       return Interfaces.C.Extensions.bool
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaType_isPrimitive";
+
    function AbstractMetaType_isValue
     (Self : not null AbstractMetaType_Access)
        return Interfaces.C.Extensions.bool
@@ -103,6 +110,15 @@ package body Abstract_Meta_Types is
    begin
       return Self.Object = null;
    end Is_Null;
+
+   ------------------
+   -- Is_Primitive --
+   ------------------
+
+   function Is_Primitive (Self : Abstract_Meta_Type'Class) return Boolean is
+   begin
+      return AbstractMetaType_isPrimitive (Self.Object) /= 0;
+   end Is_Primitive;
 
    --------------------------
    -- Is_R_Value_Reference --

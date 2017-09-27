@@ -67,13 +67,6 @@ package Abstract_Meta_Types is
    --    // true when the type is a QtJambiObject subclass
    --    bool hasNativeId() const;
    --
-   --    // returns true if the typs is used as a non complex primitive, no
-   --    //  & or *'s
-   --    bool isPrimitive() const
-   --    {
-   --        return m_pattern == PrimitivePattern;
-   --    }
-   --
    --    bool isCppPrimitive() const;
    --
    --    // returns true if the type is used as an enum
@@ -286,6 +279,10 @@ package Abstract_Meta_Types is
 
    function Is_Constant (Self : Abstract_Meta_Type'Class) return Boolean;
    --  bool isConstant() const
+
+   function Is_Primitive (Self : Abstract_Meta_Type'Class) return Boolean;
+   --  bool isPrimitive() const
+   --  returns true if the typs is used as a non complex primitive, no & or *'s
 
    function Is_Value (Self : Abstract_Meta_Type'Class) return Boolean;
    --  bool isValue() const
