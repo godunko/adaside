@@ -1,5 +1,6 @@
 with Ada.Wide_Wide_Text_IO;
 
+with Abstract_Meta_Argument_Lists;
 with Abstract_Meta_Function_Lists;
 with Abstract_Meta_Types;
 
@@ -82,6 +83,8 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
               := (if Return_Type.Is_Null
                     then Abstract_Meta_Classes.Null_Abstract_Meta_Class
                     else Self.Find_Class (Return_Type.Type_Entry));
+            First_Arg    : Boolean := True;
+            Second_Close : Boolean := False;
 
          begin
             if Self.Can_Be_Generated (Class, Method) then
@@ -90,12 +93,11 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                Unit.Put_Line (+"{");
 
                if Return_Type.Type_Entry.Is_Primitive then
-                  Unit.Put_Line
+                  Unit.Put
                       ("    return "
                          & "self->"
                          & Method.Name.To_Universal_String
-                         & "();");
-                  Unit.Put_Line (+"}");
+                         & "(");
 
                elsif Method.Get_Type.Is_Value then
                   Unit.New_Line;
@@ -103,23 +105,52 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                   if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
                        = Return_Class
                   then
-                     Unit.Put_Line
+                     Unit.Put
                       ("    *___view = new (___storage) "
                          & Class.Name.To_Universal_String
                          & "(self->"
                          & Method.Name.To_Universal_String
-                         & "());");
+                         & "(");
+                     Second_Close := True;
 
                   else
-                     Unit.Put_Line
+                     Unit.Put
                       ("    *___view = "
                          & "self->"
                          & Method.Name.To_Universal_String
-                         & "();");
+                         & "(");
                   end if;
 
-                  Unit.Put_Line (+"}");
+                  declare
+                     Parameters :
+                       Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+                         := Method.Arguments;
+
+                  begin
+                     for Parameter of Parameters loop
+                        if First_Arg then
+                           First_Arg := False;
+
+                        else
+                           Unit.Put (+", ");
+                        end if;
+
+                        if Parameter.Get_Type.Is_Constant then
+                           Unit.Put ("*" & Parameter.Name.To_Universal_String);
+
+                        else
+                           raise Program_Error;
+                        end if;
+                     end loop;
+                  end;
                end if;
+
+               if Second_Close then
+                  Unit.Put (+")");
+               end if;
+
+               Unit.Put_Line (+");");
+               Unit.Put_Line (+"}");
 
             else
                --  XXX Not supported yet.

@@ -1,3 +1,4 @@
+with Abstract_Meta_Argument_Lists;
 with Abstract_Meta_Types;
 
 package body Ada_Side.Generators is
@@ -73,13 +74,32 @@ package body Ada_Side.Generators is
          return False;
       end if;
 
+      if Subprogram.Is_Arithmetic_Operator
+        or Subprogram.Is_Bitwise_Operator
+      then
+         --  XXX Not supported yet.
+
+         return False;
+      end if;
+
       if not Subprogram.Is_Constant then
          return False;
       end if;
 
-      if not Subprogram.Arguments.Is_Empty then
-         return False;
-      end if;
+      declare
+         Parameters : Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+           := Subprogram.Arguments;
+
+      begin
+         for Parameter of Parameters loop
+            if not Parameter.Get_Type.Is_Value
+              or not Parameter.Get_Type.Is_Constant
+              or not Parameter.Get_Type.Is_L_Value_Reference
+            then
+               return False;
+            end if;
+         end loop;
+      end;
 
       if Subprogram.Get_Type.Is_Null then
          return False;

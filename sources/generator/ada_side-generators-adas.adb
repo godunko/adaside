@@ -1,3 +1,4 @@
+with Abstract_Meta_Argument_Lists;
 with Abstract_Meta_Types;
 
 with Ada_Side.Generators.Adas.Value_API_Spec;
@@ -7,6 +8,10 @@ with Ada_Side.Generators.Adas.Values;
 package body Ada_Side.Generators.Adas is
 
    use type League.Strings.Universal_String;
+
+   function "+"
+    (Item : Wide_Wide_String) return League.Strings.Universal_String
+       renames League.Strings.To_Universal_String;
 
    -------------------------------
    -- API_Access_Type_Full_Name --
@@ -59,41 +64,76 @@ package body Ada_Side.Generators.Adas is
    is
       use type Abstract_Meta_Classes.Abstract_Meta_Class;
 
-      Return_Type  : constant Abstract_Meta_Types.Abstract_Meta_Type
+      Return_Type : constant Abstract_Meta_Types.Abstract_Meta_Type
         := Subprogram.Get_Type;
-      Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
-        := (if Return_Type.Is_Null
-              then Abstract_Meta_Classes.Null_Abstract_Meta_Class
-              else Generator.Find_Class (Return_Type.Type_Entry));
 
    begin
       Unit.New_Line;
-      Unit.Put_Line
-       ("   function " & Values.To_Ada_Identifier (Subprogram.Name));
-      Unit.Put_Line
-       ("    (Self : "
-          & User_Tagged_Type_Name (Class) & "'Class)");
 
-      if Return_Type.Type_Entry.Is_Primitive then
-         Unit.Put
-          ("       return "
-             & Return_Type.Type_Entry.Target_Lang_Name
-                 .To_Universal_String);
-
-      elsif Return_Type.Is_Value then
-         if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-              /= Return_Class
-         then
-            Unit.Add_With_Clause
-             (User_Package_Full_Name (Return_Class));
-         end if;
-
-         Unit.Put
-          ("       return "
-             & User_Tagged_Type_Full_Name (Return_Class));
+      if Return_Type.Is_Null then
+         Unit.Put (+"   procedure ");
 
       else
-         raise Program_Error;
+         Unit.Put (+"   function ");
+      end if;
+
+      Unit.Put_Line (Values.To_Ada_Identifier (Subprogram.Name));
+      Unit.Put
+       ("    (Self : "
+          & User_Tagged_Type_Name (Class) & "'Class");
+
+      declare
+         Parameters : Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+           := Subprogram.Arguments;
+
+      begin
+         for Parameter of Parameters loop
+            if Parameter.Get_Type.Is_Constant then
+               Unit.Put_Line (+";");
+               Unit.Put
+                ("     "
+                   & Parameter.Name.To_Universal_String
+                   & " : "
+                   & User_Tagged_Type_Full_Name
+                      (Generator.Find_Class (Parameter.Get_Type.Type_Entry))
+                   & "'Class");
+
+            else
+               raise Program_Error;
+            end if;
+         end loop;
+      end;
+
+      Unit.Put_Line (+")");
+
+      if not Return_Type.Is_Null then
+         declare
+            Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
+              := Generator.Find_Class (Return_Type.Type_Entry);
+
+         begin
+            if Return_Type.Type_Entry.Is_Primitive then
+               Unit.Put
+                ("       return "
+                   & Return_Type.Type_Entry.Target_Lang_Name
+                       .To_Universal_String);
+
+            elsif Return_Type.Is_Value then
+               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                    /= Return_Class
+               then
+                  Unit.Add_With_Clause
+                   (User_Package_Full_Name (Return_Class));
+               end if;
+
+               Unit.Put
+                ("       return "
+                   & User_Tagged_Type_Full_Name (Return_Class));
+
+            else
+               raise Program_Error;
+            end if;
+         end;
       end if;
    end Generate_User_Declaration;
 

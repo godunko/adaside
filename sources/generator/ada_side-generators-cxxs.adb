@@ -1,6 +1,11 @@
+with Abstract_Meta_Argument_Lists;
 with Abstract_Meta_Types;
 
 package body Ada_Side.Generators.CXXs is
+
+   function "+"
+    (Item : Wide_Wide_String) return League.Strings.Universal_String
+       renames League.Strings.To_Universal_String;
 
    --------------------------
    -- Generate_Declaration --
@@ -30,7 +35,7 @@ package body Ada_Side.Generators.CXXs is
              & API_Subprogram_Link_Name (Class, Subprogram)
              & "("
              & Class.Name.To_Universal_String
-             & "* self)");
+             & "* self");
 
       elsif Return_Type.Is_Value then
          if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
@@ -42,7 +47,7 @@ package body Ada_Side.Generators.CXXs is
                 & "(" & Return_Class.Name.To_Universal_String
                 & "** ___view, void* ___storage, const "
                 & Class.Name.To_Universal_String
-                & "* self)");
+                & "* self");
 
          else
             Unit.Put
@@ -51,9 +56,30 @@ package body Ada_Side.Generators.CXXs is
                 & "(" & Return_Class.Name.To_Universal_String
                 & "* ___view, const "
                 & Class.Name.To_Universal_String
-                & "* self)");
+                & "* self");
          end if;
       end if;
+
+      declare
+         Parameters : Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+           := Subprogram.Arguments;
+
+      begin
+         for Parameter of Parameters loop
+            if Parameter.Get_Type.Is_Constant then
+               Unit.Put
+                (", const "
+                   & Parameter.Get_Type.Name.To_Universal_String
+                   & "* "
+                   & Parameter.Name.To_Universal_String);
+
+            else
+               raise Program_Error;
+            end if;
+         end loop;
+      end;
+
+      Unit.Put (+")");
    end Generate_Declaration;
 
 end Ada_Side.Generators.CXXs;
