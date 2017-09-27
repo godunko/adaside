@@ -1,5 +1,8 @@
+with Interfaces.C.Extensions;
 
 package body Abstract_Meta_Argument_Lists is
+
+   use type Interfaces.C.Extensions.bool;
 
    procedure AbstractMetaArgumentList_adjust
     (This : in out Internals.AbstractMetaArgumentList_Access)
@@ -12,6 +15,13 @@ package body Abstract_Meta_Argument_Lists is
        with Import     => True,
             Convention => C,
             Link_Name  => "AbstractMetaArgumentList__finalize";
+
+   function AbstractMetaArgumentList_isEmpty
+    (This : Internals.AbstractMetaArgumentList_Access)
+       return Interfaces.C.Extensions.bool
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaArgumentList_isEmpty";
 
    function AbstractMetaArgumentList_size
     (This : Internals.AbstractMetaArgumentList_Access) return Interfaces.C.int
@@ -112,6 +122,16 @@ package body Abstract_Meta_Argument_Lists is
       end Internal;
 
    end Internals;
+
+   --------------
+   -- Is_Empty --
+   --------------
+
+   function Is_Empty
+    (Self : Abstract_Meta_Argument_List'Class) return Boolean is
+   begin
+      return AbstractMetaArgumentList_isEmpty (Self.Object) /= 0;
+   end Is_Empty;
 
    ----------
    -- Size --

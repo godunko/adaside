@@ -32,3 +32,8 @@ extern "C"
     }
 
 }
+
+extern "C" bool AbstractMetaArgumentList_isEmpty(AbstractMetaArgumentList* self)
+{
+    return self->isEmpty();
+}

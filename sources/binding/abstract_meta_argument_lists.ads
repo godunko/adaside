@@ -11,6 +11,9 @@ package Abstract_Meta_Argument_Lists is
           Constant_Indexing => Value,
           Default_Iterator  => Each;
 
+   function Is_Empty
+    (Self : Abstract_Meta_Argument_List'Class) return Boolean;
+
    function Size (Self : Abstract_Meta_Argument_List'Class)
      return Interfaces.C.int;
 

@@ -12,3 +12,5 @@ extern "C"
     AbstractMetaArgument* AbstractMetaArgumentList_value(AbstractMetaArgumentList* self, int index);
 
 }
+
+extern "C" bool AbstractMetaArgumentList_isEmpty(AbstractMetaArgumentList* self);
