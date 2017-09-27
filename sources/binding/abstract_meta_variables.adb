@@ -8,6 +8,25 @@ package body Abstract_Meta_Variables is
             Convention => C,
             Link_Name  => "AbstractMetaVariable_name";
 
+   function AbstractMetaVariable_type
+    (This : AbstractMetaVariable_Access)
+       return Abstract_Meta_Types.AbstractMetaType_Access
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaVariable_type";
+
+   --------------
+   -- Get_Type --
+   --------------
+
+   function Get_Type (Self : Abstract_Meta_Variable'Class)
+     return Abstract_Meta_Types.Abstract_Meta_Type is
+   begin
+      return
+        Abstract_Meta_Types.Internals.Wrap
+         (AbstractMetaVariable_type (Self.AbstractMetaVariable_View));
+   end Get_Type;
+
    ----------
    -- Name --
    ----------

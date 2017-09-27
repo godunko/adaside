@@ -1,3 +1,4 @@
+with Abstract_Meta_Types;
 with Q_Strings;
 
 package Abstract_Meta_Variables is
@@ -8,10 +9,6 @@ package Abstract_Meta_Variables is
    type Abstract_Meta_Variable is interface;
 
    pragma Style_Checks (Off);
-   --    AbstractMetaType *type() const
-   --    {
-   --        return m_type;
-   --    }
    --    void setType(AbstractMetaType *type)
    --    {
    --        Q_ASSERT(m_type == 0);
@@ -54,6 +51,10 @@ package Abstract_Meta_Variables is
    function Name
     (Self : Abstract_Meta_Variable'Class) return Q_Strings.Q_String;
    --  QString name() const
+
+   function Get_Type (Self : Abstract_Meta_Variable'Class)
+     return Abstract_Meta_Types.Abstract_Meta_Type;
+   --  AbstractMetaType *type() const
 
    not overriding function AbstractMetaVariable_View
     (Self : Abstract_Meta_Variable)
