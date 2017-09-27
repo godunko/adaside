@@ -137,7 +137,45 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
          begin
             if Self.Can_Be_Generated (Class, Method) then
-               if Return_Type.Type_Entry.Is_Primitive then
+               if Return_Type.Is_Null then
+                  Unit.New_Line;
+                  Unit.Put_Line
+                   ("   procedure " & API_Subprogram_Name (Class, Method));
+                  Unit.Put
+                   ("    (Self    : not null "
+                      & API_Access_Type_Full_Name (Class));
+
+                  declare
+                     Parameters :
+                       Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+                         := Method.Arguments;
+
+                  begin
+                     for Parameter of Parameters loop
+                        if Parameter.Get_Type.Is_Constant then
+                           Unit.Put_Line (+";");
+                           Unit.Put
+                            ("     "
+                               & Parameter.Name.To_Universal_String
+                               & " : not null "
+                               & API_Access_Type_Full_Name
+                                  (Self.Find_Class
+                                    (Parameter.Get_Type.Type_Entry)));
+
+                        else
+                           raise Program_Error;
+                        end if;
+                     end loop;
+                  end;
+
+                  Unit.Put_Line (+")");
+                  Unit.Put_Line (+"       with Import     => True,");
+                  Unit.Put_Line (+"            Convention => C,");
+                  Unit.Put_Line
+                   ("            Link_Name  => """
+                      & API_Subprogram_Link_Name (Class, Method) & """;");
+
+               elsif Return_Type.Type_Entry.Is_Primitive then
                   Unit.New_Line;
                   Unit.Put_Line
                    ("   function " & API_Subprogram_Name (Class, Method));
@@ -303,7 +341,13 @@ package body Ada_Side.Generators.Adas.Value_Body is
                Unit.Put_Line (+" is");
                Unit.Put_Line (+"   begin");
 
-               if Return_Type.Type_Entry.Is_Primitive then
+               if Return_Type.Is_Null then
+                  Unit.Put
+                   ("      "
+                      & API_Subprogram_Name (Class, Method)
+                      & " (" & View_Expression (Class, Class, +"Self"));
+
+               elsif Return_Type.Type_Entry.Is_Primitive then
                   Unit.Put
                    ("      return "
                       & API_Subprogram_Name (Class, Method)

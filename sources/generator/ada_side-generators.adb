@@ -104,7 +104,7 @@ package body Ada_Side.Generators is
       end;
 
       if Subprogram.Get_Type.Is_Null then
-         return False;
+         return True;
       end if;
 
       if Subprogram.Get_Type.Is_Reference then

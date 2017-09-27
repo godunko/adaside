@@ -92,12 +92,18 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                Unit.New_Line;
                Unit.Put_Line (+"{");
 
-               if Return_Type.Type_Entry.Is_Primitive then
+               if Return_Type.Is_Null then
                   Unit.Put
-                      ("    return "
-                         & "self->"
-                         & Method.Name.To_Universal_String
-                         & "(");
+                   ("    self->"
+                      & Method.Name.To_Universal_String
+                      & "(");
+
+               elsif Return_Type.Type_Entry.Is_Primitive then
+                  Unit.Put
+                   ("    return "
+                      & "self->"
+                      & Method.Name.To_Universal_String
+                      & "(");
 
                elsif Method.Get_Type.Is_Value then
                   Unit.New_Line;
@@ -120,30 +126,30 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                          & Method.Name.To_Universal_String
                          & "(");
                   end if;
-
-                  declare
-                     Parameters :
-                       Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
-                         := Method.Arguments;
-
-                  begin
-                     for Parameter of Parameters loop
-                        if First_Arg then
-                           First_Arg := False;
-
-                        else
-                           Unit.Put (+", ");
-                        end if;
-
-                        if Parameter.Get_Type.Is_Constant then
-                           Unit.Put ("*" & Parameter.Name.To_Universal_String);
-
-                        else
-                           raise Program_Error;
-                        end if;
-                     end loop;
-                  end;
                end if;
+
+               declare
+                  Parameters :
+                    Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+                      := Method.Arguments;
+
+               begin
+                  for Parameter of Parameters loop
+                     if First_Arg then
+                        First_Arg := False;
+
+                     else
+                        Unit.Put (+", ");
+                     end if;
+
+                     if Parameter.Get_Type.Is_Constant then
+                        Unit.Put ("*" & Parameter.Name.To_Universal_String);
+
+                     else
+                        raise Program_Error;
+                     end if;
+                  end loop;
+               end;
 
                if Second_Close then
                   Unit.Put (+")");

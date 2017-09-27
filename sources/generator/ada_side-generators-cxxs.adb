@@ -28,7 +28,16 @@ package body Ada_Side.Generators.CXXs is
               else Generator.Find_Class (Return_Type.Type_Entry));
 
    begin
-      if Return_Type.Type_Entry.Is_Primitive then
+      if Return_Type.Is_Null then
+         Unit.Put
+          ("void "
+             & API_Subprogram_Link_Name (Class, Subprogram)
+             & "("
+             & (if Subprogram.Is_Constant then "const " else "")
+             & Class.Name.To_Universal_String
+             & "* self");
+
+      elsif Return_Type.Type_Entry.Is_Primitive then
          Unit.Put
           (Return_Type.Type_Entry.Name.To_Universal_String
              & " "

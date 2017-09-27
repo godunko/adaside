@@ -105,7 +105,7 @@ package body Ada_Side.Generators.Adas is
          end loop;
       end;
 
-      Unit.Put_Line (+")");
+      Unit.Put (+")");
 
       if not Return_Type.Is_Null then
          declare
@@ -113,6 +113,8 @@ package body Ada_Side.Generators.Adas is
               := Generator.Find_Class (Return_Type.Type_Entry);
 
          begin
+            Unit.New_Line;
+
             if Return_Type.Type_Entry.Is_Primitive then
                Unit.Put
                 ("       return "
