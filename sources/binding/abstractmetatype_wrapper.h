@@ -9,6 +9,7 @@ extern "C"
 
 }
 
+extern "C" bool AbstractMetaType_isConstant(AbstractMetaType* self);
 extern "C" bool AbstractMetaType_isValue(AbstractMetaType* self);
 extern "C" ReferenceType AbstractMetaType_referenceType(AbstractMetaType* self);
 extern "C" const TypeEntry* AbstractMetaType_typeEntry(AbstractMetaType* self);

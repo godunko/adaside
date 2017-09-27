@@ -16,6 +16,11 @@ extern "C"
 
 }
 
+bool AbstractMetaType_isConstant(AbstractMetaType* self)
+{
+    return self->isConstant();
+}
+
 bool AbstractMetaType_isValue(AbstractMetaType* self)
 {
     return self->isValue();

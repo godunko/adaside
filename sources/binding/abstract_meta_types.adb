@@ -11,6 +11,13 @@ package body Abstract_Meta_Types is
             Convention => C,
             Link_Name  => "AbstractMetaType_fullName";
 
+   function AbstractMetaType_isConstant
+    (Self : not null AbstractMetaType_Access)
+       return Interfaces.C.Extensions.bool
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaType_isConstant";
+
    function AbstractMetaType_isValue
     (Self : not null AbstractMetaType_Access)
        return Interfaces.C.Extensions.bool
@@ -68,6 +75,15 @@ package body Abstract_Meta_Types is
       end Wrap;
 
    end Internals;
+
+   -----------------
+   -- Is_Constant --
+   -----------------
+
+   function Is_Constant (Self : Abstract_Meta_Type'Class) return Boolean is
+   begin
+      return AbstractMetaType_isConstant (Self.Object) /= 0;
+   end Is_Constant;
 
    --------------------------
    -- Is_L_Value_Reference --

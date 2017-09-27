@@ -166,10 +166,6 @@ package Abstract_Meta_Types is
    --        return m_pattern == ThreadPattern;
    --    }
    --
-   --    bool isConstant() const
-   --    {
-   --        return m_constant;
-   --    }
    --    void setConstant(bool constant)
    --    {
    --        m_constant = constant;
@@ -287,6 +283,9 @@ package Abstract_Meta_Types is
    function Full_Name
     (Self : Abstract_Meta_Type'Class) return Q_Strings.Q_String;
    --  QString fullName() const
+
+   function Is_Constant (Self : Abstract_Meta_Type'Class) return Boolean;
+   --  bool isConstant() const
 
    function Is_Value (Self : Abstract_Meta_Type'Class) return Boolean;
    --  bool isValue() const
