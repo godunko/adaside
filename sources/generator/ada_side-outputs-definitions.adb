@@ -27,6 +27,24 @@ package body Ada_Side.Outputs.Definitions is
    --------------
 
    overriding function Document
+    (Self    : Derived;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.Put ("new ");
+      Result.Append (Self.Parent.Document (Printer, Pad));
+
+      return Result;
+   end Document;
+
+   --------------
+   -- Document --
+   --------------
+
+   overriding function Document
      (Self    : Private_Record;
       Printer : not null access League.Pretty_Printers.Printer'Class;
       Pad     : Natural)
@@ -145,6 +163,15 @@ package body Ada_Side.Outputs.Definitions is
    begin
       return Access_Definition'(Is_All, Target);
    end New_Access;
+
+   -----------------
+   -- New_Derived --
+   -----------------
+
+   function New_Derived (Parent : not null Node_Access) return Node'Class is
+   begin
+      return Derived'(Parent => Parent);
+   end New_Derived;
 
    ------------------------
    -- New_Private_Record --

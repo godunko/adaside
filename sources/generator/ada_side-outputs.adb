@@ -150,6 +150,19 @@ package body Ada_Side.Outputs is
                              (Root, Clauses, License));
    end New_Compilation_Unit;
 
+   -----------------
+   -- New_Derived --
+   -----------------
+
+   not overriding function New_Derived
+     (Self   : access Factory;
+      Parent : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Definitions.New_Derived (Parent));
+   end New_Derived;
+
    ---------------
    -- New_Elsif --
    ---------------
