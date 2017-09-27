@@ -247,18 +247,10 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
          begin
             if Self.Can_Be_Generated (Class, Method) then
+               Generate_User_Declaration (Self, Unit, Class, Method);
+               Unit.Put_Line (+" is");
+
                if Return_Type.Type_Entry.Is_Primitive then
-                  Unit.New_Line;
-                  Unit.Put_Line
-                   ("   function "
-                      & Values.To_Ada_Identifier (Method.Name));
-                  Unit.Put_Line
-                   ("    (Self : "
-                      & User_Tagged_Type_Name (Class) & "'Class)");
-                  Unit.Put_Line
-                   ("       return "
-                      & Return_Type.Type_Entry.Target_Lang_Name
-                          .To_Universal_String & " is");
                   Unit.Put_Line (+"   begin");
                   Unit.Put_Line
                    ("      return "
@@ -269,16 +261,6 @@ package body Ada_Side.Generators.Adas.Value_Body is
                       & Values.To_Ada_Identifier (Method.Name) & ";");
 
                elsif Return_Type.Is_Value then
-                  Unit.New_Line;
-                  Unit.Put_Line
-                   ("   function "
-                      & Values.To_Ada_Identifier (Method.Name));
-                  Unit.Put_Line
-                   ("    (Self : "
-                      & User_Tagged_Type_Name (Class) & "'Class)");
-                  Unit.Put_Line
-                   ("       return "
-                      & User_Tagged_Type_Full_Name (Return_Class) & " is");
                   Unit.Put_Line (+"   begin");
 
                   if Abstract_Meta_Classes.Abstract_Meta_Class (Class)

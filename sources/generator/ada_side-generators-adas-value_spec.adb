@@ -3,7 +3,6 @@ with Ada.Wide_Wide_Text_IO;
 with League.Strings;
 
 with Abstract_Meta_Function_Lists;
-with Abstract_Meta_Types;
 
 with Ada_Side.Generators.Adas.Values;
 with Ada_Side.Units;
@@ -31,8 +30,6 @@ package body Ada_Side.Generators.Adas.Value_Spec is
     (Self  : in out Value_Ada_Spec_Generator;
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
    is
-      use type Abstract_Meta_Classes.Abstract_Meta_Class;
-
       Unit      : Ada_Side.Units.Ada_Spec_Unit;
       Functions : Abstract_Meta_Function_Lists.Abstract_Meta_Function_List;
 
@@ -53,57 +50,17 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       Functions := Class.Functions;
 
       for Method of Functions loop
-         declare
-            Return_Type  : constant Abstract_Meta_Types.Abstract_Meta_Type
-              := Method.Get_Type;
-            Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
-              := (if Return_Type.Is_Null
-                    then Abstract_Meta_Classes.Null_Abstract_Meta_Class
-                    else Self.Find_Class (Return_Type.Type_Entry));
+         if Self.Can_Be_Generated (Class, Method) then
+            Generate_User_Declaration (Self, Unit, Class, Method);
+            Unit.Put_Line (+";");
 
-         begin
-            if Self.Can_Be_Generated (Class, Method) then
-               if Return_Type.Type_Entry.Is_Primitive then
-                  Unit.New_Line;
-                  Unit.Put_Line
-                   ("   function "
-                      & Values.To_Ada_Identifier (Method.Name));
-                  Unit.Put_Line
-                   ("    (Self : "
-                      & User_Tagged_Type_Name (Class) & "'Class)");
-                  Unit.Put_Line
-                   ("       return "
-                      & Return_Type.Type_Entry.Target_Lang_Name
-                          .To_Universal_String & ";");
+         else
+            --  XXX Not supported yet.
 
-               elsif Return_Type.Is_Value then
-                  if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
-                       /= Return_Class
-                  then
-                     Unit.Add_With_Clause
-                      (User_Package_Full_Name (Return_Class));
-                  end if;
-
-                  Unit.New_Line;
-                  Unit.Put_Line
-                   ("   function "
-                      & Values.To_Ada_Identifier (Method.Name));
-                  Unit.Put_Line
-                   ("    (Self : "
-                      & User_Tagged_Type_Name (Class) & "'Class)");
-                  Unit.Put_Line
-                   ("       return "
-                      & User_Tagged_Type_Full_Name (Return_Class) & ";");
-               end if;
-
-            else
-               --  XXX Not supported yet.
-
-               Ada.Wide_Wide_Text_IO.Put_Line
-                ("Skipping "
-                   & Method.Name.To_Universal_String.To_Wide_Wide_String);
-            end if;
-         end;
+            Ada.Wide_Wide_Text_IO.Put_Line
+             ("Skipping "
+                & Method.Name.To_Universal_String.To_Wide_Wide_String);
+         end if;
       end loop;
 
       Unit.New_Line;
