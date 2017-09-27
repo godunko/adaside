@@ -56,4 +56,11 @@ private
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String;
 
+   function Can_Be_Generated
+    (Generator : Abstract_Generator'Class;
+     Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
+       return Boolean;
+   --  Returns True if generator can generate binding for given subprogram.
+
 end Ada_Side.Generators;

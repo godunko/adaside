@@ -1,5 +1,4 @@
 with Ada.Wide_Wide_Text_IO;
-with Interfaces.C;
 
 with Abstract_Meta_Function_Lists;
 with Abstract_Meta_Types;
@@ -50,8 +49,6 @@ package body Ada_Side.Generators.CXXs.Value_H is
 
       for Method of Functions loop
          declare
-            use type Interfaces.C.int;
-
             Return_Type  : constant Abstract_Meta_Types.Abstract_Meta_Type
               := Method.Get_Type;
             Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
@@ -60,18 +57,7 @@ package body Ada_Side.Generators.CXXs.Value_H is
                     else Self.Find_Class (Return_Type.Type_Entry));
 
          begin
-            if Method.Is_Constructor then
-               --  XXX Not supported yet.
-
-               Ada.Wide_Wide_Text_IO.Put_Line
-                ("Skipping "
-                   & Method.Name.To_Universal_String.To_Wide_Wide_String);
-
-            elsif not Return_Type.Is_Null
-              and then Method.Is_Constant
-              and then Method.Arguments.Size = 0
-              and then not Method.Get_Type.Is_Reference
-            then
+            if Self.Can_Be_Generated (Class, Method) then
                if Return_Type.Type_Entry.Is_Primitive then
                   Unit.Put_Line
                    ("extern ""C"" "

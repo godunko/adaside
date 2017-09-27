@@ -1,3 +1,4 @@
+with Abstract_Meta_Types;
 
 package body Ada_Side.Generators is
 
@@ -52,6 +53,61 @@ package body Ada_Side.Generators is
           & "__"
           & Subprogram.Name.To_Universal_String;
    end API_Subprogram_Link_Name;
+
+   ----------------------
+   -- Can_Be_Generated --
+   ----------------------
+
+   function Can_Be_Generated
+    (Generator : Abstract_Generator'Class;
+     Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
+       return Boolean
+   is
+      pragma Unreferenced (Generator, Class);
+
+   begin
+      if Subprogram.Is_Constructor then
+         --  XXX Not supported yet.
+
+         return False;
+      end if;
+
+      if not Subprogram.Is_Constant then
+         return False;
+      end if;
+
+      if not Subprogram.Arguments.Is_Empty then
+         return False;
+      end if;
+
+      if Subprogram.Get_Type.Is_Null then
+         return False;
+      end if;
+
+      if Subprogram.Get_Type.Is_Reference then
+         return False;
+      end if;
+
+      declare
+         Return_Type  : constant Abstract_Meta_Types.Abstract_Meta_Type
+           := Subprogram.Get_Type;
+--         Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
+--           := Generator.Find_Class (Return_Type.Type_Entry);
+--           := (if Return_Type.Is_Null
+--                 then Abstract_Meta_Classes.Null_Abstract_Meta_Class
+--                 else Self.Find_Class (Return_Type.Type_Entry));
+
+      begin
+         if Return_Type.Type_Entry.Is_Primitive
+           or Return_Type.Is_Value
+         then
+            return True;
+         end if;
+      end;
+
+      return False;
+   end Can_Be_Generated;
 
    ----------------
    -- Find_Class --
