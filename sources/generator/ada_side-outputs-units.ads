@@ -7,12 +7,6 @@ private package Ada_Side.Outputs.Units is
       Clauses : Node_Access := null;
       License : League.Strings.Universal_String) return Node'Class;
 
-   overriding function Document
-    (Self    : Compilation_Unit;
-     Printer : not null access League.Pretty_Printers.Printer'Class;
-     Pad     : Natural)
-      return League.Pretty_Printers.Document;
-
 private
 
    type Compilation_Unit is new Node with record
@@ -20,5 +14,11 @@ private
       Clauses : Node_Access;
       License : League.Strings.Universal_String;
    end record;
+
+   overriding function Document
+    (Self    : Compilation_Unit;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document;
 
 end Ada_Side.Outputs.Units;

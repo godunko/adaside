@@ -6,17 +6,17 @@ private package Ada_Side.Outputs.Joins is
      (Left  : not null Node_Access;
       Right : not null Node_Access) return Node'Class;
 
-   overriding function Document
-    (Self    : Join;
-     Printer : not null access League.Pretty_Printers.Printer'Class;
-     Pad     : Natural)
-      return League.Pretty_Printers.Document;
-
 private
 
    type Join is new Node with record
       Left  : not null Node_Access;
       Right : not null Node_Access;
    end record;
+
+   overriding function Document
+    (Self    : Join;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document;
 
 end Ada_Side.Outputs.Joins;

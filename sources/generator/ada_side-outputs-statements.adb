@@ -28,7 +28,7 @@ package body Ada_Side.Outputs.Statements is
    --------------
 
    overriding function Document
-    (Self    : IF_Statement;
+    (Self    : If_Statement;
      Printer : not null access League.Pretty_Printers.Printer'Class;
      Pad     : Natural)
       return League.Pretty_Printers.Document
@@ -130,7 +130,7 @@ package body Ada_Side.Outputs.Statements is
       Elsif_List : Node_Access;
       Else_Path  : Node_Access) return Node'Class is
    begin
-      return IF_Statement'(Condition, Then_Path, Elsif_List, Else_Path);
+      return If_Statement'(Condition, Then_Path, Elsif_List, Else_Path);
    end New_If;
 
    -------------------
