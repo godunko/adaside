@@ -20,6 +20,12 @@ package body Abstract_Meta_Functions is
             Convention => C,
             Link_Name  => "AbstractMetaFunction_arguments";
 
+   function AbstractMetaFunction_isArithmeticOperator
+    (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaFunction_isArithmeticOperator";
+
    function AbstractMetaFunction_isConstant
     (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
        with Import     => True,
@@ -103,6 +109,16 @@ package body Abstract_Meta_Functions is
       end Wrap;
 
    end Internals;
+
+   ----------------------------
+   -- Is_Arithmetic_Operator --
+   ----------------------------
+
+   function Is_Arithmetic_Operator
+    (Self : Abstract_Meta_Function'Class) return Boolean is
+   begin
+      return AbstractMetaFunction_isArithmeticOperator (Self.Object) /= 0;
+   end Is_Arithmetic_Operator;
 
    -----------------
    -- Is_Constant --
