@@ -15,12 +15,16 @@ package Ada_Side.Outputs is
       Unit : not null Node_Access)
       return League.String_Vectors.Universal_String_Vector;
 
+   --  Compilation units
+
    not overriding function New_Compilation_Unit
      (Self    : access Factory;
       Root    : not null Node_Access;
       Clauses : Node_Access := null;
       License : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   --  Node lists
 
    not overriding function New_List
      (Self : access Factory;
@@ -31,45 +35,32 @@ package Ada_Side.Outputs is
      (Self : access Factory;
       List : Node_Access_Array) return not null Node_Access;
 
-   not overriding function New_Name
-     (Self : access Factory;
-      Name : League.Strings.Universal_String) return not null Node_Access;
-   --  Identifier, character literal ('X'), operator ("<")
+   --  Clauses, Pragmas and Aspects
 
-   not overriding function New_Literal
+   not overriding function New_Aspect
      (Self  : access Factory;
-      Value : Natural;
-      Base  : Positive := 10) return not null Node_Access;
+      Name  : not null Node_Access;
+      Value : Node_Access := null) return not null Node_Access;
 
-   not overriding function New_String_Literal
-     (Self : access Factory;
-      Text : League.Strings.Universal_String) return not null Node_Access;
-
-   not overriding function New_Type
-     (Self          : access Factory;
-      Name          : not null Node_Access;
-      Discriminants : Node_Access := null;
-      Definition    : Node_Access := null;
-      Aspects       : Node_Access := null;
-      Comment       : League.Strings.Universal_String :=
+   not overriding function New_Pragma
+     (Self      : access Factory;
+      Name      : not null Node_Access;
+      Arguments : Node_Access := null;
+      Comment   : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String) return not null Node_Access;
 
-   not overriding function New_Subtype
-     (Self          : access Factory;
-      Name          : not null Node_Access;
-      Definition    : not null Node_Access;
-      Constrain     : Node_Access := null;
-      Comment       : League.Strings.Universal_String :=
-        League.Strings.Empty_Universal_String) return not null Node_Access;
+   not overriding function New_Use
+     (Self       : access Factory;
+      Name       : not null Node_Access;
+      Use_Type   : Boolean := False) return not null Node_Access;
 
-   not overriding function New_Selected_Name
-     (Self     : access Factory;
-      Prefix   : not null Node_Access;
-      Selector : not null Node_Access) return not null Node_Access;
+   not overriding function New_With
+     (Self       : access Factory;
+      Name       : not null Node_Access;
+      Is_Limited : Boolean := False;
+      Is_Private : Boolean := False) return not null Node_Access;
 
-   not overriding function New_Selected_Name
-     (Self : access Factory;
-      Name : League.Strings.Universal_String) return not null Node_Access;
+   --  Declarations
 
    not overriding function New_Package
      (Self         : access Factory;
@@ -83,85 +74,6 @@ package Ada_Side.Outputs is
      (Self : access Factory;
       Name : not null Node_Access;
       List : Node_Access := null) return not null Node_Access;
-
-   not overriding function New_Pragma
-     (Self      : access Factory;
-      Name      : not null Node_Access;
-      Arguments : Node_Access := null;
-      Comment   : League.Strings.Universal_String :=
-        League.Strings.Empty_Universal_String) return not null Node_Access;
-
-   not overriding function New_Variable
-     (Self            : access Factory;
-      Name            : not null Node_Access;
-      Type_Definition : Node_Access := null;
-      Initialization  : Node_Access := null;
-      Is_Constant     : Boolean := False;
-      Is_Aliased      : Boolean := False;
-      Aspects         : Node_Access := null;
-      Comment         : League.Strings.Universal_String :=
-        League.Strings.Empty_Universal_String) return not null Node_Access;
-
-   not overriding function New_With
-     (Self       : access Factory;
-      Name       : not null Node_Access;
-      Is_Limited : Boolean := False;
-      Is_Private : Boolean := False) return not null Node_Access;
-
-   not overriding function New_Use
-     (Self       : access Factory;
-      Name       : not null Node_Access;
-      Use_Type   : Boolean := False) return not null Node_Access;
-
-   not overriding function New_Derived
-     (Self   : access Factory;
-      Parent : not null Node_Access) return not null Node_Access;
-
-   not overriding function New_Record
-     (Self       : access Factory;
-      Parent     : Node_Access := null;
-      Components : Node_Access := null) return not null Node_Access;
-
-   not overriding function New_Private_Record
-     (Self      : access Factory;
-      Is_Tagged : Boolean := False) return not null Node_Access;
-
-   not overriding function New_Apply
-     (Self      : access Factory;
-      Prefix    : not null Node_Access;
-      Arguments : not null Node_Access) return not null Node_Access;
-   --  This node represent construction in form 'prefix (arguments)'
-   --  This includes function_call, indexed_component, slice,
-   --  subtype_indication, etc
-
-   not overriding function New_Access
-     (Self   : access Factory;
-      Is_All : Boolean;
-      Target : not null Node_Access) return not null Node_Access;
-
-   not overriding function New_Aspect
-     (Self  : access Factory;
-      Name  : not null Node_Access;
-      Value : Node_Access := null) return not null Node_Access;
-
-   not overriding function New_Infix
-     (Self     : access Factory;
-      Operator : League.Strings.Universal_String;
-      Left     : not null Node_Access) return not null Node_Access;
-
-   not overriding function New_Subprogram_Declaration
-     (Self          : access Factory;
-      Specification : not null Node_Access;
-      Aspects       : Node_Access := null;
-      Comment       : League.Strings.Universal_String :=
-        League.Strings.Empty_Universal_String) return not null Node_Access;
-
-   not overriding function New_Subprogram_Specification
-     (Self          : access Factory;
-      Is_Overriding : Boolean := False;
-      Name          : Node_Access := null;
-      Parameters    : Node_Access := null;
-      Result        : Node_Access := null) return not null Node_Access;
 
    not overriding function New_Parameter
      (Self            : access Factory;
@@ -181,14 +93,122 @@ package Ada_Side.Outputs is
       Statements    : Node_Access := null;
       Exceptions    : Node_Access := null) return not null Node_Access;
 
-   not overriding function New_Statement
+   not overriding function New_Subprogram_Declaration
+     (Self          : access Factory;
+      Specification : not null Node_Access;
+      Aspects       : Node_Access := null;
+      Comment       : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   not overriding function New_Subtype
+     (Self          : access Factory;
+      Name          : not null Node_Access;
+      Definition    : not null Node_Access;
+      Constrain     : Node_Access := null;
+      Comment       : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   not overriding function New_Type
+     (Self          : access Factory;
+      Name          : not null Node_Access;
+      Discriminants : Node_Access := null;
+      Definition    : Node_Access := null;
+      Aspects       : Node_Access := null;
+      Comment       : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   not overriding function New_Variable
+     (Self            : access Factory;
+      Name            : not null Node_Access;
+      Type_Definition : Node_Access := null;
+      Initialization  : Node_Access := null;
+      Is_Constant     : Boolean := False;
+      Is_Aliased      : Boolean := False;
+      Aspects         : Node_Access := null;
+      Comment         : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String) return not null Node_Access;
+
+   --  Definitions
+
+   not overriding function New_Access
+     (Self   : access Factory;
+      Is_All : Boolean;
+      Target : not null Node_Access) return not null Node_Access;
+
+   not overriding function New_Derived
+     (Self   : access Factory;
+      Parent : not null Node_Access) return not null Node_Access;
+
+   not overriding function New_Null_Exclusion
      (Self       : access Factory;
-      Expression : Node_Access := null) return not null Node_Access;
+      Definition : not null Node_Access;
+      Exclude    : Boolean := True) return not null Node_Access;
+
+   not overriding function New_Private_Record
+     (Self      : access Factory;
+      Is_Tagged : Boolean := False) return not null Node_Access;
+
+   not overriding function New_Record
+     (Self       : access Factory;
+      Parent     : Node_Access := null;
+      Components : Node_Access := null) return not null Node_Access;
+
+   not overriding function New_Subprogram_Specification
+     (Self          : access Factory;
+      Is_Overriding : Boolean := False;
+      Name          : Node_Access := null;
+      Parameters    : Node_Access := null;
+      Result        : Node_Access := null) return not null Node_Access;
+
+   --  Expressions ad Names
+
+   not overriding function New_Apply
+     (Self      : access Factory;
+      Prefix    : not null Node_Access;
+      Arguments : not null Node_Access) return not null Node_Access;
+   --  This node represent construction in form 'prefix (arguments)'
+   --  This includes function_call, indexed_component, slice,
+   --  subtype_indication, etc
+
+   not overriding function New_Infix
+     (Self     : access Factory;
+      Operator : League.Strings.Universal_String;
+      Left     : not null Node_Access) return not null Node_Access;
+
+   not overriding function New_Literal
+     (Self  : access Factory;
+      Value : Natural;
+      Base  : Positive := 10) return not null Node_Access;
+
+   not overriding function New_Name
+     (Self : access Factory;
+      Name : League.Strings.Universal_String) return not null Node_Access;
+   --  Identifier, character literal ('X'), operator ("<")
+
+   not overriding function New_Selected_Name
+     (Self : access Factory;
+      Name : League.Strings.Universal_String) return not null Node_Access;
+
+   not overriding function New_Selected_Name
+     (Self     : access Factory;
+      Prefix   : not null Node_Access;
+      Selector : not null Node_Access) return not null Node_Access;
+
+   not overriding function New_String_Literal
+     (Self : access Factory;
+      Text : League.Strings.Universal_String) return not null Node_Access;
+
+   --  Statements and Paths
 
    not overriding function New_Assignment
      (Self  : access Factory;
       Left  : not null Node_Access;
       Right : not null Node_Access) return not null Node_Access;
+
+   not overriding function New_Elsif
+     (Self       : access Factory;
+      Condition  : not null Node_Access;
+      List       : not null Node_Access) return not null Node_Access;
 
    not overriding function New_If
      (Self       : access Factory;
@@ -197,10 +217,9 @@ package Ada_Side.Outputs is
       Elsif_List : Node_Access := null;
       Else_Path  : Node_Access := null) return not null Node_Access;
 
-   not overriding function New_Elsif
+   not overriding function New_Statement
      (Self       : access Factory;
-      Condition  : not null Node_Access;
-      List       : not null Node_Access) return not null Node_Access;
+      Expression : Node_Access := null) return not null Node_Access;
 
 private
    type Node is abstract tagged null record;

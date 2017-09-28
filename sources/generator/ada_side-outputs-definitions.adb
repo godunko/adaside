@@ -45,6 +45,27 @@ package body Ada_Side.Outputs.Definitions is
    --------------
 
    overriding function Document
+    (Self    : Null_Exclusion;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      if Self.Exclude then
+         Result.Put ("not ");
+      end if;
+
+      Result.Put ("null ");
+      Result.Append (Self.Definition.Document (Printer, Pad));
+      return Result;
+   end Document;
+
+   --------------
+   -- Document --
+   --------------
+
+   overriding function Document
      (Self    : Private_Record;
       Printer : not null access League.Pretty_Printers.Printer'Class;
       Pad     : Natural)
@@ -172,6 +193,17 @@ package body Ada_Side.Outputs.Definitions is
    begin
       return Derived'(Parent => Parent);
    end New_Derived;
+
+   ------------------------
+   -- New_Null_Exclusion --
+   ------------------------
+
+   function New_Null_Exclusion
+     (Definition : not null Node_Access;
+      Exclude    : Boolean) return Node'Class is
+   begin
+      return Null_Exclusion'(Definition, Exclude);
+   end New_Null_Exclusion;
 
    ------------------------
    -- New_Private_Record --

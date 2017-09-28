@@ -266,6 +266,21 @@ package body Ada_Side.Outputs is
       return new Node'Class'(Outputs.Expressions.New_Name (Name));
    end New_Name;
 
+   ------------------------
+   -- New_Null_Exclusion --
+   ------------------------
+
+   not overriding function New_Null_Exclusion
+     (Self       : access Factory;
+      Definition : not null Node_Access;
+      Exclude    : Boolean := True) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Definitions.New_Null_Exclusion
+                             (Definition, Exclude));
+   end New_Null_Exclusion;
+
    -----------------
    -- New_Package --
    -----------------

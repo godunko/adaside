@@ -10,6 +10,12 @@ private package Ada_Side.Outputs.Definitions is
 
    function New_Derived (Parent : not null Node_Access) return Node'Class;
 
+   type Null_Exclusion is new Node with private;
+
+   function New_Null_Exclusion
+     (Definition : not null Node_Access;
+      Exclude    : Boolean) return Node'Class;
+
    type Private_Record is new Node with private;
 
    function New_Private_Record (Is_Tagged : Boolean) return Node'Class;
@@ -49,6 +55,17 @@ private
 
    overriding function Document
     (Self    : Derived;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document;
+
+   type Null_Exclusion is new Node with record
+      Definition : not null Node_Access;
+      Exclude    : Boolean;
+   end record;
+
+   overriding function Document
+    (Self    : Null_Exclusion;
      Printer : not null access League.Pretty_Printers.Printer'Class;
      Pad     : Natural)
       return League.Pretty_Printers.Document;
