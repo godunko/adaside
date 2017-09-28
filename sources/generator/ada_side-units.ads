@@ -2,7 +2,7 @@ private with Ada.Containers.Ordered_Maps;
 private with Ada.Finalization;
 
 with League.Strings;
-private with League.String_Vectors;
+with League.String_Vectors;
 
 package Ada_Side.Units is
 
@@ -17,6 +17,10 @@ package Ada_Side.Units is
      Item : League.Strings.Universal_String);
 
    procedure New_Line (Self : in out Abstract_Unit'Class);
+
+   procedure Put_Lines
+    (Self  : in out Abstract_Unit'Class;
+     Lines : League.String_Vectors.Universal_String_Vector);
 
    procedure Save
     (Self      : in out Abstract_Unit'Class;

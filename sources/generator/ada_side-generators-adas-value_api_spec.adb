@@ -1,5 +1,4 @@
 with League.Strings;
-with League.String_Vectors;
 
 with Ada_Side.Units;
 with Ada_Side.Outputs;
@@ -168,19 +167,9 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
       Spec_Unit : constant Ada_Side.Outputs.Node_Access :=
         F.New_Compilation_Unit (Package_Spec, With_Clause);
 
-      Lines : constant League.String_Vectors.Universal_String_Vector :=
-        F.To_Text (Spec_Unit);
    begin
       Unit.Set_Package_Name (Package_Name);
-
-      for J in 1 .. Lines.Length loop
-         declare
-            Line : constant League.Strings.Universal_String := Lines (J);
-         begin
-            Unit.Put_Line (Line);
-         end;
-      end loop;
-
+      Unit.Put_Lines (F.To_Text (Spec_Unit));
       Unit.Save (Self.Output_Directory);
    end Generate;
 

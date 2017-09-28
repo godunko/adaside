@@ -234,6 +234,19 @@ package body Ada_Side.Units is
       Self.Flushed := False;
    end Put_Line;
 
+   ---------------
+   -- Put_Lines --
+   ---------------
+
+   procedure Put_Lines
+    (Self  : in out Abstract_Unit'Class;
+     Lines : League.String_Vectors.Universal_String_Vector) is
+   begin
+      for J in 1 .. Lines.Length loop
+         Self.Put_Line (Lines (J));
+      end loop;
+   end Put_Lines;
+
    ----------
    -- Save --
    ----------

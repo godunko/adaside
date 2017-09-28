@@ -1,4 +1,5 @@
 with Ada_Side.Units;
+with Ada_Side.Outputs;
 
 package body Ada_Side.Generators.Adas.Value_Internals_Spec is
 
@@ -17,27 +18,44 @@ package body Ada_Side.Generators.Adas.Value_Internals_Spec is
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
    is
       Unit : Ada_Side.Units.Ada_Spec_Unit;
+      F    : aliased Ada_Side.Outputs.Factory;
 
+      Package_Name : constant League.Strings.Universal_String :=
+        User_Package_Full_Name (Class) & ".Internals";
+
+      With_Clause : constant Ada_Side.Outputs.Node_Access :=
+        F.New_With (F.New_Selected_Name (API_Package_Full_Name (Class)));
+
+      Preelaborate : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Pragma (F.New_Name (+"Preelaborate"));
+
+      Self_Arg : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Parameter
+          (Name            => F.New_Name (+"Self"),
+           Type_Definition => F.New_Selected_Name
+             (User_Tagged_Type_Full_Name (Class) & "'Class"));
+
+      View : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Specification
+          (Name       => F.New_Name (Class.Name.To_Universal_String & "_View"),
+           Parameters => Self_Arg,
+           Result     => F.New_Null_Exclusion
+             (F.New_Selected_Name
+                (API_Access_Type_Full_Name (Class))));
+
+      View_Decl : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Subprogram_Declaration (View);
+
+      Package_Spec : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Package
+          (Name         => F.New_Selected_Name (Package_Name),
+           Public_Part  => F.New_List (Preelaborate, View_Decl));
+
+      Spec_Unit : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Compilation_Unit (Package_Spec, With_Clause);
    begin
-      Unit.Set_Package_Name (User_Package_Full_Name (Class) & ".Internals");
-
-      Unit.Add_With_Clause (API_Package_Full_Name (Class));
-
-      Unit.New_Line;
-      Unit.Put_Line
-       ("package " & User_Package_Full_Name (Class) & ".Internals is");
-      Unit.New_Line;
-      Unit.Put_Line (+"   pragma Preelaborate;");
-      Unit.New_Line;
-      Unit.Put_Line
-       ("   function " & Class.Name.To_Universal_String & "_View");
-      Unit.Put_Line
-       ("    (Self : " & User_Tagged_Type_Full_Name (Class) & "'Class)");
-      Unit.Put_Line
-       ("       return not null " & API_Access_Type_Full_Name (Class) & ";");
-      Unit.New_Line;
-      Unit.Put_Line ("end " & User_Package_Full_Name (Class) & ".Internals;");
-
+      Unit.Set_Package_Name (Package_Name);
+      Unit.Put_Lines (F.To_Text (Spec_Unit));
       Unit.Save (Self.Output_Directory);
    end Generate;
 
