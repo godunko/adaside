@@ -122,11 +122,6 @@ package Abstract_Meta_Attributes is
    --        return m_attributes & Public;
    --    }
    --
-   --    bool isFriendly() const
-   --    {
-   --        return m_attributes & Friendly;
-   --    }
-   --
    --    bool wasPrivate() const
    --    {
    --        return m_originalAttributes & Private;
@@ -157,6 +152,9 @@ package Abstract_Meta_Attributes is
    --        return m_doc;
    --    }
    pragma Style_Checks (On);
+
+   function Is_Friendly (Self : Abstract_Meta_Attributes'Class) return Boolean;
+   --  bool isFriendly() const
 
    function Is_Static (Self : Abstract_Meta_Attributes'Class) return Boolean;
    --  bool isStatic() const
