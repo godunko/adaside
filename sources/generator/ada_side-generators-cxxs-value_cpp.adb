@@ -94,14 +94,21 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
 
                if Return_Type.Is_Null then
                   Unit.Put
-                   ("    self->"
+                   ("    "
+                      & (if Method.Is_Static
+                           then Class.Type_Entry.Name.To_Universal_String
+                                  & "::"
+                           else +"self->")
                       & Method.Name.To_Universal_String
                       & "(");
 
                elsif Return_Type.Type_Entry.Is_Primitive then
                   Unit.Put
                    ("    return "
-                      & "self->"
+                      & (if Method.Is_Static
+                           then Class.Type_Entry.Name.To_Universal_String
+                                  & "::"
+                           else +"self->")
                       & Method.Name.To_Universal_String
                       & "(");
 
@@ -114,7 +121,11 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                      Unit.Put
                       ("    *___view = new (___storage) "
                          & Class.Name.To_Universal_String
-                         & "(self->"
+                         & "("
+                         & (if Method.Is_Static
+                              then Class.Type_Entry.Name.To_Universal_String
+                                     & "::"
+                              else +"self->")
                          & Method.Name.To_Universal_String
                          & "(");
                      Second_Close := True;
@@ -122,7 +133,10 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                   else
                      Unit.Put
                       ("    *___view = "
-                         & "self->"
+                         & (if Method.Is_Static
+                              then Class.Type_Entry.Name.To_Universal_String
+                                     & "::"
+                              else +"self->")
                          & Method.Name.To_Universal_String
                          & "(");
                   end if;

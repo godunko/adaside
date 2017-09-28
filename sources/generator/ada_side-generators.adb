@@ -85,12 +85,6 @@ package body Ada_Side.Generators is
          return False;
       end if;
 
-      if Subprogram.Is_Static then
-         --  XXX Not supported yet.
-
-         return False;
-      end if;
-
       if Subprogram.Is_Arithmetic_Operator
         or Subprogram.Is_Bitwise_Operator
       then

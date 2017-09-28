@@ -128,177 +128,117 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
       for Method of Functions loop
          declare
-            Return_Type  : constant Abstract_Meta_Types.Abstract_Meta_Type
+            Return_Type     : constant Abstract_Meta_Types.Abstract_Meta_Type
               := Method.Get_Type;
-            Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
-              := (if Return_Type.Is_Null
-                    then Abstract_Meta_Classes.Null_Abstract_Meta_Class
-                    else Self.Find_Class (Return_Type.Type_Entry));
+            Return_Class    : constant
+              Abstract_Meta_Classes.Abstract_Meta_Class
+                := (if Return_Type.Is_Null
+                      then Abstract_Meta_Classes.Null_Abstract_Meta_Class
+                      else Self.Find_Class (Return_Type.Type_Entry));
+            Parameters :
+              Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+                := Method.Arguments;
+            First_Parameter : Boolean := True;
 
          begin
             if Self.Can_Be_Generated (Class, Method) then
-               if Return_Type.Is_Null then
-                  Unit.New_Line;
-                  Unit.Put_Line
-                   ("   procedure " & API_Subprogram_Name (Class, Method));
-                  Unit.Put
-                   ("    (Self    : not null "
-                      & API_Access_Type_Full_Name (Class));
+               Unit.New_Line;
 
-                  declare
-                     Parameters :
-                       Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
-                         := Method.Arguments;
+               if Return_Type.Is_Null
+                 or else Return_Type.Is_Value
+               then
+                  Unit.Put (+"   procedure ");
 
-                  begin
-                     for Parameter of Parameters loop
-                        if Parameter.Get_Type.Is_Primitive then
-                           Unit.Put_Line (+";");
-                           Unit.Put
-                            ("     "
-                               & Parameter.Name.To_Universal_String
-                               & " : "
-                               & Parameter.Get_Type.Type_Entry.Target_Lang_Name
-                                   .To_Universal_String);
+               else
+                  Unit.Put (+"   function ");
+               end if;
 
-                        elsif Parameter.Get_Type.Is_Constant then
-                           Unit.Put_Line (+";");
-                           Unit.Put
-                            ("     "
-                               & Parameter.Name.To_Universal_String
-                               & " : not null "
-                               & API_Access_Type_Full_Name
-                                  (Self.Find_Class
-                                    (Parameter.Get_Type.Type_Entry)));
+               Unit.Put_Line (API_Subprogram_Name (Class, Method));
+               Unit.Put (+"    ");
 
-                        else
-                           raise Program_Error;
-                        end if;
-                     end loop;
-                  end;
-
-                  Unit.Put_Line (+")");
-                  Unit.Put_Line (+"       with Import     => True,");
-                  Unit.Put_Line (+"            Convention => C,");
-                  Unit.Put_Line
-                   ("            Link_Name  => """
-                      & API_Subprogram_Link_Name (Class, Method) & """;");
-
-               elsif Return_Type.Type_Entry.Is_Primitive then
-                  Unit.New_Line;
-                  Unit.Put_Line
-                   ("   function " & API_Subprogram_Name (Class, Method));
-                  Unit.Put
-                   ("    (Self    : not null "
-                      & API_Access_Type_Full_Name (Class));
-
-                  declare
-                     Parameters :
-                       Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
-                         := Method.Arguments;
-
-                  begin
-                     for Parameter of Parameters loop
-                        if Parameter.Get_Type.Is_Primitive then
-                           Unit.Put_Line (+";");
-                           Unit.Put
-                            ("     "
-                               & Parameter.Name.To_Universal_String
-                               & " : "
-                               & Parameter.Get_Type.Type_Entry.Target_Lang_Name
-                                   .To_Universal_String);
-
-                        elsif Parameter.Get_Type.Is_Constant then
-                           Unit.Put_Line (+";");
-                           Unit.Put
-                            ("     "
-                               & Parameter.Name.To_Universal_String
-                               & " : not null "
-                               & API_Access_Type_Full_Name
-                                  (Self.Find_Class
-                                    (Parameter.Get_Type.Type_Entry)));
-
-                        else
-                           raise Program_Error;
-                        end if;
-                     end loop;
-                  end;
-
-                  Unit.Put_Line (+")");
-                  Unit.Put_Line
-                   ("       return "
-                      & Return_Type.Type_Entry.Target_Lang_Name
-                          .To_Universal_String);
-                  Unit.Put_Line (+"         with Import     => True,");
-                  Unit.Put_Line (+"              Convention => C,");
-                  Unit.Put_Line
-                   ("              Link_Name  => """
-                      & API_Subprogram_Link_Name (Class, Method) & """;");
-
-               elsif Method.Get_Type.Is_Value then
-                  Unit.New_Line;
-                  Unit.Put_Line
-                   ("   procedure " & API_Subprogram_Name (Class, Method));
+               if not Return_Type.Is_Null
+                 and then Return_Type.Is_Value
+               then
+                  First_Parameter := False;
 
                   if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
                        = Return_Class
                   then
-                     Unit.Put_Line
-                      ("    (View    : in out "
-                         & API_Access_Type_Full_Name (Return_Class) & ";");
-                     Unit.Put_Line (+"     Storage : System.Address;");
+                     Unit.Put
+                      ("(View : in out "
+                         & API_Access_Type_Full_Name (Return_Class));
+                     Unit.Put_Line (+";");
+                     Unit.Put (+"     Storage : System.Address");
 
                   else
+                     Unit.Put
+                      ("(View : "
+                         & API_Access_Type_Full_Name (Return_Class));
                      Unit.Add_With_Clause
                       (API_Package_Full_Name (Return_Class));
-                     Unit.Put_Line
-                      ("    (View    : not null "
-                         & API_Access_Type_Full_Name (Return_Class) & ";");
+                  end if;
+               end if;
+
+               if not Method.Is_Static then
+                  if First_Parameter then
+                     Unit.Put (+"(");
+                     First_Parameter := False;
+
+                  else
+                     Unit.Put_Line (+";");
+                     Unit.Put (+"     ");
                   end if;
 
                   Unit.Put
-                   ("     Self    : not null "
-                      & API_Access_Type_Full_Name (Class));
-
-                  declare
-                     Parameters :
-                       Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
-                         := Method.Arguments;
-
-                  begin
-                     for Parameter of Parameters loop
-                        if Parameter.Get_Type.Is_Primitive then
-                           Unit.Put_Line (+";");
-                           Unit.Put
-                            ("     "
-                               & Parameter.Name.To_Universal_String
-                               & " : "
-                               & Parameter.Get_Type.Type_Entry.Target_Lang_Name
-                                   .To_Universal_String);
-
-                        elsif Parameter.Get_Type.Is_Constant then
-                           Unit.Put_Line (+";");
-                           Unit.Put
-                            ("     "
-                               & Parameter.Name.To_Universal_String
-                               & " : not null "
-                               & API_Access_Type_Full_Name
-                                  (Self.Find_Class
-                                    (Parameter.Get_Type.Type_Entry)));
-
-                        else
-                           raise Program_Error;
-                        end if;
-                     end loop;
-                  end;
-
-                  Unit.Put_Line (+")");
-                  Unit.Put_Line (+"       with Import     => True,");
-                  Unit.Put_Line (+"            Convention => C,");
-                  Unit.Put_Line
-                   ("            Link_Name  => """
-                      & API_Subprogram_Link_Name (Class, Method) & """;");
+                   ("Self : not null " & API_Access_Type_Full_Name (Class));
                end if;
+
+               for Parameter of Parameters loop
+                  if First_Parameter then
+                     Unit.Put (+"(");
+                     First_Parameter := False;
+
+                  else
+                     Unit.Put_Line (+";");
+                     Unit.Put (+"     ");
+                  end if;
+
+                  if Parameter.Get_Type.Is_Primitive then
+                     Unit.Put
+                      (Parameter.Name.To_Universal_String
+                         & " : "
+                         & Parameter.Get_Type.Type_Entry.Target_Lang_Name
+                             .To_Universal_String);
+
+                  elsif Parameter.Get_Type.Is_Constant then
+                     Unit.Put
+                      (Parameter.Name.To_Universal_String
+                         & " : not null "
+                         & API_Access_Type_Full_Name
+                            (Self.Find_Class
+                              (Parameter.Get_Type.Type_Entry)));
+
+                  else
+                     raise Program_Error;
+                  end if;
+               end loop;
+
+               Unit.Put_Line (+")");
+
+               if not Return_Type.Is_Null
+                 and then Return_Type.Type_Entry.Is_Primitive
+               then
+                  Unit.Put_Line
+                   ("       return "
+                      & Return_Type.Type_Entry.Target_Lang_Name
+                          .To_Universal_String);
+               end if;
+
+               Unit.Put_Line (+"       with Import     => True,");
+               Unit.Put_Line (+"            Convention => C,");
+               Unit.Put_Line
+                ("            Link_Name  => """
+                   & API_Subprogram_Link_Name (Class, Method) & """;");
 
             else
                --  XXX Not supported yet.
@@ -354,55 +294,65 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
       for Method of Functions loop
          declare
-            Return_Type  : constant Abstract_Meta_Types.Abstract_Meta_Type
+            Return_Type     : constant Abstract_Meta_Types.Abstract_Meta_Type
               := Method.Get_Type;
-            Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
-              := (if Return_Type.Is_Null
-                    then Abstract_Meta_Classes.Null_Abstract_Meta_Class
-                    else Self.Find_Class (Return_Type.Type_Entry));
-            End_Return   : Boolean := False;
+            Return_Class    : constant
+              Abstract_Meta_Classes.Abstract_Meta_Class
+                := (if Return_Type.Is_Null
+                      then Abstract_Meta_Classes.Null_Abstract_Meta_Class
+                      else Self.Find_Class (Return_Type.Type_Entry));
+            Parameters      :
+              Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+                := Method.Arguments;
+            End_Return      : Boolean := False;
+            First_Parameter : Boolean := True;
 
          begin
             if Self.Can_Be_Generated (Class, Method) then
                Generate_User_Declaration (Self, Unit, Class, Method);
                Unit.Put_Line (+" is");
                Unit.Put_Line (+"   begin");
+               Unit.Put (+"      ");
 
                if Return_Type.Is_Null then
-                  Unit.Put
-                   ("      "
-                      & API_Subprogram_Name (Class, Method)
-                      & " (" & View_Expression (Class, Class, +"Self"));
+                  null;
 
                elsif Return_Type.Type_Entry.Is_Primitive then
-                  Unit.Put
-                   ("      return "
-                      & API_Subprogram_Name (Class, Method)
-                      & " (" & View_Expression (Class, Class, +"Self"));
+                  Unit.Put (+"return ");
 
                elsif Return_Type.Is_Value then
                   if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
                        = Return_Class
                   then
                      Unit.Put_Line
-                      ("      return QtAda_Result : "
+                      ("return QtAda_Result : "
                          & User_Tagged_Type_Full_Name (Return_Class)
                          & " := (Ada.Finalization.Controlled with"
                          & " others => <>) do");
 
                   else
                      Unit.Put_Line
-                      ("      return QtAda_Result : "
+                      ("return QtAda_Result : "
                          & User_Tagged_Type_Full_Name (Return_Class)
                          & " do");
                   end if;
 
-                  Unit.Put_Line
-                   ("         " & API_Subprogram_Name (Class, Method));
+                  Unit.Put (+"         ");
+                  End_Return := True;
+               end if;
+
+               Unit.Put (API_Subprogram_Name (Class, Method));
+
+               --  Process return value when function returns value type.
+
+               if not Return_Type.Is_Null
+                 and then Return_Type.Is_Value
+               then
                   Unit.Put
-                   ("          ("
+                   (" ("
                       & View_Expression
                          (Class, Return_Class, +"QtAda_Result"));
+                  First_Parameter := False;
 
                   if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
                        = Return_Class
@@ -413,37 +363,47 @@ package body Ada_Side.Generators.Adas.Value_Body is
                      Unit.Add_With_Clause
                       (User_Package_Full_Name (Return_Class) & ".Internals");
                   end if;
-
-                  Unit.Put
-                   (", " & View_Expression (Class, Class, +"Self"));
-
-                  End_Return := True;
                end if;
 
-               declare
-                  Parameters :
-                    Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
-                      := Method.Arguments;
+               --  Process "self" parameter for non-static functions.
 
-               begin
-                  for Parameter of Parameters loop
-                     if Parameter.Get_Type.Is_Primitive then
-                        Unit.Put_Line (+", ");
-                        Unit.Put (Parameter.Name.To_Universal_String);
+               if not Method.Is_Static then
+                  if First_Parameter then
+                     Unit.Put (+" (");
+                     First_Parameter := False;
 
-                     elsif Parameter.Get_Type.Is_Constant then
-                        Unit.Put (+", ");
-                        Unit.Put
-                         (View_Expression
-                           (Class,
-                            Self.Find_Class (Parameter.Get_Type.Type_Entry),
-                            Parameter.Name.To_Universal_String));
+                  else
+                     Unit.Put (+", ");
+                  end if;
 
-                     else
-                        raise Program_Error;
-                     end if;
-                  end loop;
-               end;
+                  Unit.Put (View_Expression (Class, Class, +"Self"));
+               end if;
+
+               --  Process parameters.
+
+               for Parameter of Parameters loop
+                  if First_Parameter then
+                     Unit.Put (+" (");
+                     First_Parameter := False;
+
+                  else
+                     Unit.Put (+", ");
+                  end if;
+
+                  if Parameter.Get_Type.Is_Primitive then
+                     Unit.Put (Parameter.Name.To_Universal_String);
+
+                  elsif Parameter.Get_Type.Is_Constant then
+                     Unit.Put
+                      (View_Expression
+                        (Class,
+                         Self.Find_Class (Parameter.Get_Type.Type_Entry),
+                         Parameter.Name.To_Universal_String));
+
+                  else
+                     raise Program_Error;
+                  end if;
+               end loop;
 
                Unit.Put_Line (+");");
 

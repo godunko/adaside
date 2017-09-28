@@ -64,8 +64,9 @@ package body Ada_Side.Generators.Adas is
    is
       use type Abstract_Meta_Classes.Abstract_Meta_Class;
 
-      Return_Type : constant Abstract_Meta_Types.Abstract_Meta_Type
+      Return_Type     : constant Abstract_Meta_Types.Abstract_Meta_Type
         := Subprogram.Get_Type;
+      First_Parameter : Boolean := True;
 
    begin
       Unit.New_Line;
@@ -78,10 +79,14 @@ package body Ada_Side.Generators.Adas is
       end if;
 
       Unit.Put_Line (Values.To_Ada_Identifier (Subprogram.Name));
-      Unit.Put
-       ("    (Self : "
-          & (if Subprogram.Is_Constant then "" else "in out ")
-          & User_Tagged_Type_Name (Class) & "'Class");
+
+      if not Subprogram.Is_Static then
+         Unit.Put
+          ("    (Self : "
+             & (if Subprogram.Is_Constant then "" else "in out ")
+             & User_Tagged_Type_Name (Class) & "'Class");
+         First_Parameter := False;
+      end if;
 
       declare
          Parameters : Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
@@ -89,20 +94,25 @@ package body Ada_Side.Generators.Adas is
 
       begin
          for Parameter of Parameters loop
-            if Parameter.Get_Type.Is_Primitive then
+            if First_Parameter then
+               Unit.Put (+"    (");
+               First_Parameter := False;
+
+            else
                Unit.Put_Line (+";");
+               Unit.Put (+"     ");
+            end if;
+
+            if Parameter.Get_Type.Is_Primitive then
                Unit.Put
-                ("     "
-                   & Parameter.Name.To_Universal_String
+                (Parameter.Name.To_Universal_String
                    & " : "
                    & Parameter.Get_Type.Type_Entry.Target_Lang_Name
                        .To_Universal_String);
 
             elsif Parameter.Get_Type.Is_Constant then
-               Unit.Put_Line (+";");
                Unit.Put
-                ("     "
-                   & Parameter.Name.To_Universal_String
+                (Parameter.Name.To_Universal_String
                    & " : "
                    & User_Tagged_Type_Full_Name
                       (Generator.Find_Class (Parameter.Get_Type.Type_Entry))
@@ -114,7 +124,9 @@ package body Ada_Side.Generators.Adas is
          end loop;
       end;
 
-      Unit.Put (+")");
+      if not First_Parameter then
+         Unit.Put (+")");
+      end if;
 
       if not Return_Type.Is_Null then
          declare
