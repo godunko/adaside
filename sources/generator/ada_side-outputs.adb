@@ -383,6 +383,19 @@ package body Ada_Side.Outputs is
                                (Parent, Components));
    end New_Record;
 
+   ----------------
+   -- New_Return --
+   ----------------
+
+   not overriding function New_Return
+     (Self       : access Factory;
+      Expression : Node_Access := null) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Outputs.Statements.New_Return (Expression));
+   end New_Return;
+
    -----------------------
    -- New_Selected_Name --
    -----------------------

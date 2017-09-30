@@ -60,6 +60,30 @@ package body Ada_Side.Outputs.Statements is
    --------------
 
    overriding function Document
+    (Self    : Return_Statement;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.New_Line;
+      Result.Put ("return");
+
+      if Self.Expression /= null then
+         Result.Put (" ");
+         Result.Append (Self.Expression.Document (Printer, Pad));
+      end if;
+
+      Result.Put (";");
+      return Result;
+   end Document;
+
+   --------------
+   -- Document --
+   --------------
+
+   overriding function Document
      (Self    : Statement;
       Printer : not null access League.Pretty_Printers.Printer'Class;
       Pad     : Natural)
@@ -132,6 +156,16 @@ package body Ada_Side.Outputs.Statements is
    begin
       return If_Statement'(Condition, Then_Path, Elsif_List, Else_Path);
    end New_If;
+
+   ----------------
+   -- New_Return --
+   ----------------
+
+   function New_Return
+     (Expression : not null Node_Access) return Node'Class is
+   begin
+      return Return_Statement'(Expression => Expression);
+   end New_Return;
 
    -------------------
    -- New_Statement --

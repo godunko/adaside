@@ -20,6 +20,11 @@ private package Ada_Side.Outputs.Statements is
       Elsif_List : Node_Access;
       Else_Path  : Node_Access) return Node'Class;
 
+   type Return_Statement is new Node with private;
+
+   function New_Return
+     (Expression : not null Node_Access) return Node'Class;
+
    type Statement is new Node with private;
 
    function New_Statement
@@ -58,6 +63,16 @@ private
 
    overriding function Document
     (Self    : If_Statement;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document;
+
+   type Return_Statement is new Node with record
+      Expression : Node_Access;
+   end record;
+
+   overriding function Document
+    (Self    : Return_Statement;
      Printer : not null access League.Pretty_Printers.Printer'Class;
      Pad     : Natural)
       return League.Pretty_Printers.Document;

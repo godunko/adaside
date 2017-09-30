@@ -217,6 +217,10 @@ package Ada_Side.Outputs is
       Elsif_List : Node_Access := null;
       Else_Path  : Node_Access := null) return not null Node_Access;
 
+   not overriding function New_Return
+     (Self       : access Factory;
+      Expression : Node_Access := null) return not null Node_Access;
+
    not overriding function New_Statement
      (Self       : access Factory;
       Expression : Node_Access := null) return not null Node_Access;
