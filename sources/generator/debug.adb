@@ -1,6 +1,8 @@
 with Ada.Wide_Wide_Text_IO; use Ada.Wide_Wide_Text_IO;
 with Interfaces.C;
 
+with Abstract_Meta_Classes;
+
 package body Debug is
 
    Indent : Count := 1;
@@ -16,6 +18,18 @@ package body Debug is
       Set_Col (Indent);
       Put ("Arguments              =>");
       Put (Interfaces.C.int'Wide_Wide_Image (Item.Arguments.Size));
+
+      Set_Col (Indent);
+      Put ("Declaring_Class        => ");
+      Put
+       (Item.Declaring_Class.Full_Name.To_Universal_String
+          .To_Wide_Wide_String);
+
+      Set_Col (Indent);
+      Put ("Implementing_Class     => ");
+      Put
+       (Item.Implementing_Class.Full_Name.To_Universal_String
+          .To_Wide_Wide_String);
 
       Set_Col (Indent);
       Put ("Is_Arithmetic_Operator => ");
@@ -34,6 +48,14 @@ package body Debug is
       Put (Boolean'Wide_Wide_Image (Item.Is_Constructor));
 
       Set_Col (Indent);
+      Put ("Is_In_Global_Scope     => ");
+      Put (Boolean'Wide_Wide_Image (Item.Is_In_Global_Scope));
+
+      Set_Col (Indent);
+      Put ("Is_Reverse_Operator    => ");
+      Put (Boolean'Wide_Wide_Image (Item.Is_Reverse_Operator));
+
+      Set_Col (Indent);
       Put ("Is_Friendly            => ");
       Put (Boolean'Wide_Wide_Image (Item.Is_Friendly));
 
@@ -44,6 +66,10 @@ package body Debug is
       Set_Col (Indent);
       Put ("Name                   => ");
       Put (Item.Name.To_Universal_String.To_Wide_Wide_String);
+
+      Set_Col (Indent);
+      Put ("Owner_Class            => ");
+      Put (Item.Owner_Class.Full_Name.To_Universal_String.To_Wide_Wide_String);
 
       Indent := Indent - 2;
 
