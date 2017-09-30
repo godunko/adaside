@@ -66,7 +66,9 @@ package body Ada_Side.Generators.CXXs is
          Has_Parameters := True;
       end if;
 
-      if not Subprogram.Is_Static then
+      if not Subprogram.Is_Static
+        and not Subprogram.Is_Arithmetic_Operator
+      then
          if Has_Parameters then
             Unit.Put (+", ");
 
@@ -78,6 +80,19 @@ package body Ada_Side.Generators.CXXs is
           ((if Subprogram.Is_Constant then "const " else "")
              & Class.Name.To_Universal_String
              & "* self");
+      end if;
+
+      if Subprogram.Is_Arithmetic_Operator
+        and not Subprogram.Is_Reverse_Operator
+      then
+         if Has_Parameters then
+            Unit.Put (+", ");
+
+         else
+            Has_Parameters := True;
+         end if;
+
+         Unit.Put ("const " & Class.Name.To_Universal_String & "* ___self");
       end if;
 
       for Parameter of Parameters loop
@@ -105,6 +120,19 @@ package body Ada_Side.Generators.CXXs is
             raise Program_Error;
          end if;
       end loop;
+
+      if Subprogram.Is_Arithmetic_Operator
+        and Subprogram.Is_Reverse_Operator
+      then
+         if Has_Parameters then
+            Unit.Put (+", ");
+
+         else
+            Has_Parameters := True;
+         end if;
+
+         Unit.Put ("const " & Class.Name.To_Universal_String & "* ___self");
+      end if;
 
       Unit.Put (+")");
    end Generate_Declaration;

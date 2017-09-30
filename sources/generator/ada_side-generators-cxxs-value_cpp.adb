@@ -88,6 +88,7 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
 
          begin
             if Self.Can_Be_Generated (Class, Method) then
+               Unit.New_Line;
                Generate_Declaration (Self, Unit, Class, Method);
                Unit.New_Line;
                Unit.Put_Line (+"{");
@@ -113,8 +114,6 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                       & "(");
 
                elsif Method.Get_Type.Is_Value then
-                  Unit.New_Line;
-
                   if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
                        = Return_Class
                   then
@@ -122,10 +121,12 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                       ("    *___view = new (___storage) "
                          & Class.Name.To_Universal_String
                          & "("
-                         & (if Method.Is_Static
-                              then Class.Type_Entry.Name.To_Universal_String
-                                     & "::"
-                              else +"self->")
+                         & (if Method.Is_Arithmetic_Operator
+                              then +""
+                              elsif Method.Is_Static
+                                then Class.Type_Entry.Name.To_Universal_String
+                                       & "::"
+                                else +"self->")
                          & Method.Name.To_Universal_String
                          & "(");
                      Second_Close := True;
@@ -133,10 +134,12 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                   else
                      Unit.Put
                       ("    *___view = "
-                         & (if Method.Is_Static
-                              then Class.Type_Entry.Name.To_Universal_String
-                                     & "::"
-                              else +"self->")
+                         & (if Method.Is_Arithmetic_Operator
+                              then +""
+                              elsif Method.Is_Static
+                                then Class.Type_Entry.Name.To_Universal_String
+                                       & "::"
+                                else +"self->")
                          & Method.Name.To_Universal_String
                          & "(");
                   end if;
@@ -148,6 +151,21 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                       := Method.Arguments;
 
                begin
+                  --  Add first argument for non-reversed operators
+
+                  if Method.Is_Arithmetic_Operator
+                    and not Method.Is_Reverse_Operator
+                  then
+                     if First_Arg then
+                        First_Arg := False;
+
+                     else
+                        Unit.Put (+", ");
+                     end if;
+
+                     Unit.Put (+"*___self");
+                  end if;
+
                   for Parameter of Parameters loop
                      if First_Arg then
                         First_Arg := False;
@@ -166,6 +184,21 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                         raise Program_Error;
                      end if;
                   end loop;
+
+                  --  Add second argument for reversed operators
+
+                  if Method.Is_Arithmetic_Operator
+                    and Method.Is_Reverse_Operator
+                  then
+                     if First_Arg then
+                        First_Arg := False;
+
+                     else
+                        Unit.Put (+", ");
+                     end if;
+
+                     Unit.Put (+"*___self");
+                  end if;
                end;
 
                if Second_Close then

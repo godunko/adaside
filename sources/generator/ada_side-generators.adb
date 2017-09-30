@@ -5,6 +5,10 @@ package body Ada_Side.Generators is
 
    use type League.Strings.Universal_String;
 
+   function "+"
+    (Item : Wide_Wide_String) return League.Strings.Universal_String
+       renames League.Strings.To_Universal_String;
+
    ---------------------------
    -- API_Size_Of_Link_Name --
    ---------------------------
@@ -48,6 +52,8 @@ package body Ada_Side.Generators is
      Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
        return League.Strings.Universal_String
    is
+      Name       : constant League.Strings.Universal_String
+        := Subprogram.Name.To_Universal_String;
       Parameters : Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
         := Subprogram.Arguments;
 
@@ -56,13 +62,45 @@ package body Ada_Side.Generators is
         := "__qtada__"
              & Class.Name.To_Universal_String
              & "__"
-             & Subprogram.Name.To_Universal_String
       do
+         if Subprogram.Is_Arithmetic_Operator then
+            if Name = +"operator+" then
+               Result.Append ("_operator_plus");
+
+            elsif Name = +"operator-" then
+               Result.Append ("_operator_minus");
+
+            elsif Name = +"operator*" then
+               Result.Append ("_operator_multiply");
+
+            elsif Name = +"operator/" then
+               Result.Append ("_operator_divide");
+
+            else
+               raise Program_Error;
+            end if;
+
+            if not Subprogram.Is_Reverse_Operator then
+               Result.Append ('_');
+               Result.Append (Class.Name.To_Universal_String);
+            end if;
+
+         else
+            Result.Append (Name);
+         end if;
+
          for Parameter of Parameters loop
             Result.Append ('_');
             Result.Append
              (Parameter.Get_Type.Type_Entry.Name.To_Universal_String);
          end loop;
+
+         if Subprogram.Is_Arithmetic_Operator
+           and Subprogram.Is_Reverse_Operator
+         then
+            Result.Append ('_');
+            Result.Append (Class.Name.To_Universal_String);
+         end if;
       end return;
    end API_Subprogram_Link_Name;
 
@@ -85,9 +123,7 @@ package body Ada_Side.Generators is
          return False;
       end if;
 
-      if Subprogram.Is_Arithmetic_Operator
-        or Subprogram.Is_Bitwise_Operator
-      then
+      if Subprogram.Is_Bitwise_Operator then
          --  XXX Not supported yet.
 
          return False;

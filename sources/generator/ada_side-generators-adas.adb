@@ -78,13 +78,22 @@ package body Ada_Side.Generators.Adas is
          Unit.Put (+"   function ");
       end if;
 
-      Unit.Put_Line (Values.To_Ada_Identifier (Subprogram.Name));
+      Unit.Put_Line (User_Subprogram_Name (Subprogram));
 
-      if not Subprogram.Is_Static then
+      if not Subprogram.Is_Static
+        and not Subprogram.Is_Arithmetic_Operator
+      then
          Unit.Put
           ("    (Self : "
              & (if Subprogram.Is_Constant then "" else "in out ")
              & User_Tagged_Type_Name (Class) & "'Class");
+         First_Parameter := False;
+      end if;
+
+      if Subprogram.Is_Arithmetic_Operator
+        and not Subprogram.Is_Reverse_Operator
+      then
+         Unit.Put ("    (Self : " & User_Tagged_Type_Name (Class) & "'Class");
          First_Parameter := False;
       end if;
 
@@ -123,6 +132,21 @@ package body Ada_Side.Generators.Adas is
             end if;
          end loop;
       end;
+
+      if Subprogram.Is_Arithmetic_Operator
+        and Subprogram.Is_Reverse_Operator
+      then
+         if First_Parameter then
+            Unit.Put (+"    (");
+            First_Parameter := False;
+
+         else
+            Unit.Put_Line (+";");
+            Unit.Put (+"     ");
+         end if;
+
+         Unit.Put ("Self : " & User_Tagged_Type_Name (Class) & "'Class");
+      end if;
 
       if not First_Parameter then
          Unit.Put (+")");
@@ -169,6 +193,40 @@ package body Ada_Side.Generators.Adas is
     (Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
        return League.Strings.Universal_String
          renames Ada_Side.Generators.Adas.Value_Spec.User_Package_Full_Name;
+
+   --------------------------
+   -- User_Subprogram_Name --
+   --------------------------
+
+   function User_Subprogram_Name
+    (Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
+       return League.Strings.Universal_String
+   is
+      Name : constant League.Strings.Universal_String
+        := Subprogram.Name.To_Universal_String;
+
+   begin
+      if Subprogram.Is_Arithmetic_Operator then
+         if Name = +"operator+" then
+            return +"""+""";
+
+         elsif Name = +"operator-" then
+            return +"""-""";
+
+         elsif Name = +"operator*" then
+            return +"""*""";
+
+         elsif Name = +"operator/" then
+            return +"""/""";
+
+         else
+            raise Program_Error;
+         end if;
+
+      else
+         return Values.To_Ada_Identifier (Name);
+      end if;
+   end User_Subprogram_Name;
 
    --------------------------------
    -- User_Tagged_Type_Full_Name --

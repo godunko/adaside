@@ -5,7 +5,6 @@ with Abstract_Meta_Function_Lists;
 with Abstract_Meta_Functions;
 with Abstract_Meta_Types;
 
-with Ada_Side.Generators.Adas.Values;
 with Ada_Side.Units;
 
 package body Ada_Side.Generators.Adas.Value_Body is
@@ -61,12 +60,36 @@ package body Ada_Side.Generators.Adas.Value_Body is
    function API_Subprogram_Name
     (Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
      Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
-       return League.Strings.Universal_String is
+       return League.Strings.Universal_String
+   is
+      Name : constant League.Strings.Universal_String
+        := Subprogram.Name.To_Universal_String;
+
    begin
-      return
-        Class.Name.To_Universal_String
-          & "_"
-          & Subprogram.Name.To_Universal_String;
+      return Result : League.Strings.Universal_String
+        := Class.Name.To_Universal_String & "_"
+      do
+         if Subprogram.Is_Arithmetic_Operator then
+            if Name = +"operator+" then
+               Result.Append ("operator_plus");
+
+            elsif Name = +"operator-" then
+               Result.Append ("operator_minus");
+
+            elsif Name = +"operator*" then
+               Result.Append ("operator_multiply");
+
+            elsif Name = +"operator/" then
+               Result.Append ("operator_divide");
+
+            else
+               raise Program_Error;
+            end if;
+
+         else
+            Result.Append (Name);
+         end if;
+      end return;
    end API_Subprogram_Name;
 
    --------------
@@ -179,7 +202,9 @@ package body Ada_Side.Generators.Adas.Value_Body is
                   end if;
                end if;
 
-               if not Method.Is_Static then
+               if not Method.Is_Static
+                 and not Method.Is_Arithmetic_Operator
+               then
                   if First_Parameter then
                      Unit.Put (+"(");
                      First_Parameter := False;
@@ -191,6 +216,21 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
                   Unit.Put
                    ("Self : not null " & API_Access_Type_Full_Name (Class));
+               end if;
+
+               if Method.Is_Arithmetic_Operator
+                 and not Method.Is_Reverse_Operator
+               then
+                  if First_Parameter then
+                     Unit.Put (+"(");
+                     First_Parameter := False;
+
+                  else
+                     Unit.Put_Line (+";");
+                     Unit.Put (+"     ");
+                  end if;
+
+                  Unit.Put ("Self : " & API_Access_Type_Full_Name (Class));
                end if;
 
                for Parameter of Parameters loop
@@ -222,6 +262,21 @@ package body Ada_Side.Generators.Adas.Value_Body is
                      raise Program_Error;
                   end if;
                end loop;
+
+               if Method.Is_Arithmetic_Operator
+                 and Method.Is_Reverse_Operator
+               then
+                  if First_Parameter then
+                     Unit.Put (+"(");
+                     First_Parameter := False;
+
+                  else
+                     Unit.Put_Line (+";");
+                     Unit.Put (+"     ");
+                  end if;
+
+                  Unit.Put ("Self : " & API_Access_Type_Full_Name (Class));
+               end if;
 
                Unit.Put_Line (+")");
 
@@ -367,7 +422,25 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
                --  Process "self" parameter for non-static functions.
 
-               if not Method.Is_Static then
+               if not Method.Is_Static
+                 and not Method.Is_Arithmetic_Operator
+               then
+                  if First_Parameter then
+                     Unit.Put (+" (");
+                     First_Parameter := False;
+
+                  else
+                     Unit.Put (+", ");
+                  end if;
+
+                  Unit.Put (View_Expression (Class, Class, +"Self"));
+               end if;
+
+               --  Process first parameter for non-reversed operators.
+
+               if Method.Is_Arithmetic_Operator
+                 and not Method.Is_Reverse_Operator
+               then
                   if First_Parameter then
                      Unit.Put (+" (");
                      First_Parameter := False;
@@ -405,14 +478,29 @@ package body Ada_Side.Generators.Adas.Value_Body is
                   end if;
                end loop;
 
+               --  Process second parameter for reversed operators.
+
+               if Method.Is_Arithmetic_Operator
+                 and Method.Is_Reverse_Operator
+               then
+                  if First_Parameter then
+                     Unit.Put (+" (");
+                     First_Parameter := False;
+
+                  else
+                     Unit.Put (+", ");
+                  end if;
+
+                  Unit.Put (View_Expression (Class, Class, +"Self"));
+               end if;
+
                Unit.Put_Line (+");");
 
                if End_Return then
                   Unit.Put_Line (+"      end return;");
                end if;
 
-               Unit.Put_Line
-                ("   end " & Values.To_Ada_Identifier (Method.Name) & ";");
+               Unit.Put_Line ("   end " & User_Subprogram_Name (Method) & ";");
 
             else
                --  XXX Not supported yet.
