@@ -106,10 +106,13 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                elsif Return_Type.Type_Entry.Is_Primitive then
                   Unit.Put
                    ("    return "
-                      & (if Method.Is_Static
-                           then Class.Type_Entry.Name.To_Universal_String
-                                  & "::"
-                           else +"___self->")
+                      & (if Method.Is_Arithmetic_Operator
+                              or Method.Is_Comparison_Operator
+                           then +""
+                           elsif Method.Is_Static
+                             then Class.Type_Entry.Name.To_Universal_String
+                                    & "::"
+                             else +"___self->")
                       & Method.Name.To_Universal_String
                       & "(");
 
@@ -122,6 +125,7 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                          & Class.Name.To_Universal_String
                          & "("
                          & (if Method.Is_Arithmetic_Operator
+                                 or Method.Is_Comparison_Operator
                               then +""
                               elsif Method.Is_Static
                                 then Class.Type_Entry.Name.To_Universal_String
@@ -135,6 +139,7 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                      Unit.Put
                       ("    *___view = "
                          & (if Method.Is_Arithmetic_Operator
+                                 or Method.Is_Comparison_Operator
                               then +""
                               elsif Method.Is_Static
                                 then Class.Type_Entry.Name.To_Universal_String
@@ -153,7 +158,8 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                begin
                   --  Add first argument for non-reversed operators
 
-                  if Method.Is_Arithmetic_Operator
+                  if (Method.Is_Arithmetic_Operator
+                        or Method.Is_Comparison_Operator)
                     and not Method.Is_Reverse_Operator
                   then
                      if First_Arg then
@@ -187,7 +193,8 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
 
                   --  Add second argument for reversed operators
 
-                  if Method.Is_Arithmetic_Operator
+                  if (Method.Is_Arithmetic_Operator
+                        or Method.Is_Comparison_Operator)
                     and Method.Is_Reverse_Operator
                   then
                      if First_Arg then

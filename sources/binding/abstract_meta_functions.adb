@@ -280,6 +280,17 @@ package body Abstract_Meta_Functions is
       end return;
    end Minimal_Signature;
 
+   -----------------------
+   -- Minimal_Signature --
+   -----------------------
+
+   function Minimal_Signature
+    (Self : Abstract_Meta_Function'Class)
+       return League.Strings.Universal_String is
+   begin
+      return Self.Minimal_Signature.To_Universal_String;
+   end Minimal_Signature;
+
    ----------
    -- Name --
    ----------
@@ -291,6 +302,17 @@ package body Abstract_Meta_Functions is
          AbstractMetaFunction_name
           (Q_Strings.Internals.Internal (Result), Self.Object);
       end return;
+   end Name;
+
+   ----------
+   -- Name --
+   ----------
+
+   function Name
+    (Self : Abstract_Meta_Function'Class)
+       return League.Strings.Universal_String is
+   begin
+      return Self.Name.To_Universal_String;
    end Name;
 
    -----------------
@@ -317,6 +339,17 @@ package body Abstract_Meta_Functions is
          AbstractMetaFunction_signature
           (Q_Strings.Internals.Internal (Result), Self.Object);
       end return;
+   end Signature;
+
+   ---------------
+   -- Signature --
+   ---------------
+
+   function Signature
+    (Self : Abstract_Meta_Function'Class)
+       return League.Strings.Universal_String is
+   begin
+      return Self.Signature.To_Universal_String;
    end Signature;
 
 end Abstract_Meta_Functions;

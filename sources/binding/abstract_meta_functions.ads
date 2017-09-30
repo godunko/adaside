@@ -1,3 +1,5 @@
+with League.Strings;
+
 with Abstract_Meta_Argument_Lists;
 with Abstract_Meta_Attributes;
 limited with Abstract_Meta_Classes;
@@ -349,10 +351,16 @@ package Abstract_Meta_Functions is
 
    function Minimal_Signature
     (Self : Abstract_Meta_Function'Class) return Q_Strings.Q_String;
+   function Minimal_Signature
+    (Self : Abstract_Meta_Function'Class)
+       return League.Strings.Universal_String;
    --  QString minimalSignature() const
 
    function Name
     (Self : Abstract_Meta_Function'Class) return Q_Strings.Q_String;
+   function Name
+    (Self : Abstract_Meta_Function'Class)
+       return League.Strings.Universal_String;
    --  QString name() const;
 
    function Owner_Class
@@ -363,6 +371,9 @@ package Abstract_Meta_Functions is
 
    function Signature
     (Self : Abstract_Meta_Function'Class) return Q_Strings.Q_String;
+   function Signature
+    (Self : Abstract_Meta_Function'Class)
+       return League.Strings.Universal_String;
    --  QString signature() const
 
    function Get_Type (Self : Abstract_Meta_Function'Class)

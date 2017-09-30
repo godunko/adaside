@@ -63,7 +63,11 @@ package body Ada_Side.Generators is
              & Class.Name.To_Universal_String
              & "__"
       do
-         if Subprogram.Is_Arithmetic_Operator then
+         if Subprogram.Is_Arithmetic_Operator
+           or else Subprogram.Is_Comparison_Operator
+         then
+            --  Arithmetic operators
+
             if Name = +"operator+" then
                Result.Append ("_operator_plus");
 
@@ -75,6 +79,11 @@ package body Ada_Side.Generators is
 
             elsif Name = +"operator/" then
                Result.Append ("_operator_divide");
+
+            --  Comparison operators
+
+            elsif Name = +"operator==" then
+               Result.Append ("_operator_equal");
 
             else
                raise Program_Error;
