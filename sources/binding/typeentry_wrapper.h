@@ -10,4 +10,5 @@ extern "C"
 }
 
 extern "C" bool TypeEntry_isPrimitive(TypeEntry* self);
+extern "C" void TypeEntry_targetLangAPIName(QString* _return, TypeEntry* self);
 extern "C" void TypeEntry_targetLangName(QString* _return, TypeEntry* self);

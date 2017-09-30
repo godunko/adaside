@@ -21,6 +21,11 @@ extern "C" bool TypeEntry_isPrimitive(TypeEntry* self)
     return self->isPrimitive();
 }
 
+void TypeEntry_targetLangAPIName(QString* _return, TypeEntry* self)
+{
+    *_return = self->targetLangApiName();
+}
+
 void TypeEntry_targetLangName(QString* _return, TypeEntry* self)
 {
     *_return = self->targetLangName();

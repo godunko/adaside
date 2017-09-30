@@ -142,20 +142,6 @@ package Type_Entries is
    --        return m_name;
    --    }
    --
-   --    /**
-   --     *   Its type's name in target language API
-   --     *   The target language API name represents how this type is
-   --     *   referred on low level code for the target language.
-   --     *   Examples: for Java this would be a JNI name, for Python
-   --     *   it should represent the CPython type name.
-   --     *   /return string representing the target language API name
-   --     *   for this type entry
-   --     */
-   --    virtual QString targetLangApiName() const
-   --    {
-   --        return m_name;
-   --    }
-   --
    --    // The type to lookup when converting to TargetLang
    --    virtual QString lookupName() const
    --    {
@@ -312,6 +298,16 @@ package Type_Entries is
    function Name (Self : Type_Entry'Class) return Q_Strings.Q_String;
    --  The type's name in C++, fully qualified
    --  QString name() const
+
+   not overriding function Target_Lang_API_Name
+    (Self : Type_Entry) return Q_Strings.Q_String;
+   --  Its type's name in target language API
+   --  The target language API name represents how this type is referred on low
+   --  level code for the target language. Examples: for Java this would be a
+   --  JNI name, for Python it should represent the CPython type name.
+   --  /return string representing the target language API name for this type
+   --    entry
+   --  virtual QString targetLangApiName() const
 
    not overriding function Target_Lang_Name
     (Self : Type_Entry) return Q_Strings.Q_String;
