@@ -81,7 +81,8 @@ package body Ada_Side.Generators.Adas is
       Unit.Put_Line (User_Subprogram_Name (Subprogram));
 
       if not Subprogram.Is_Static
-        and not Subprogram.Is_Arithmetic_Operator
+        and not (Subprogram.Is_Arithmetic_Operator
+                   or Subprogram.Is_Comparison_Operator)
       then
          Unit.Put
           ("    (Self : "
@@ -90,7 +91,8 @@ package body Ada_Side.Generators.Adas is
          First_Parameter := False;
       end if;
 
-      if Subprogram.Is_Arithmetic_Operator
+      if (Subprogram.Is_Arithmetic_Operator
+            or Subprogram.Is_Comparison_Operator)
         and not Subprogram.Is_Reverse_Operator
       then
          Unit.Put ("    (Self : " & User_Tagged_Type_Name (Class) & "'Class");
@@ -133,7 +135,8 @@ package body Ada_Side.Generators.Adas is
          end loop;
       end;
 
-      if Subprogram.Is_Arithmetic_Operator
+      if (Subprogram.Is_Arithmetic_Operator
+            or Subprogram.Is_Comparison_Operator)
         and Subprogram.Is_Reverse_Operator
       then
          if First_Parameter then
@@ -206,7 +209,11 @@ package body Ada_Side.Generators.Adas is
         := Subprogram.Name.To_Universal_String;
 
    begin
-      if Subprogram.Is_Arithmetic_Operator then
+      if Subprogram.Is_Arithmetic_Operator
+        or Subprogram.Is_Comparison_Operator
+      then
+         --  Arithmetic operators.
+
          if Name = +"operator+" then
             return +"""+""";
 
@@ -218,6 +225,11 @@ package body Ada_Side.Generators.Adas is
 
          elsif Name = +"operator/" then
             return +"""/""";
+
+         --  Comparison operators.
+
+         elsif Name = +"operator==" then
+            return +"""=""";
 
          else
             raise Program_Error;

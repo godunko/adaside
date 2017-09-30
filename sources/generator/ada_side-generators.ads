@@ -1,4 +1,7 @@
+private with Ada.Containers.Hashed_Sets;
+
 with League.Strings;
+private with League.Strings.Hash;
 
 with Abstract_Meta_Classes;
 with Abstract_Meta_Class_Lists;
@@ -62,5 +65,12 @@ private
      Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class)
        return Boolean;
    --  Returns True if generator can generate binding for given subprogram.
+
+   package Universal_String_Sets is
+     new Ada.Containers.Hashed_Sets
+          (League.Strings.Universal_String,
+           League.Strings.Hash,
+           League.Strings."=",
+           League.Strings."=");
 
 end Ada_Side.Generators;

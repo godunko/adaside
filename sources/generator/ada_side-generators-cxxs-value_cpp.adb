@@ -26,6 +26,7 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
       Unit      : Ada_Side.Units.CXX_Cpp_Unit;
       Functions : Abstract_Meta_Function_Lists.Abstract_Meta_Function_List
         := Class.Functions;
+      Generated : Universal_String_Sets.Set;
 
    begin
       Unit.Set_Class_Name (Class.Name.To_Universal_String);
@@ -87,7 +88,12 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
             Second_Close : Boolean := False;
 
          begin
-            if Self.Can_Be_Generated (Class, Method) then
+            if Self.Can_Be_Generated (Class, Method)
+              and not Generated.Contains (Method.Minimal_Signature)
+            then
+               Generated.Include (Method.Minimal_Signature);
+               --  Protect from generation of duplicate for operators.
+
                Unit.New_Line;
                Generate_Declaration (Self, Unit, Class, Method);
                Unit.New_Line;

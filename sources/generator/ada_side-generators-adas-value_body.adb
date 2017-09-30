@@ -69,7 +69,11 @@ package body Ada_Side.Generators.Adas.Value_Body is
       return Result : League.Strings.Universal_String
         := Class.Name.To_Universal_String & "_"
       do
-         if Subprogram.Is_Arithmetic_Operator then
+         if Subprogram.Is_Arithmetic_Operator
+           or Subprogram.Is_Comparison_Operator
+         then
+            --  Arithmetic operators.
+
             if Name = +"operator+" then
                Result.Append ("operator_plus");
 
@@ -81,6 +85,11 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
             elsif Name = +"operator/" then
                Result.Append ("operator_divide");
+
+            --  Comparison operators.
+
+            elsif Name = +"operator==" then
+               Result.Append ("operator_equal");
 
             else
                raise Program_Error;

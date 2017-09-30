@@ -32,6 +32,7 @@ package body Ada_Side.Generators.Adas.Value_Spec is
    is
       Unit      : Ada_Side.Units.Ada_Spec_Unit;
       Functions : Abstract_Meta_Function_Lists.Abstract_Meta_Function_List;
+      Generated : Universal_String_Sets.Set;
 
    begin
       Unit.Set_Package_Name (User_Package_Full_Name (Class));
@@ -50,7 +51,12 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       Functions := Class.Functions;
 
       for Method of Functions loop
-         if Self.Can_Be_Generated (Class, Method) then
+         if Self.Can_Be_Generated (Class, Method)
+           and not Generated.Contains (Method.Minimal_Signature)
+         then
+            Generated.Include (Method.Minimal_Signature);
+            --  Protect from generation of duplicate for operators.
+
             Generate_User_Declaration (Self, Unit, Class, Method);
             Unit.Put_Line (+";");
 

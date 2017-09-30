@@ -23,6 +23,7 @@ package body Ada_Side.Generators.CXXs.Value_H is
       Unit      : Ada_Side.Units.CXX_H_Unit;
       Functions : Abstract_Meta_Function_Lists.Abstract_Meta_Function_List
         := Class.Functions;
+      Generated : Universal_String_Sets.Set;
 
    begin
       Unit.Set_Class_Name (Class.Name.To_Universal_String);
@@ -50,7 +51,12 @@ package body Ada_Side.Generators.CXXs.Value_H is
           & "** ___view, void* ___storage);");
 
       for Method of Functions loop
-         if Self.Can_Be_Generated (Class, Method) then
+         if Self.Can_Be_Generated (Class, Method)
+           and not Generated.Contains (Method.Minimal_Signature)
+         then
+            Generated.Include (Method.Minimal_Signature);
+            --  Protect from generation of duplicate for operators.
+
             Unit.Put (+"extern ""C"" ");
             Generate_Declaration (Self, Unit, Class, Method);
             Unit.Put_Line (+";");
