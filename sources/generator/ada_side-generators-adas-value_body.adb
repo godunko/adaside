@@ -113,6 +113,7 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
       Unit      : Ada_Side.Units.Ada_Body_Unit;
       Functions : Abstract_Meta_Function_Lists.Abstract_Meta_Function_List;
+      Generated : Universal_String_Sets.Set;
 
    begin
       Functions := Class.Functions;
@@ -173,7 +174,12 @@ package body Ada_Side.Generators.Adas.Value_Body is
             First_Parameter : Boolean := True;
 
          begin
-            if Self.Can_Be_Generated (Class, Method) then
+            if Self.Can_Be_Generated (Class, Method)
+              and not Generated.Contains (Method.Minimal_Signature)
+            then
+               Generated.Include (Method.Minimal_Signature);
+               --  Protect from generation of duplicate for operators.
+
                Unit.New_Line;
 
                if Return_Type.Is_Null
@@ -356,6 +362,8 @@ package body Ada_Side.Generators.Adas.Value_Body is
       Unit.Put_Line (+"      Self.Wrapper := False;");
       Unit.Put_Line (+"   end Initialize;");
 
+      Generated.Clear;
+
       for Method of Functions loop
          declare
             Return_Type     : constant Abstract_Meta_Types.Abstract_Meta_Type
@@ -372,7 +380,12 @@ package body Ada_Side.Generators.Adas.Value_Body is
             First_Parameter : Boolean := True;
 
          begin
-            if Self.Can_Be_Generated (Class, Method) then
+            if Self.Can_Be_Generated (Class, Method)
+              and not Generated.Contains (Method.Minimal_Signature)
+            then
+               Generated.Include (Method.Minimal_Signature);
+               --  Protect from generation of duplicate for operators.
+
                Generate_User_Declaration (Self, Unit, Class, Method);
                Unit.Put_Line (+" is");
                Unit.Put_Line (+"   begin");
