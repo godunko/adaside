@@ -5,6 +5,7 @@ with Abstract_Meta_Function_Lists;
 with Abstract_Meta_Functions;
 with Abstract_Meta_Types;
 
+with Ada_Side.Generators.Adas.Values;
 with Ada_Side.Units;
 
 package body Ada_Side.Generators.Adas.Value_Body is
@@ -260,14 +261,16 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
                   if Parameter.Get_Type.Is_Primitive then
                      Unit.Put
-                      (Parameter.Name.To_Universal_String
+                      (Values.To_Ada_Identifier
+                        (Parameter.Name.To_Universal_String)
                          & " : "
                          & Parameter.Get_Type.Type_Entry.Target_Lang_Name
                              .To_Universal_String);
 
                   elsif Parameter.Get_Type.Is_Constant then
                      Unit.Put
-                      (Parameter.Name.To_Universal_String
+                      (Values.To_Ada_Identifier
+                        (Parameter.Name.To_Universal_String)
                          & " : not null "
                          & API_Access_Type_Full_Name
                             (Self.Find_Class
@@ -486,14 +489,17 @@ package body Ada_Side.Generators.Adas.Value_Body is
                   end if;
 
                   if Parameter.Get_Type.Is_Primitive then
-                     Unit.Put (Parameter.Name.To_Universal_String);
+                     Unit.Put
+                      (Values.To_Ada_Identifier
+                        (Parameter.Name.To_Universal_String));
 
                   elsif Parameter.Get_Type.Is_Constant then
                      Unit.Put
                       (View_Expression
                         (Class,
                          Self.Find_Class (Parameter.Get_Type.Type_Entry),
-                         Parameter.Name.To_Universal_String));
+                         Values.To_Ada_Identifier
+                          (Parameter.Name.To_Universal_String)));
 
                   else
                      raise Program_Error;

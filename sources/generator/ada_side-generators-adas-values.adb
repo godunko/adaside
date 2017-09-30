@@ -33,7 +33,9 @@ package body Ada_Side.Generators.Adas.Values is
                   Result.Append ('_');
                end if;
 
-               Result.Append (Name (J));
+               if Name (J - 1) /= '_' and Name (J) /= '_' then
+                  Result.Append (Name (J));
+               end if;
             end if;
          end loop;
       end return;
