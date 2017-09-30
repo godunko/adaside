@@ -487,9 +487,20 @@ package body Ada_Side.Generators.Adas.Value_Body is
                   end if;
 
                   if Parameter.Get_Type.Is_Primitive then
-                     Unit.Put
-                      (Values.To_Ada_Identifier
-                        (Parameter.Name.To_Universal_String));
+                     if Parameter.Get_Type.Type_Entry.Target_Lang_Name
+                          .To_Universal_String = +"Boolean"
+                     then
+                        Unit.Put
+                         ("(if "
+                            & Values.To_Ada_Identifier
+                               (Parameter.Name.To_Universal_String)
+                            & " then 1 else 0)");
+
+                     else
+                        Unit.Put
+                         (Values.To_Ada_Identifier
+                           (Parameter.Name.To_Universal_String));
+                     end if;
 
                   elsif Parameter.Get_Type.Is_Constant then
                      Unit.Put
@@ -520,7 +531,23 @@ package body Ada_Side.Generators.Adas.Value_Body is
                   Unit.Put (View_Expression (Class, Class, +"Self"));
                end if;
 
-               Unit.Put_Line (+");");
+               Unit.Put (+")");
+
+               if not Return_Type.Is_Null
+                 and then Return_Type.Type_Entry.Is_Primitive
+                 and then Return_Type.Type_Entry.Target_Lang_Name
+                            .To_Universal_String = +"Boolean"
+--                 and then Return_Type.Type_Entry.Target_Lang_Name
+--                            /= Return_Type.Type_Entry.Target_Lang_API_Name
+               then
+                  --  XXX for 'bool' support as return value
+
+                  Unit.Add_Use_Type_Clause
+                   (Return_Type.Type_Entry.Target_Lang_API_Name);
+                  Unit.Put (+" /= 0");
+               end if;
+
+               Unit.Put_Line (+";");
 
                if End_Return then
                   Unit.Put_Line (+"      end return;");
