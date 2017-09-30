@@ -48,6 +48,12 @@ package body Abstract_Meta_Functions is
             Convention => C,
             Link_Name  => "AbstractMetaFunction_isBitwiseOperator";
 
+   function AbstractMetaFunction_isComparisonOperator
+    (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaFunction_isComparisonOperator";
+
    function AbstractMetaFunction_isConstant
     (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
        with Import     => True,
@@ -196,6 +202,16 @@ package body Abstract_Meta_Functions is
    begin
       return AbstractMetaFunction_isBitwiseOperator (Self.Object) /= 0;
    end Is_Bitwise_Operator;
+
+   ----------------------------
+   -- Is_Comparison_Operator --
+   ----------------------------
+
+   function Is_Comparison_Operator
+    (Self : Abstract_Meta_Function'Class) return Boolean is
+   begin
+      return AbstractMetaFunction_isComparisonOperator (Self.Object) /= 0;
+   end Is_Comparison_Operator;
 
    -----------------
    -- Is_Constant --

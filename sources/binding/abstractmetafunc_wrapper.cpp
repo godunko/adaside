@@ -41,6 +41,11 @@ bool AbstractMetaFunction_isBitwiseOperator(AbstractMetaFunction* self)
     return self->isBitwiseOperator();
 }
 
+bool AbstractMetaFunction_isComparisonOperator(AbstractMetaFunction* self)
+{
+    return self->isComparisonOperator();
+}
+
 bool AbstractMetaFunction_isConstant(AbstractMetaFunction* self)
 {
     return self->isConstant();

@@ -67,7 +67,6 @@ package Abstract_Meta_Functions is
    --    }
    --    bool isCastOperator() const;
    --
-   --    bool isComparisonOperator() const;
    --    bool isLogicalOperator() const;
    --    bool isSubscriptOperator() const;
    --    bool isAssignmentOperator() const; // Assignment or move assignment
@@ -329,6 +328,10 @@ package Abstract_Meta_Functions is
    function Is_Bitwise_Operator
     (Self : Abstract_Meta_Function'Class) return Boolean;
    --  bool isBitwiseOperator() const
+
+   function Is_Comparison_Operator
+    (Self : Abstract_Meta_Function'Class) return Boolean;
+   --  bool isComparisonOperator() const
 
    function Is_Constant
     (Self : Abstract_Meta_Function'Class) return Boolean;

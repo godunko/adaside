@@ -15,6 +15,7 @@ extern "C" const AbstractMetaClass* AbstractMetaFunction_declaringClass(Abstract
 extern "C" const AbstractMetaClass* AbstractMetaFunction_implementingClass(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isArithmeticOperator(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isBitwiseOperator(AbstractMetaFunction* self);
+extern "C" bool AbstractMetaFunction_isComparisonOperator(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isConstant(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isConstructor(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isInGlobalScope(AbstractMetaFunction* self);
