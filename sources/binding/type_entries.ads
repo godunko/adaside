@@ -1,3 +1,5 @@
+with League.Strings;
+
 with Q_Strings;
 
 package Type_Entries is
@@ -296,11 +298,15 @@ package Type_Entries is
    --  virtual bool isValue() const
 
    function Name (Self : Type_Entry'Class) return Q_Strings.Q_String;
+   function Name
+    (Self : Type_Entry'Class) return League.Strings.Universal_String;
    --  The type's name in C++, fully qualified
    --  QString name() const
 
    not overriding function Target_Lang_API_Name
     (Self : Type_Entry) return Q_Strings.Q_String;
+   function Target_Lang_API_Name
+    (Self : Type_Entry'Class) return League.Strings.Universal_String;
    --  Its type's name in target language API
    --  The target language API name represents how this type is referred on low
    --  level code for the target language. Examples: for Java this would be a
@@ -311,6 +317,8 @@ package Type_Entries is
 
    not overriding function Target_Lang_Name
     (Self : Type_Entry) return Q_Strings.Q_String;
+   function Target_Lang_Name
+    (Self : Type_Entry'Class) return League.Strings.Universal_String;
    --  The type's name in TargetLang
    --  virtual QString targetLangName() const
 

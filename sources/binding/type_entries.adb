@@ -106,6 +106,16 @@ package body Type_Entries is
       end return;
    end Name;
 
+   ----------
+   -- Name --
+   ----------
+
+   function Name
+    (Self : Type_Entry'Class) return League.Strings.Universal_String is
+   begin
+      return Self.Name.To_Universal_String;
+   end Name;
+
    --------------------------
    -- Target_Lang_API_Name --
    --------------------------
@@ -119,6 +129,16 @@ package body Type_Entries is
       end return;
    end Target_Lang_API_Name;
 
+   --------------------------
+   -- Target_Lang_API_Name --
+   --------------------------
+
+   function Target_Lang_API_Name
+    (Self : Type_Entry'Class) return League.Strings.Universal_String is
+   begin
+      return Self.Target_Lang_API_Name.To_Universal_String;
+   end Target_Lang_API_Name;
+
    ----------------------
    -- Target_Lang_Name --
    ----------------------
@@ -130,6 +150,16 @@ package body Type_Entries is
          TypeEntry_targetLangName
           (Q_Strings.Internals.Internal (Result), Self.TypeEntry_View);
       end return;
+   end Target_Lang_Name;
+
+   ----------------------
+   -- Target_Lang_Name --
+   ----------------------
+
+   function Target_Lang_Name
+    (Self : Type_Entry'Class) return League.Strings.Universal_String is
+   begin
+      return Self.Target_Lang_Name.To_Universal_String;
    end Target_Lang_Name;
 
 end Type_Entries;
