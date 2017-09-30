@@ -89,7 +89,6 @@ package Abstract_Meta_Functions is
    --    bool allowThread() const;
    --    QString modifiedName() const;
    --
-   --    QString minimalSignature() const;
    --    QStringList possibleIntrospectionCompatibleSignatures() const;
    --
    --    QString marshalledName() const;
@@ -348,8 +347,12 @@ package Abstract_Meta_Functions is
     (Self : Abstract_Meta_Function'Class) return Boolean;
    --  bool isReverseOperator() const
 
-   function Name (Self : Abstract_Meta_Function'Class)
-     return Q_Strings.Q_String;
+   function Minimal_Signature
+    (Self : Abstract_Meta_Function'Class) return Q_Strings.Q_String;
+   --  QString minimalSignature() const
+
+   function Name
+    (Self : Abstract_Meta_Function'Class) return Q_Strings.Q_String;
    --  QString name() const;
 
    function Owner_Class

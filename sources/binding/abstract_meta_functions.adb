@@ -78,6 +78,13 @@ package body Abstract_Meta_Functions is
             Convention => C,
             Link_Name  => "AbstractMetaFunction_isReverseOperator";
 
+   procedure AbstractMetaFunction_minimalSignature
+    (Result : not null Q_Strings.Internals.QString_Access;
+     Self   : not null AbstractMetaFunction_Access)
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaFunction_minimalSignature";
+
    procedure AbstractMetaFunction_name
     (Result : not null Q_Strings.Internals.QString_Access;
      Self   : not null AbstractMetaFunction_Access)
@@ -259,6 +266,19 @@ package body Abstract_Meta_Functions is
    begin
       return AbstractMetaFunction_isReverseOperator (Self.Object) /= 0;
    end Is_Reverse_Operator;
+
+   -----------------------
+   -- Minimal_Signature --
+   -----------------------
+
+   function Minimal_Signature
+    (Self : Abstract_Meta_Function'Class) return Q_Strings.Q_String is
+   begin
+      return Result : Q_Strings.Q_String do
+         AbstractMetaFunction_minimalSignature
+          (Q_Strings.Internals.Internal (Result), Self.Object);
+      end return;
+   end Minimal_Signature;
 
    ----------
    -- Name --

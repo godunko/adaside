@@ -66,6 +66,11 @@ bool AbstractMetaFunction_isReverseOperator(AbstractMetaFunction* self)
     return self->isReverseOperator();
 }
 
+void AbstractMetaFunction_minimalSignature(QString* _return, AbstractMetaFunction* self)
+{
+    *_return = self->minimalSignature();
+}
+
 const AbstractMetaClass* AbstractMetaFunction_ownerClass(AbstractMetaFunction* self)
 {
     return self->ownerClass();
