@@ -12,9 +12,6 @@ package Abstract_Meta_Functions is
      new Abstract_Meta_Attributes.Abstract_Meta_Attributes with private;
 
    --    void setName(const QString &name)
-   --    {
-   --        m_name = name;
-   --    }
    --
    --    QString originalName() const
    --    {
@@ -27,14 +24,6 @@ package Abstract_Meta_Functions is
    --    }
    --
    --    void setReverseOperator(bool reverse)
-   --    {
-   --        m_reverse = reverse;
-   --    }
-   --
-   --    bool isReverseOperator() const
-   --    {
-   --        return m_reverse;
-   --    }
    --
    --    /**
    --     *  Returns true if this is a operator and the "self" operand is a
@@ -348,7 +337,7 @@ package Abstract_Meta_Functions is
    function Arguments
     (Self : Abstract_Meta_Function'Class)
        return Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List;
-   --   AbstractMetaArgumentList arguments() const
+   --  AbstractMetaArgumentList arguments() const
 
    function Is_Arithmetic_Operator
     (Self : Abstract_Meta_Function'Class) return Boolean;
@@ -360,19 +349,23 @@ package Abstract_Meta_Functions is
 
    function Is_Constant
     (Self : Abstract_Meta_Function'Class) return Boolean;
-   --   bool isConstant() const
+   --  bool isConstant() const
 
    function Is_Constructor
     (Self : Abstract_Meta_Function'Class) return Boolean;
-   --   bool isConstructor() const
+   --  bool isConstructor() const
+
+   function Is_Reverse_Operator
+    (Self : Abstract_Meta_Function'Class) return Boolean;
+   --  bool isReverseOperator() const
 
    function Name (Self : Abstract_Meta_Function'Class)
      return Q_Strings.Q_String;
-   --   QString name() const;
+   --  QString name() const;
 
    function Get_Type (Self : Abstract_Meta_Function'Class)
      return Abstract_Meta_Types.Abstract_Meta_Type;
-   --   AbstractMetaType *type() const
+   --  AbstractMetaType *type() const
 
    package Internals is
 

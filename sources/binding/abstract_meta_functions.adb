@@ -44,6 +44,12 @@ package body Abstract_Meta_Functions is
             Convention => C,
             Link_Name  => "AbstractMetaFunction_isConstructor";
 
+   function AbstractMetaFunction_isReverseOperator
+    (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaFunction_isReverseOperator";
+
    procedure AbstractMetaFunction_name
     (Result : not null Q_Strings.Internals.QString_Access;
      Self   : not null AbstractMetaFunction_Access)
@@ -155,6 +161,16 @@ package body Abstract_Meta_Functions is
    begin
       return AbstractMetaFunction_isConstructor (Self.Object) /= 0;
    end Is_Constructor;
+
+   -------------------------
+   -- Is_Reverse_Operator --
+   -------------------------
+
+   function Is_Reverse_Operator
+    (Self : Abstract_Meta_Function'Class) return Boolean is
+   begin
+      return AbstractMetaFunction_isReverseOperator (Self.Object) /= 0;
+   end Is_Reverse_Operator;
 
    ----------
    -- Name --

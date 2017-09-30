@@ -15,4 +15,5 @@ extern "C" bool AbstractMetaFunction_isArithmeticOperator(AbstractMetaFunction* 
 extern "C" bool AbstractMetaFunction_isBitwiseOperator(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isConstant(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isConstructor(AbstractMetaFunction* self);
+extern "C" bool AbstractMetaFunction_isReverseOperator(AbstractMetaFunction* self);
 extern "C" AbstractMetaType* AbstractMetaFunction_type(AbstractMetaFunction* self);
