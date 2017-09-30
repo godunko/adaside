@@ -29,6 +29,13 @@ package body Abstract_Meta_Functions is
               Convention => C,
               Link_Name  => "AbstractMetaFunction_declaringClass";
 
+   function AbstractMetaFunction_implementingClass
+    (Self : not null AbstractMetaFunction_Access)
+       return Abstract_Meta_Classes.AbstractMetaClass_Access
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaFunction_implementingClass";
+
    function AbstractMetaFunction_isArithmeticOperator
     (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
        with Import     => True,
@@ -52,6 +59,12 @@ package body Abstract_Meta_Functions is
        with Import     => True,
             Convention => C,
             Link_Name  => "AbstractMetaFunction_isConstructor";
+
+   function AbstractMetaFunction_isInGlobalScope
+    (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaFunction_isInGlobalScope";
 
    function AbstractMetaFunction_isReverseOperator
     (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
@@ -122,6 +135,19 @@ package body Abstract_Meta_Functions is
          (AbstractMetaFunction_type (Self.Object));
    end Get_Type;
 
+   ------------------------
+   -- Implementing_Class --
+   ------------------------
+
+   function Implementing_Class
+    (Self : Abstract_Meta_Function'Class)
+       return Abstract_Meta_Classes.Abstract_Meta_Class is
+   begin
+      return
+        Abstract_Meta_Classes.Internals.Wrap
+         (AbstractMetaFunction_implementingClass (Self.Object));
+   end Implementing_Class;
+
    --------------
    -- Internal --
    --------------
@@ -190,6 +216,16 @@ package body Abstract_Meta_Functions is
    begin
       return AbstractMetaFunction_isConstructor (Self.Object) /= 0;
    end Is_Constructor;
+
+   ------------------------
+   -- Is_In_Global_Scope --
+   ------------------------
+
+   function Is_In_Global_Scope
+    (Self : Abstract_Meta_Function'Class) return Boolean is
+   begin
+      return AbstractMetaFunction_isInGlobalScope (Self.Object) /= 0;
+   end Is_In_Global_Scope;
 
    -------------------------
    -- Is_Reverse_Operator --

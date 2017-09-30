@@ -26,6 +26,11 @@ const AbstractMetaClass* AbstractMetaFunction_declaringClass(AbstractMetaFunctio
     return self->declaringClass();
 }
 
+const AbstractMetaClass* AbstractMetaFunction_implementingClass(AbstractMetaFunction* self)
+{
+    return self->implementingClass();
+}
+
 bool AbstractMetaFunction_isArithmeticOperator(AbstractMetaFunction* self)
 {
     return self->isArithmeticOperator();
@@ -44,6 +49,11 @@ bool AbstractMetaFunction_isConstant(AbstractMetaFunction* self)
 bool AbstractMetaFunction_isConstructor(AbstractMetaFunction* self)
 {
     return self->isConstructor();
+}
+
+bool AbstractMetaFunction_isInGlobalScope(AbstractMetaFunction* self)
+{
+    return self->isInGlobalScope();
 }
 
 bool AbstractMetaFunction_isReverseOperator(AbstractMetaFunction* self)

@@ -124,16 +124,7 @@ package Abstract_Meta_Functions is
    --
    --    void setOwnerClass(const AbstractMetaClass *cls)
    --    void setDeclaringClass(const AbstractMetaClass *cls)
-   --
-   --    // The class that actually implements this function
-   --    const AbstractMetaClass *implementingClass() const
-   --    {
-   --        return m_implementingClass;
-   --    }
    --    void setImplementingClass(const AbstractMetaClass *cls)
-   --    {
-   --        m_implementingClass = cls;
-   --    }
    --
    --    bool needsCallThrough() const;
    --
@@ -156,10 +147,6 @@ package Abstract_Meta_Functions is
    --    {
    --        return functionType() == NormalFunction || isSlot() ||
    --                                   isInGlobalScope();
-   --    }
-   --    bool isInGlobalScope() const
-   --    {
-   --        return functionType() == GlobalScopeFunction;
    --    }
    --    bool isSignal() const
    --    {
@@ -329,6 +316,12 @@ package Abstract_Meta_Functions is
    --  The first class in a hierarchy that declares the function
    --  const AbstractMetaClass *declaringClass() const
 
+   function Implementing_Class
+    (Self : Abstract_Meta_Function'Class)
+       return Abstract_Meta_Classes.Abstract_Meta_Class;
+   --  The class that actually implements this function
+   --  const AbstractMetaClass *implementingClass() const
+
    function Is_Arithmetic_Operator
     (Self : Abstract_Meta_Function'Class) return Boolean;
    --  bool isArithmeticOperator() const
@@ -344,6 +337,10 @@ package Abstract_Meta_Functions is
    function Is_Constructor
     (Self : Abstract_Meta_Function'Class) return Boolean;
    --  bool isConstructor() const
+
+   function Is_In_Global_Scope
+    (Self : Abstract_Meta_Function'Class) return Boolean;
+   --  bool isInGlobalScope() const
 
    function Is_Reverse_Operator
     (Self : Abstract_Meta_Function'Class) return Boolean;
