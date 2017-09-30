@@ -123,6 +123,15 @@ package body Abstract_Meta_Classes is
 
    end Internals;
 
+   -------------
+   -- Is_Null --
+   -------------
+
+   function Is_Null (Self : Abstract_Meta_Class'Class) return Boolean is
+   begin
+      return Self.Object = null;
+   end Is_Null;
+
    ----------
    -- Name --
    ----------

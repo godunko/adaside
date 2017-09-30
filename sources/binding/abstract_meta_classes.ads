@@ -16,6 +16,8 @@ package Abstract_Meta_Classes is
 
    Null_Abstract_Meta_Class : constant Abstract_Meta_Class;
 
+   function Is_Null (Self : Abstract_Meta_Class'Class) return Boolean;
+
    pragma Style_Checks (Off);
    --    AbstractMetaClass *extractInterface();
    --    void fixFunctions();
