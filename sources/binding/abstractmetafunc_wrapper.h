@@ -21,4 +21,5 @@ extern "C" bool AbstractMetaFunction_isConstructor(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isInGlobalScope(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isReverseOperator(AbstractMetaFunction* self);
 extern "C" const AbstractMetaClass* AbstractMetaFunction_ownerClass(AbstractMetaFunction* self);
+extern "C" void AbstractMetaFunction_signature(QString* _return, AbstractMetaFunction* self);
 extern "C" AbstractMetaType* AbstractMetaFunction_type(AbstractMetaFunction* self);

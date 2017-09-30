@@ -71,6 +71,11 @@ const AbstractMetaClass* AbstractMetaFunction_ownerClass(AbstractMetaFunction* s
     return self->ownerClass();
 }
 
+void AbstractMetaFunction_signature(QString* _return, AbstractMetaFunction* self)
+{
+    *_return = self->signature();
+}
+
 AbstractMetaType* AbstractMetaFunction_type(AbstractMetaFunction* self)
 {
     return self->type();

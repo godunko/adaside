@@ -92,6 +92,13 @@ package body Abstract_Meta_Functions is
               Convention => C,
               Link_Name  => "AbstractMetaFunction_ownerClass";
 
+   procedure AbstractMetaFunction_signature
+    (Result : not null Q_Strings.Internals.QString_Access;
+     Self   : not null AbstractMetaFunction_Access)
+       with Import     => True,
+            Convention => C,
+            Link_Name  => "AbstractMetaFunction_signature";
+
    function AbstractMetaFunction_type
     (This : AbstractMetaFunction_Access)
        return Abstract_Meta_Types.AbstractMetaType_Access
@@ -278,5 +285,18 @@ package body Abstract_Meta_Functions is
         Abstract_Meta_Classes.Internals.Wrap
          (AbstractMetaFunction_ownerClass (Self.Object));
    end Owner_Class;
+
+   ---------------
+   -- Signature --
+   ---------------
+
+   function Signature
+    (Self : Abstract_Meta_Function'Class) return Q_Strings.Q_String is
+   begin
+      return Result : Q_Strings.Q_String do
+         AbstractMetaFunction_signature
+          (Q_Strings.Internals.Internal (Result), Self.Object);
+      end return;
+   end Signature;
 
 end Abstract_Meta_Functions;

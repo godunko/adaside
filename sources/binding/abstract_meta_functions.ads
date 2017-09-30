@@ -171,7 +171,6 @@ package Abstract_Meta_Functions is
    --    bool usesRValueReferences() const;
    --    QStringList introspectionCompatibleSignatures(
    --      const QStringList &resolvedArguments = QStringList()) const;
-   --    QString signature() const;
    --    QString targetLangSignature(bool minimal = false) const;
    --    bool shouldReturnThisObject() const
    --    {
@@ -358,6 +357,10 @@ package Abstract_Meta_Functions is
        return Abstract_Meta_Classes.Abstract_Meta_Class;
    --  The class that has this function as a member.
    --  const AbstractMetaClass *ownerClass() const
+
+   function Signature
+    (Self : Abstract_Meta_Function'Class) return Q_Strings.Q_String;
+   --  QString signature() const
 
    function Get_Type (Self : Abstract_Meta_Function'Class)
      return Abstract_Meta_Types.Abstract_Meta_Type;
