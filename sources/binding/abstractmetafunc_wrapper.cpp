@@ -21,6 +21,11 @@ void AbstractMetaFunction_arguments(AbstractMetaArgumentList* _return, AbstractM
     *_return = self->arguments();
 }
 
+const AbstractMetaClass* AbstractMetaFunction_declaringClass(AbstractMetaFunction* self)
+{
+    return self->declaringClass();
+}
+
 bool AbstractMetaFunction_isArithmeticOperator(AbstractMetaFunction* self)
 {
     return self->isArithmeticOperator();

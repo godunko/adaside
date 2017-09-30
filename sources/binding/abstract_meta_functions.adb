@@ -22,6 +22,13 @@ package body Abstract_Meta_Functions is
             Convention => C,
             Link_Name  => "AbstractMetaFunction_arguments";
 
+   function AbstractMetaFunction_declaringClass
+    (Self : not null AbstractMetaFunction_Access)
+       return Abstract_Meta_Classes.AbstractMetaClass_Access
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaFunction_declaringClass";
+
    function AbstractMetaFunction_isArithmeticOperator
     (This : AbstractMetaFunction_Access) return Interfaces.C.Extensions.bool
        with Import     => True,
@@ -89,6 +96,19 @@ package body Abstract_Meta_Functions is
            Self.Object);
       end return;
    end Arguments;
+
+   ---------------------
+   -- Declaring_Class --
+   ---------------------
+
+   function Declaring_Class
+    (Self : Abstract_Meta_Function'Class)
+       return Abstract_Meta_Classes.Abstract_Meta_Class is
+   begin
+      return
+        Abstract_Meta_Classes.Internals.Wrap
+         (AbstractMetaFunction_declaringClass (Self.Object));
+   end Declaring_Class;
 
    --------------
    -- Get_Type --

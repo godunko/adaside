@@ -123,16 +123,7 @@ package Abstract_Meta_Functions is
    --    }
    --
    --    void setOwnerClass(const AbstractMetaClass *cls)
-   --
-   --    // The first class in a hierarchy that declares the function
-   --    const AbstractMetaClass *declaringClass() const
-   --    {
-   --        return m_declaringClass;
-   --    }
    --    void setDeclaringClass(const AbstractMetaClass *cls)
-   --    {
-   --        m_declaringClass = cls;
-   --    }
    --
    --    // The class that actually implements this function
    --    const AbstractMetaClass *implementingClass() const
@@ -331,6 +322,12 @@ package Abstract_Meta_Functions is
     (Self : Abstract_Meta_Function'Class)
        return Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List;
    --  AbstractMetaArgumentList arguments() const
+
+   function Declaring_Class
+    (Self : Abstract_Meta_Function'Class)
+       return Abstract_Meta_Classes.Abstract_Meta_Class;
+   --  The first class in a hierarchy that declares the function
+   --  const AbstractMetaClass *declaringClass() const
 
    function Is_Arithmetic_Operator
     (Self : Abstract_Meta_Function'Class) return Boolean;

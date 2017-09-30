@@ -11,6 +11,7 @@ extern "C"
 }
 
 extern "C" void AbstractMetaFunction_arguments(AbstractMetaArgumentList* _return, AbstractMetaFunction* self);
+extern "C" const AbstractMetaClass* AbstractMetaFunction_declaringClass(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isArithmeticOperator(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isBitwiseOperator(AbstractMetaFunction* self);
 extern "C" bool AbstractMetaFunction_isConstant(AbstractMetaFunction* self);
