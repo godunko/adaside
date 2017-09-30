@@ -79,7 +79,7 @@ package body Ada_Side.Generators.CXXs is
          Unit.Put
           ((if Subprogram.Is_Constant then "const " else "")
              & Class.Name.To_Universal_String
-             & "* self");
+             & "* ___self");
       end if;
 
       if Subprogram.Is_Arithmetic_Operator

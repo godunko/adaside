@@ -99,7 +99,7 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                       & (if Method.Is_Static
                            then Class.Type_Entry.Name.To_Universal_String
                                   & "::"
-                           else +"self->")
+                           else +"___self->")
                       & Method.Name.To_Universal_String
                       & "(");
 
@@ -109,7 +109,7 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                       & (if Method.Is_Static
                            then Class.Type_Entry.Name.To_Universal_String
                                   & "::"
-                           else +"self->")
+                           else +"___self->")
                       & Method.Name.To_Universal_String
                       & "(");
 
@@ -126,7 +126,7 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                               elsif Method.Is_Static
                                 then Class.Type_Entry.Name.To_Universal_String
                                        & "::"
-                                else +"self->")
+                                else +"___self->")
                          & Method.Name.To_Universal_String
                          & "(");
                      Second_Close := True;
@@ -139,7 +139,7 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                               elsif Method.Is_Static
                                 then Class.Type_Entry.Name.To_Universal_String
                                        & "::"
-                                else +"self->")
+                                else +"___self->")
                          & Method.Name.To_Universal_String
                          & "(");
                   end if;
