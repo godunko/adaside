@@ -64,9 +64,27 @@ package body Ada_Side.Generators.Adas is
    is
       use type Abstract_Meta_Classes.Abstract_Meta_Class;
 
-      Return_Type     : constant Abstract_Meta_Types.Abstract_Meta_Type
+      procedure New_Parameter;
+
+      Return_Type   : constant Abstract_Meta_Types.Abstract_Meta_Type
         := Subprogram.Get_Type;
-      First_Parameter : Boolean := True;
+      Has_Parameter : Boolean := False;
+
+      -------------------
+      -- New_Parameter --
+      -------------------
+
+      procedure New_Parameter is
+      begin
+         if Has_Parameter then
+            Unit.Put_Line (+";");
+            Unit.Put (+"     ");
+
+         else
+            Unit.Put (+"    (");
+            Has_Parameter := True;
+         end if;
+      end New_Parameter;
 
    begin
       Unit.New_Line;
@@ -84,19 +102,19 @@ package body Ada_Side.Generators.Adas is
         and not (Subprogram.Is_Arithmetic_Operator
                    or Subprogram.Is_Comparison_Operator)
       then
+         New_Parameter;
          Unit.Put
-          ("    (Self : "
+          ("Self : "
              & (if Subprogram.Is_Constant then "" else "in out ")
              & User_Tagged_Type_Name (Class) & "'Class");
-         First_Parameter := False;
       end if;
 
       if (Subprogram.Is_Arithmetic_Operator
             or Subprogram.Is_Comparison_Operator)
         and not Subprogram.Is_Reverse_Operator
       then
-         Unit.Put ("    (Self : " & User_Tagged_Type_Name (Class) & "'Class");
-         First_Parameter := False;
+         New_Parameter;
+         Unit.Put ("Self : " & User_Tagged_Type_Name (Class) & "'Class");
       end if;
 
       declare
@@ -105,14 +123,7 @@ package body Ada_Side.Generators.Adas is
 
       begin
          for Parameter of Parameters loop
-            if First_Parameter then
-               Unit.Put (+"    (");
-               First_Parameter := False;
-
-            else
-               Unit.Put_Line (+";");
-               Unit.Put (+"     ");
-            end if;
+            New_Parameter;
 
             if Parameter.Get_Type.Is_Primitive then
                Unit.Put
@@ -139,19 +150,11 @@ package body Ada_Side.Generators.Adas is
             or Subprogram.Is_Comparison_Operator)
         and Subprogram.Is_Reverse_Operator
       then
-         if First_Parameter then
-            Unit.Put (+"    (");
-            First_Parameter := False;
-
-         else
-            Unit.Put_Line (+";");
-            Unit.Put (+"     ");
-         end if;
-
+         New_Parameter;
          Unit.Put ("Self : " & User_Tagged_Type_Name (Class) & "'Class");
       end if;
 
-      if not First_Parameter then
+      if Has_Parameter then
          Unit.Put (+")");
       end if;
 
