@@ -44,6 +44,17 @@ package body Ada_Side.Units is
       end if;
    end Add_Private_With_Clause;
 
+   -------------------------
+   -- Add_Use_Type_Clause --
+   -------------------------
+
+   procedure Add_Use_Type_Clause
+    (Self : in out Abstract_Ada_Unit'Class;
+     Name : League.Strings.Universal_String) is
+   begin
+      Self.Use_Type.Include (Name);
+   end Add_Use_Type_Clause;
+
    ---------------------
    -- Add_With_Clause --
    ---------------------
@@ -260,6 +271,7 @@ package body Ada_Side.Units is
              & '/'
              & Self.Generated_File_Name.To_UTF_8_String;
       File : Ada.Wide_Wide_Text_IO.File_Type;
+      Done : Boolean := False;
 
    begin
       Ada.Wide_Wide_Text_IO.Create
@@ -282,6 +294,18 @@ package body Ada_Side.Units is
          then
             Ada.Wide_Wide_Text_IO.Put_Line
              (File, Self.Text (J).To_Wide_Wide_String);
+
+            if Self in Abstract_Ada_Unit'Class
+              and Self.Text (J).Index ("package") /= 0
+              and not Done
+            then
+               for Name of Abstract_Ada_Unit'Class (Self).Use_Type loop
+                  Ada.Wide_Wide_Text_IO.Put_Line
+                   (File, "   use type " & Name.To_Wide_Wide_String & ";");
+               end loop;
+
+               Done := True;
+            end if;
          end if;
       end loop;
 

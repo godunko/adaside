@@ -1,4 +1,5 @@
 private with Ada.Containers.Ordered_Maps;
+private with Ada.Containers.Ordered_Sets;
 private with Ada.Finalization;
 
 with League.Strings;
@@ -42,6 +43,10 @@ package Ada_Side.Units is
      Name : League.Strings.Universal_String);
 
    procedure Add_Limited_With_Clause
+    (Self : in out Abstract_Ada_Unit'Class;
+     Name : League.Strings.Universal_String);
+
+   procedure Add_Use_Type_Clause
     (Self : in out Abstract_Ada_Unit'Class;
      Name : League.Strings.Universal_String);
 
@@ -107,13 +112,20 @@ private
    function Generate_Unit_Context_Clauses
     (Self : Ada_Context) return League.String_Vectors.Universal_String_Vector;
 
+   package Universal_String_Sets is
+     new Ada.Containers.Ordered_Sets
+          (League.Strings.Universal_String,
+           League.Strings."<",
+           League.Strings."=");
+
    -----------------------
    -- Abstract_Ada_Unit --
    -----------------------
 
    type Abstract_Ada_Unit is abstract new Abstract_Unit with record
-      Name    : League.Strings.Universal_String;
-      Context : Ada_Context;
+      Name     : League.Strings.Universal_String;
+      Context  : Ada_Context;
+      Use_Type : Universal_String_Sets.Set;
    end record;
 
    overriding function Get_Context
