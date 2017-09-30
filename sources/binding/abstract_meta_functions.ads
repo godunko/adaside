@@ -1,5 +1,6 @@
 with Abstract_Meta_Argument_Lists;
 with Abstract_Meta_Attributes;
+limited with Abstract_Meta_Classes;
 with Abstract_Meta_Types;
 with Q_Strings;
 
@@ -121,15 +122,7 @@ package Abstract_Meta_Functions is
    --        m_type = type;
    --    }
    --
-   --    // The class that has this function as a member.
-   --    const AbstractMetaClass *ownerClass() const
-   --    {
-   --        return m_class;
-   --    }
    --    void setOwnerClass(const AbstractMetaClass *cls)
-   --    {
-   --        m_class = cls;
-   --    }
    --
    --    // The first class in a hierarchy that declares the function
    --    const AbstractMetaClass *declaringClass() const
@@ -362,6 +355,12 @@ package Abstract_Meta_Functions is
    function Name (Self : Abstract_Meta_Function'Class)
      return Q_Strings.Q_String;
    --  QString name() const;
+
+   function Owner_Class
+    (Self : Abstract_Meta_Function'Class)
+       return Abstract_Meta_Classes.Abstract_Meta_Class;
+   --  The class that has this function as a member.
+   --  const AbstractMetaClass *ownerClass() const
 
    function Get_Type (Self : Abstract_Meta_Function'Class)
      return Abstract_Meta_Types.Abstract_Meta_Type;

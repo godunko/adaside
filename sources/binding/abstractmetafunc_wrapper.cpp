@@ -46,6 +46,11 @@ bool AbstractMetaFunction_isReverseOperator(AbstractMetaFunction* self)
     return self->isReverseOperator();
 }
 
+const AbstractMetaClass* AbstractMetaFunction_ownerClass(AbstractMetaFunction* self)
+{
+    return self->ownerClass();
+}
+
 AbstractMetaType* AbstractMetaFunction_type(AbstractMetaFunction* self)
 {
     return self->type();

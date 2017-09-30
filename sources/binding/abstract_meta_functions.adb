@@ -1,5 +1,7 @@
 with Interfaces.C.Extensions;
 
+with Abstract_Meta_Classes;
+
 package body Abstract_Meta_Functions is
 
    use type Interfaces.C.Extensions.bool;
@@ -56,6 +58,13 @@ package body Abstract_Meta_Functions is
        with Import     => True,
             Convention => C,
             Link_Name  => "AbstractMetaFunction_name";
+
+   function AbstractMetaFunction_ownerClass
+    (Self : not null AbstractMetaFunction_Access)
+       return Abstract_Meta_Classes.AbstractMetaClass_Access
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaFunction_ownerClass";
 
    function AbstractMetaFunction_type
     (This : AbstractMetaFunction_Access)
@@ -184,5 +193,18 @@ package body Abstract_Meta_Functions is
           (Q_Strings.Internals.Internal (Result), Self.Object);
       end return;
    end Name;
+
+   -----------------
+   -- Owner_Class --
+   -----------------
+
+   function Owner_Class
+    (Self : Abstract_Meta_Function'Class)
+       return Abstract_Meta_Classes.Abstract_Meta_Class is
+   begin
+      return
+        Abstract_Meta_Classes.Internals.Wrap
+         (AbstractMetaFunction_ownerClass (Self.Object));
+   end Owner_Class;
 
 end Abstract_Meta_Functions;
