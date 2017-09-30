@@ -26,6 +26,29 @@ package body Ada_Side.Outputs is
    -- Join --
    ----------
 
+   overriding function Join
+    (Self    : Declaration;
+     List    : Node_Access_Array;
+     Pad     : Natural;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.Append (Node'Class (Self).Document (Printer, Pad));
+
+      for J in List'Range loop
+         Result.New_Line;
+         Result.Append (List (J).Document (Printer, Pad));
+      end loop;
+
+      return Result;
+   end Join;
+
+   ----------
+   -- Join --
+   ----------
+
    not overriding function Join
     (Self    : Node;
      List    : Node_Access_Array;

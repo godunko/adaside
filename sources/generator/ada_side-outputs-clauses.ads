@@ -48,7 +48,7 @@ private
    overriding function Max_Pad (Self : Aspect) return Natural is
      (Self.Name.Max_Pad);
 
-   type Pragma_Node is new Node with record
+   type Pragma_Node is new Declaration with record
       Name      : not null Node_Access;
       Arguments : Node_Access;
    end record;

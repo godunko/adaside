@@ -24,6 +24,7 @@ package body Ada_Side.Outputs.Declarations is
 
       if Self.List /= null then
          Content := Printer.New_Document;
+         Content.New_Line;
          Content.Append (Self.List.Document (Printer, Pad));
          Content.Nest (3);
 
@@ -147,7 +148,6 @@ package body Ada_Side.Outputs.Declarations is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
       Result.New_Line;
-      Result.New_Line;
       Result.Append (Self.Specification.Document (Printer, Pad));
       Result.Put (" is");
 
@@ -189,7 +189,6 @@ package body Ada_Side.Outputs.Declarations is
    is
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
-      Result.New_Line;
       Result.New_Line;
       Result.Append (Self.Specification.Document (Printer, Pad));
       Result.Append (Print_Aspect (Self.Aspects, Printer));

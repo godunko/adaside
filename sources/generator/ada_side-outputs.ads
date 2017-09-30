@@ -254,6 +254,16 @@ private
      Printer : not null access League.Pretty_Printers.Printer'Class)
       return League.Pretty_Printers.Document;
 
+   type Declaration is abstract new Node with null record;
+
+   overriding function Join
+    (Self    : Declaration;
+     List    : Node_Access_Array;
+     Pad     : Natural;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document;
+   --  Declarations are separated by an extra new line
+
    type Factory is tagged null record;
 
    function Print_Aspect

@@ -62,7 +62,7 @@ private package Ada_Side.Outputs.Declarations is
 
 private
 
-   type Package_Body is new Node with record
+   type Package_Body is new Declaration with record
       Name : not null Node_Access;
       List : Node_Access;
    end record;
@@ -73,7 +73,7 @@ private
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
-   type Package_Spec is new Node with record
+   type Package_Spec is new Declaration with record
       Name         : not null Node_Access;
       Public_Part  : Node_Access;
       Private_Part : Node_Access;
@@ -112,7 +112,7 @@ private
    overriding function Max_Pad (Self : Parameter) return Natural is
      (Self.Name.Max_Pad);
 
-   type Subprogram_Body is new Node with record
+   type Subprogram_Body is new Declaration with record
       Specification : not null Node_Access;
       Declarations  : Node_Access;
       Statements    : Node_Access;
@@ -125,7 +125,7 @@ private
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
-   type Subprogram_Declaration is new Node with record
+   type Subprogram_Declaration is new Declaration with record
       Specification : not null Node_Access;
       Aspects       : Node_Access;
       Comment       : League.Strings.Universal_String;
@@ -137,7 +137,7 @@ private
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
-   type Type_Declaration is new Node with record
+   type Type_Declaration is new Declaration with record
       Name          : not null Node_Access;
       Discriminants : Node_Access;
       Definition    : Node_Access;
@@ -151,7 +151,7 @@ private
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
-   type Variable is new Node with record
+   type Variable is new Declaration with record
       Name            : not null Node_Access;
       Type_Definition : Node_Access;
       Initialization  : Node_Access;
