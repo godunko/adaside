@@ -41,15 +41,4 @@ package body Ada_Side.Generators.Adas.Values is
       end return;
    end To_Ada_Identifier;
 
-   -----------------------
-   -- To_Ada_Identifier --
-   -----------------------
-
-   function To_Ada_Identifier
-    (Name : Q_Strings.Q_String)
-       return League.Strings.Universal_String is
-   begin
-      return To_Ada_Identifier (Name.To_Universal_String);
-   end To_Ada_Identifier;
-
 end Ada_Side.Generators.Adas.Values;

@@ -264,7 +264,7 @@ package body Ada_Side.Generators.Adas.Value_Body is
                       (Values.To_Ada_Identifier
                         (Parameter.Name.To_Universal_String)
                          & " : "
-                         & Parameter.Get_Type.Type_Entry.Target_Lang_Name
+                         & Parameter.Get_Type.Type_Entry.Target_Lang_API_Name
                              .To_Universal_String);
 
                   elsif Parameter.Get_Type.Is_Constant then
@@ -303,8 +303,7 @@ package body Ada_Side.Generators.Adas.Value_Body is
                then
                   Unit.Put_Line
                    ("       return "
-                      & Return_Type.Type_Entry.Target_Lang_Name
-                          .To_Universal_String);
+                      & Return_Type.Type_Entry.Target_Lang_API_Name);
                end if;
 
                Unit.Put_Line (+"       with Import     => True,");
@@ -317,8 +316,7 @@ package body Ada_Side.Generators.Adas.Value_Body is
                --  XXX Not supported yet.
 
                Ada.Wide_Wide_Text_IO.Put_Line
-                ("Skipping "
-                   & Method.Name.To_Universal_String.To_Wide_Wide_String);
+                ("Skipping " & Method.Name.To_Wide_Wide_String);
             end if;
          end;
       end loop;
@@ -534,8 +532,7 @@ package body Ada_Side.Generators.Adas.Value_Body is
                --  XXX Not supported yet.
 
                Ada.Wide_Wide_Text_IO.Put_Line
-                ("Skipping "
-                   & Method.Name.To_Universal_String.To_Wide_Wide_String);
+                ("Skipping " & Method.Name.To_Wide_Wide_String);
             end if;
          end;
       end loop;
