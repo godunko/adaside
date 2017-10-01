@@ -32,7 +32,15 @@ package body Ada_Side.Generators.CXXs is
       Has_Parameters : Boolean := False;
 
    begin
-      if Return_Type.Is_Null then
+      if Subprogram.Is_Constructor then
+         Unit.Put
+          ("void "
+             & API_Subprogram_Link_Name (Class, Subprogram)
+             & "(" & Class.Name.To_Universal_String
+             & "** ___view, void* ___storage");
+         Has_Parameters := True;
+
+      elsif Return_Type.Is_Null then
          Unit.Put
           ("void "
              & API_Subprogram_Link_Name (Class, Subprogram)
@@ -67,6 +75,7 @@ package body Ada_Side.Generators.CXXs is
       end if;
 
       if not Subprogram.Is_Static
+        and not Subprogram.Is_Constructor
         and not Subprogram.Is_Arithmetic_Operator
       then
          if Has_Parameters then

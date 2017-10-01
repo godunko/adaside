@@ -89,7 +89,9 @@ package body Ada_Side.Generators.Adas is
    begin
       Unit.New_Line;
 
-      if Return_Type.Is_Null then
+      if Return_Type.Is_Null
+        and not Subprogram.Is_Constructor
+      then
          Unit.Put (+"   procedure ");
 
       else
@@ -98,7 +100,8 @@ package body Ada_Side.Generators.Adas is
 
       Unit.Put_Line (User_Subprogram_Name (Subprogram));
 
-      if not Subprogram.Is_Static
+      if not Subprogram.Is_Constructor
+        and not Subprogram.Is_Static
         and not (Subprogram.Is_Arithmetic_Operator
                    or Subprogram.Is_Comparison_Operator)
       then
@@ -170,7 +173,11 @@ package body Ada_Side.Generators.Adas is
          Unit.Put (+")");
       end if;
 
-      if not Return_Type.Is_Null then
+      if Subprogram.Is_Constructor then
+         Unit.New_Line;
+         Unit.Put ("       return " & User_Tagged_Type_Full_Name (Class));
+
+      elsif not Return_Type.Is_Null then
          declare
             Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
               := Generator.Find_Class (Return_Type.Type_Entry);
@@ -249,6 +256,9 @@ package body Ada_Side.Generators.Adas is
          else
             raise Program_Error;
          end if;
+
+      elsif Subprogram.Is_Constructor then
+         return "Create_" & Values.To_Ada_Identifier (Name);
 
       else
          return Values.To_Ada_Identifier (Name);

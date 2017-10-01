@@ -126,8 +126,11 @@ package body Ada_Side.Generators is
       pragma Unreferenced (Generator, Class);
 
    begin
-      if Subprogram.Is_Constructor then
-         --  XXX Not supported yet.
+      if Subprogram.Is_Constructor
+        and (Subprogram.Arguments.Is_Empty or Subprogram.Is_Copy_Constructor)
+      then
+         --  Binding for default & copy constructors are not need to be
+         --  generated.
 
          return False;
       end if;

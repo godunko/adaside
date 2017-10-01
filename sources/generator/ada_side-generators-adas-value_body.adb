@@ -195,7 +195,14 @@ package body Ada_Side.Generators.Adas.Value_Body is
                Unit.Put_Line (API_Subprogram_Name (Class, Method));
                Unit.Put (+"    ");
 
-               if not Return_Type.Is_Null
+               if Method.Is_Constructor then
+                  First_Parameter := False;
+                  Unit.Put
+                   ("(View : in out " & API_Access_Type_Full_Name (Class));
+                  Unit.Put_Line (+";");
+                  Unit.Put (+"     Storage : System.Address");
+
+               elsif not Return_Type.Is_Null
                  and then Return_Type.Is_Value
                then
                   First_Parameter := False;
@@ -218,7 +225,8 @@ package body Ada_Side.Generators.Adas.Value_Body is
                   end if;
                end if;
 
-               if not Method.Is_Static
+               if not Method.Is_Constructor
+                 and not Method.Is_Static
                  and not Method.Is_Arithmetic_Operator
                then
                   if First_Parameter then
@@ -404,7 +412,16 @@ package body Ada_Side.Generators.Adas.Value_Body is
                Unit.Put_Line (+"   begin");
                Unit.Put (+"      ");
 
-               if Return_Type.Is_Null then
+               if Method.Is_Constructor then
+                  Unit.Put_Line
+                   ("return QtAda_Result : "
+                      & User_Tagged_Type_Full_Name (Class)
+                      & " := (Ada.Finalization.Controlled with"
+                      & " others => <>) do");
+                  Unit.Put (+"         ");
+                  End_Return := True;
+
+               elsif Return_Type.Is_Null then
                   null;
 
                elsif Return_Type.Type_Entry.Is_Primitive then
@@ -435,7 +452,13 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
                --  Process return value when function returns value type.
 
-               if not Return_Type.Is_Null
+               if Method.Is_Constructor then
+                  Unit.Put
+                   (" (" & View_Expression (Class, Class, +"QtAda_Result"));
+                  First_Parameter := False;
+                  Unit.Put (+", QtAda_Result.Storage'Address");
+
+               elsif not Return_Type.Is_Null
                  and then Return_Type.Is_Value
                then
                   Unit.Put
@@ -457,7 +480,8 @@ package body Ada_Side.Generators.Adas.Value_Body is
 
                --  Process "self" parameter for non-static functions.
 
-               if not Method.Is_Static
+               if not Method.Is_Constructor
+                 and not Method.Is_Static
                  and not Method.Is_Arithmetic_Operator
                then
                   if First_Parameter then

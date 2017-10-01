@@ -115,7 +115,13 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                Unit.New_Line;
                Unit.Put_Line (+"{");
 
-               if Return_Type.Is_Null then
+               if Method.Is_Constructor then
+                  Unit.Put
+                   ("    *___view = new (___storage) "
+                      & Class.Name.To_Universal_String
+                      & "(");
+
+               elsif Return_Type.Is_Null then
                   Unit.Put
                    ("    "
                       & (if Method.Is_Static
