@@ -125,19 +125,19 @@ package body Ada_Side.Generators.Adas is
          for Parameter of Parameters loop
             New_Parameter;
 
+            Unit.Put
+             (Values.To_Ada_Identifier (Parameter.Name.To_Universal_String)
+                & " : ");
+
             if Parameter.Get_Type.Is_Primitive then
                Unit.Put
-                (Values.To_Ada_Identifier (Parameter.Name.To_Universal_String)
-                   & " : "
-                   & Parameter.Get_Type.Type_Entry.Target_Lang_Name
-                       .To_Universal_String);
+                (Parameter.Get_Type.Type_Entry.Target_Lang_Name
+                   .To_Universal_String);
 
             elsif Parameter.Get_Type.Is_Constant then
                Unit.Put
-                (Values.To_Ada_Identifier (Parameter.Name.To_Universal_String)
-                   & " : "
-                   & User_Tagged_Type_Full_Name
-                      (Generator.Find_Class (Parameter.Get_Type.Type_Entry))
+                (User_Tagged_Type_Full_Name
+                  (Generator.Find_Class (Parameter.Get_Type.Type_Entry))
                    & "'Class");
 
             else
