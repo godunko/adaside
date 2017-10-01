@@ -251,10 +251,10 @@ package body Ada_Side.Outputs is
      (Self : access Factory;
       List : Node_Access_Array) return not null Node_Access
    is
-      Result : Node_Access := List (List'Last);
+      Result : Node_Access := List (List'First);
    begin
-      for J in reverse List'First .. List'Last - 1 loop
-         Result := Self.New_List (List (J), Result);
+      for J in List'First + 1 .. List'Last loop
+         Result := Self.New_List (Result, List (J));
       end loop;
 
       return Result;

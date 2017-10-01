@@ -12,29 +12,28 @@ package body Ada_Side.Outputs.Joins is
    is
       pragma Unreferenced (Pad);
       Count : Positive := 1;
-      Next  : Node_Access := Self.Right;
-      Max   : Natural := Self.Left.Max_Pad;
+      Next  : Node_Access := Self.Left;
+      Max   : Natural := Self.Right.Max_Pad;
    begin
       while Next.all in Join loop
          Count := Count + 1;
-         Max := Natural'Max (Max, Join (Next.all).Left.Max_Pad);
-         Next := Join (Next.all).Right;
+         Max := Natural'Max (Max, Join (Next.all).Right.Max_Pad);
+         Next := Join (Next.all).Left;
       end loop;
 
       Max := Natural'Max (Max, Next.Max_Pad);
 
       declare
-         List : Node_Access_Array (1 .. Count) := (others => Self.Left);
+         List : Node_Access_Array (1 .. Count) := (others => Self.Right);
       begin
-         Next := Self.Right;
-         for J in 1 .. Count - 1 loop
-            List (J) := Join (Next.all).Left;
-            Next := Join (Next.all).Right;
+         List (Count) := Self.Right;
+         Next := Self.Left;
+         for J in reverse 1 .. Count - 1 loop
+            List (J) := Join (Next.all).Right;
+            Next := Join (Next.all).Left;
          end loop;
 
-         List (Count) := Next;
-
-         return Self.Left.Join (List, Max, Printer);
+         return Next.Join (List, Max, Printer);
       end;
    end Document;
 

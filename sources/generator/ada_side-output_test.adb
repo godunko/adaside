@@ -57,8 +57,9 @@ procedure Ada_Side.Output_Test is
          F.New_String_Literal (+"__qtada__QString__storage_size"));
 
       Aspect_List : constant Ada_Side.Outputs.Node_Access :=
-        F.New_List (Import,
-          F.New_List (Convention, Link_Name));
+        F.New_List
+          (F.New_List (Import, Convention),
+           Link_Name);
 
       QString_Storage_Size : constant Ada_Side.Outputs.Node_Access :=
         F.New_Variable
