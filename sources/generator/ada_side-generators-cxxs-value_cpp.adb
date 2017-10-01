@@ -78,14 +78,30 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
 
       for Method of Functions loop
          declare
-            Return_Type  : constant Abstract_Meta_Types.Abstract_Meta_Type
+            Return_Type   : constant Abstract_Meta_Types.Abstract_Meta_Type
               := Method.Get_Type;
-            Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
+            Return_Class  : constant Abstract_Meta_Classes.Abstract_Meta_Class
               := (if Return_Type.Is_Null
                     then Abstract_Meta_Classes.Null_Abstract_Meta_Class
                     else Self.Find_Class (Return_Type.Type_Entry));
-            First_Arg    : Boolean := True;
-            Second_Close : Boolean := False;
+            Has_Parameter : Boolean := False;
+            Second_Close  : Boolean := False;
+
+            procedure New_Parameter;
+
+            -------------------
+            -- New_Parameter --
+            -------------------
+
+            procedure New_Parameter is
+            begin
+               if Has_Parameter then
+                  Unit.Put (+", ");
+
+               else
+                  Has_Parameter := True;
+               end if;
+            end New_Parameter;
 
          begin
             if Self.Can_Be_Generated (Class, Method)
@@ -168,23 +184,12 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                         or Method.Is_Comparison_Operator)
                     and not Method.Is_Reverse_Operator
                   then
-                     if First_Arg then
-                        First_Arg := False;
-
-                     else
-                        Unit.Put (+", ");
-                     end if;
-
+                     New_Parameter;
                      Unit.Put (+"*___self");
                   end if;
 
                   for Parameter of Parameters loop
-                     if First_Arg then
-                        First_Arg := False;
-
-                     else
-                        Unit.Put (+", ");
-                     end if;
+                     New_Parameter;
 
                      if Parameter.Get_Type.Is_Primitive then
                         Unit.Put (Parameter.Name.To_Universal_String);
@@ -203,13 +208,7 @@ package body Ada_Side.Generators.CXXs.Value_Cpp is
                         or Method.Is_Comparison_Operator)
                     and Method.Is_Reverse_Operator
                   then
-                     if First_Arg then
-                        First_Arg := False;
-
-                     else
-                        Unit.Put (+", ");
-                     end if;
-
+                     New_Parameter;
                      Unit.Put (+"*___self");
                   end if;
                end;
