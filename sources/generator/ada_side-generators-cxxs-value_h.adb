@@ -51,22 +51,24 @@ package body Ada_Side.Generators.CXXs.Value_H is
           & "** ___view, void* ___storage);");
 
       for Method of Functions loop
-         if Self.Can_Be_Generated (Class, Method)
-           and not Generated.Contains (Method.Minimal_Signature)
-         then
+         if not Self.Can_Be_Generated (Class, Method) then
+            null;
+
+         elsif Generated.Contains (Method.Minimal_Signature) then
+            Ada.Wide_Wide_Text_IO.Put_Line
+             (" Skip '" & Method.Name.To_Wide_Wide_String
+                & " - already generated");
+
+         else
+            Generated.Include (Method.Minimal_Signature);
+            --  Protect from generation of duplicate for operators.
+
             Generated.Include (Method.Minimal_Signature);
             --  Protect from generation of duplicate for operators.
 
             Unit.Put (+"extern ""C"" ");
             Generate_Declaration (Self, Unit, Class, Method);
             Unit.Put_Line (+";");
-
-         else
-            --  XXX Not supported yet.
-
-            Ada.Wide_Wide_Text_IO.Put_Line
-             ("Skipping "
-                & Method.Name.To_Universal_String.To_Wide_Wide_String);
          end if;
       end loop;
 

@@ -1,3 +1,5 @@
+with Ada.Wide_Wide_Text_IO;
+
 with Abstract_Meta_Argument_Lists;
 with Abstract_Meta_Types;
 
@@ -138,6 +140,9 @@ package body Ada_Side.Generators is
       if Subprogram.Is_Bitwise_Operator then
          --  XXX Not supported yet.
 
+         Ada.Wide_Wide_Text_IO.Put_Line
+          (" Skip '" & Subprogram.Minimal_Signature.To_Wide_Wide_String & ''');
+
          return False;
       end if;
 
@@ -156,6 +161,10 @@ package body Ada_Side.Generators is
               or not Parameter.Get_Type.Is_Constant
               or not Parameter.Get_Type.Is_L_Value_Reference
             then
+               Ada.Wide_Wide_Text_IO.Put_Line
+                (" Skip '"
+                   & Subprogram.Minimal_Signature.To_Wide_Wide_String & ''');
+
                return False;
             end if;
          end loop;
@@ -166,6 +175,9 @@ package body Ada_Side.Generators is
       end if;
 
       if Subprogram.Get_Type.Is_Reference then
+         Ada.Wide_Wide_Text_IO.Put_Line
+          (" Skip '" & Subprogram.Minimal_Signature.To_Wide_Wide_String & ''');
+
          return False;
       end if;
 
@@ -185,6 +197,9 @@ package body Ada_Side.Generators is
             return True;
          end if;
       end;
+
+      Ada.Wide_Wide_Text_IO.Put_Line
+       (" Skip '" & Subprogram.Minimal_Signature.To_Wide_Wide_String & ''');
 
       return False;
    end Can_Be_Generated;

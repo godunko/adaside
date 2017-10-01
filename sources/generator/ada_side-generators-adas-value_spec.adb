@@ -51,21 +51,20 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       Functions := Class.Functions;
 
       for Method of Functions loop
-         if Self.Can_Be_Generated (Class, Method)
-           and not Generated.Contains (Method.Minimal_Signature)
-         then
-            Generated.Include (Method.Minimal_Signature);
-            --  Protect from generation of duplicate for operators.
+         if Self.Can_Be_Generated (Class, Method) then
+            if Generated.Contains (Method.Minimal_Signature) then
+               Ada.Wide_Wide_Text_IO.Put_Line
+                (" Skip '"
+                   & Method.Name.To_Wide_Wide_String
+                   & "' - already generated");
 
-            Generate_User_Declaration (Self, Unit, Class, Method);
-            Unit.Put_Line (+";");
+            else
+               Generated.Include (Method.Minimal_Signature);
+               --  Protect from generation of duplicate for operators.
 
-         else
-            --  XXX Not supported yet.
-
-            Ada.Wide_Wide_Text_IO.Put_Line
-             ("Skipping "
-                & Method.Name.To_Universal_String.To_Wide_Wide_String);
+               Generate_User_Declaration (Self, Unit, Class, Method);
+               Unit.Put_Line (+";");
+            end if;
          end if;
       end loop;
 

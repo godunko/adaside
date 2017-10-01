@@ -175,9 +175,15 @@ package body Ada_Side.Generators.Adas.Value_Body is
             First_Parameter : Boolean := True;
 
          begin
-            if Self.Can_Be_Generated (Class, Method)
-              and not Generated.Contains (Method.Minimal_Signature)
-            then
+            if not Self.Can_Be_Generated (Class, Method) then
+               null;
+
+            elsif Generated.Contains (Method.Minimal_Signature) then
+               Ada.Wide_Wide_Text_IO.Put_Line
+                (" Skip '" & Method.Name.To_Wide_Wide_String
+                   & " - already generated");
+
+            else
                Generated.Include (Method.Minimal_Signature);
                --  Protect from generation of duplicate for operators.
 
@@ -331,12 +337,6 @@ package body Ada_Side.Generators.Adas.Value_Body is
                Unit.Put_Line
                 ("            Link_Name  => """
                    & API_Subprogram_Link_Name (Class, Method) & """;");
-
-            else
-               --  XXX Not supported yet.
-
-               Ada.Wide_Wide_Text_IO.Put_Line
-                ("Skipping " & Method.Name.To_Wide_Wide_String);
             end if;
          end;
       end loop;
@@ -401,9 +401,15 @@ package body Ada_Side.Generators.Adas.Value_Body is
             First_Parameter : Boolean := True;
 
          begin
-            if Self.Can_Be_Generated (Class, Method)
-              and not Generated.Contains (Method.Minimal_Signature)
-            then
+            if not Self.Can_Be_Generated (Class, Method) then
+               null;
+
+            elsif Generated.Contains (Method.Minimal_Signature) then
+               Ada.Wide_Wide_Text_IO.Put_Line
+                (" Skip '" & Method.Name.To_Wide_Wide_String
+                   & " - already generated");
+
+            else
                Generated.Include (Method.Minimal_Signature);
                --  Protect from generation of duplicate for operators.
 
@@ -604,12 +610,6 @@ package body Ada_Side.Generators.Adas.Value_Body is
                end if;
 
                Unit.Put_Line ("   end " & User_Subprogram_Name (Method) & ";");
-
-            else
-               --  XXX Not supported yet.
-
-               Ada.Wide_Wide_Text_IO.Put_Line
-                ("Skipping " & Method.Name.To_Wide_Wide_String);
             end if;
          end;
       end loop;
