@@ -135,10 +135,22 @@ package body Ada_Side.Generators.Adas is
                    .To_Universal_String);
 
             elsif Parameter.Get_Type.Is_Constant then
-               Unit.Put
-                (User_Tagged_Type_Full_Name
-                  (Generator.Find_Class (Parameter.Get_Type.Type_Entry))
-                   & "'Class");
+               declare
+                  Parameter_Class : constant
+                    Abstract_Meta_Classes.Abstract_Meta_Class
+                      := Generator.Find_Class (Parameter.Get_Type.Type_Entry);
+
+               begin
+                  Unit.Put
+                   (User_Tagged_Type_Full_Name (Parameter_Class) & "'Class");
+
+                  if Parameter_Class
+                       /= Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                  then
+                     Unit.Add_Limited_With_Clause
+                      (User_Package_Full_Name (Parameter_Class));
+                  end if;
+               end;
 
             else
                raise Program_Error;

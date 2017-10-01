@@ -268,13 +268,25 @@ package body Ada_Side.Generators.Adas.Value_Body is
                              .To_Universal_String);
 
                   elsif Parameter.Get_Type.Is_Constant then
-                     Unit.Put
-                      (Values.To_Ada_Identifier
-                        (Parameter.Name.To_Universal_String)
-                         & " : not null "
-                         & API_Access_Type_Full_Name
-                            (Self.Find_Class
-                              (Parameter.Get_Type.Type_Entry)));
+                     declare
+                        Parameter_Class : constant
+                          Abstract_Meta_Classes.Abstract_Meta_Class
+                            := Self.Find_Class (Parameter.Get_Type.Type_Entry);
+
+                     begin
+                        Unit.Put
+                         (Values.To_Ada_Identifier
+                           (Parameter.Name.To_Universal_String)
+                            & " : not null "
+                            & API_Access_Type_Full_Name (Parameter_Class));
+
+                        if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                             /= Parameter_Class
+                        then
+                           Unit.Add_With_Clause
+                            (API_Package_Full_Name (Parameter_Class));
+                        end if;
+                     end;
 
                   else
                      raise Program_Error;
@@ -503,12 +515,26 @@ package body Ada_Side.Generators.Adas.Value_Body is
                      end if;
 
                   elsif Parameter.Get_Type.Is_Constant then
-                     Unit.Put
-                      (View_Expression
-                        (Class,
-                         Self.Find_Class (Parameter.Get_Type.Type_Entry),
-                         Values.To_Ada_Identifier
-                          (Parameter.Name.To_Universal_String)));
+                     declare
+                        Parameter_Class : constant
+                          Abstract_Meta_Classes.Abstract_Meta_Class
+                            := Self.Find_Class (Parameter.Get_Type.Type_Entry);
+
+                     begin
+                        Unit.Put
+                         (View_Expression
+                           (Class, Parameter_Class,
+                            Values.To_Ada_Identifier
+                             (Parameter.Name.To_Universal_String)));
+
+                        if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                             /= Parameter_Class
+                        then
+                           Unit.Add_With_Clause
+                            (User_Package_Full_Name (Parameter_Class)
+                               & ".Internals");
+                        end if;
+                     end;
 
                   else
                      raise Program_Error;
