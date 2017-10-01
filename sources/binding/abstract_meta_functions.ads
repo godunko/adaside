@@ -8,6 +8,19 @@ with Q_Strings;
 
 package Abstract_Meta_Functions is
 
+   type Function_Types is
+    (Constructor_Function,
+     Copy_Constructor_Function,
+     Move_Constructor_Function,
+     Assignment_OperatorFunction,
+     Move_Assignment_Operator_Function,
+     Destructor_Function,
+     Normal_Function,
+     Signal_Function,
+     Empty_Function,
+     Slot_Function,
+     Global_Scope_Function) with Convention => C;
+
    type AbstractMetaFunction is null record with Convention => C;
    type AbstractMetaFunction_Access is access all AbstractMetaFunction;
 
@@ -160,14 +173,7 @@ package Abstract_Meta_Functions is
    --    {
    --        return functionType() == EmptyFunction;
    --    }
-   --    FunctionType functionType() const
-   --    {
-   --        return m_functionType;
-   --    }
    --    void setFunctionType(FunctionType type)
-   --    {
-   --        m_functionType = type;
-   --    }
    --
    --    bool usesRValueReferences() const;
    --    QStringList introspectionCompatibleSignatures(
@@ -314,6 +320,10 @@ package Abstract_Meta_Functions is
        return Abstract_Meta_Classes.Abstract_Meta_Class;
    --  The first class in a hierarchy that declares the function
    --  const AbstractMetaClass *declaringClass() const
+
+   function Function_Type
+    (Self : Abstract_Meta_Function'Class) return Function_Types;
+   --  FunctionType functionType() const
 
    function Implementing_Class
     (Self : Abstract_Meta_Function'Class)

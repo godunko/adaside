@@ -29,6 +29,13 @@ package body Abstract_Meta_Functions is
               Convention => C,
               Link_Name  => "AbstractMetaFunction_declaringClass";
 
+   function AbstractMetaFunction_functionType
+    (Self : not null AbstractMetaFunction_Access)
+       return Function_Types
+         with Import     => True,
+              Convention => C,
+              Link_Name  => "AbstractMetaFunction_functionType";
+
    function AbstractMetaFunction_implementingClass
     (Self : not null AbstractMetaFunction_Access)
        return Abstract_Meta_Classes.AbstractMetaClass_Access
@@ -142,6 +149,16 @@ package body Abstract_Meta_Functions is
         Abstract_Meta_Classes.Internals.Wrap
          (AbstractMetaFunction_declaringClass (Self.Object));
    end Declaring_Class;
+
+   -------------------
+   -- Function_Type --
+   -------------------
+
+   function Function_Type
+    (Self : Abstract_Meta_Function'Class) return Function_Types is
+   begin
+      return AbstractMetaFunction_functionType (Self.Object);
+   end Function_Type;
 
    --------------
    -- Get_Type --

@@ -26,6 +26,11 @@ const AbstractMetaClass* AbstractMetaFunction_declaringClass(AbstractMetaFunctio
     return self->declaringClass();
 }
 
+const AbstractMetaFunction::FunctionType AbstractMetaFunction_functionType(AbstractMetaFunction* self)
+{
+    return self->functionType();
+}
+
 const AbstractMetaClass* AbstractMetaFunction_implementingClass(AbstractMetaFunction* self)
 {
     return self->implementingClass();
