@@ -264,6 +264,16 @@ package body Abstract_Meta_Functions is
       return AbstractMetaFunction_isConstructor (Self.Object) /= 0;
    end Is_Constructor;
 
+   -------------------------
+   -- Is_Copy_Constructor --
+   -------------------------
+
+   function Is_Copy_Constructor
+    (Self : Abstract_Meta_Function'Class) return Boolean is
+   begin
+      return Self.Function_Type = Copy_Constructor_Function;
+   end Is_Copy_Constructor;
+
    ------------------------
    -- Is_In_Global_Scope --
    ------------------------

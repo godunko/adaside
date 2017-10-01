@@ -351,6 +351,9 @@ package Abstract_Meta_Functions is
     (Self : Abstract_Meta_Function'Class) return Boolean;
    --  bool isConstructor() const
 
+   function Is_Copy_Constructor
+    (Self : Abstract_Meta_Function'Class) return Boolean;
+
    function Is_In_Global_Scope
     (Self : Abstract_Meta_Function'Class) return Boolean;
    --  bool isInGlobalScope() const
