@@ -120,7 +120,16 @@ package body Ada_Side.Generators.Adas.Value_Spec is
             Result := Type_Name;
          end if;
 
-         Result.Append ('s');
+         if Result.Ends_With (+"s") then
+            --  Naming exceptions for known plurals.
+
+            if Result /= +"Margins" then
+               Result.Append ('s');
+            end if;
+
+         else
+            Result.Append ('s');
+         end if;
       end return;
    end Generated_Package_Name;
 
