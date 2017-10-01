@@ -110,7 +110,8 @@ private
    end record;
 
    function Generate_Unit_Context_Clauses
-    (Self : Ada_Context) return League.String_Vectors.Universal_String_Vector;
+    (Self    : Ada_Context;
+     Is_Body : Boolean) return League.String_Vectors.Universal_String_Vector;
 
    package Universal_String_Sets is
      new Ada.Containers.Ordered_Sets
@@ -128,10 +129,6 @@ private
       Use_Type : Universal_String_Sets.Set;
    end record;
 
-   overriding function Get_Context
-    (Self : Abstract_Ada_Unit)
-       return League.String_Vectors.Universal_String_Vector;
-
    -------------------
    -- Ada_Spec_Unit --
    -------------------
@@ -141,6 +138,10 @@ private
    overriding function Generated_File_Name
     (Self : Ada_Spec_Unit) return League.Strings.Universal_String;
 
+   overriding function Get_Context
+    (Self : Ada_Spec_Unit)
+       return League.String_Vectors.Universal_String_Vector;
+
    -------------------
    -- Ada_Body_Unit --
    -------------------
@@ -149,6 +150,10 @@ private
 
    overriding function Generated_File_Name
     (Self : Ada_Body_Unit) return League.Strings.Universal_String;
+
+   overriding function Get_Context
+    (Self : Ada_Body_Unit)
+       return League.String_Vectors.Universal_String_Vector;
 
    -----------------------
    -- Abstract_CXX_Unit --

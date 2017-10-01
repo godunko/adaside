@@ -98,7 +98,8 @@ package body Ada_Side.Units is
    -----------------------------------
 
    function Generate_Unit_Context_Clauses
-    (Self : Ada_Context) return League.String_Vectors.Universal_String_Vector
+    (Self    : Ada_Context;
+     Is_Body : Boolean) return League.String_Vectors.Universal_String_Vector
    is
       Position : Context_Maps.Cursor := Self.Records.First;
       Result   : League.String_Vectors.Universal_String_Vector;
@@ -113,10 +114,12 @@ package body Ada_Side.Units is
 
          begin
             if Info.Is_Private then
-               Result.Append ("private with " & Name & ";");
+               Result.Append
+                ((if Is_Body then "" else "private ") & "with " & Name & ";");
 
             elsif Info.Is_Limited then
-               Result.Append ("limited with " & Name & ";");
+               Result.Append
+                ((if Is_Body then "" else "limited ") & "with " & Name & ";");
 
             else
                Result.Append ("with " & Name & ";");
@@ -188,10 +191,21 @@ package body Ada_Side.Units is
    -----------------
 
    overriding function Get_Context
-    (Self : Abstract_Ada_Unit)
+    (Self : Ada_Body_Unit)
        return League.String_Vectors.Universal_String_Vector is
    begin
-      return Self.Context.Generate_Unit_Context_Clauses;
+      return Self.Context.Generate_Unit_Context_Clauses (True);
+   end Get_Context;
+
+   -----------------
+   -- Get_Context --
+   -----------------
+
+   overriding function Get_Context
+    (Self : Ada_Spec_Unit)
+       return League.String_Vectors.Universal_String_Vector is
+   begin
+      return Self.Context.Generate_Unit_Context_Clauses (False);
    end Get_Context;
 
    ----------------
