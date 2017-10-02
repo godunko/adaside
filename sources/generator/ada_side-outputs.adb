@@ -235,12 +235,16 @@ package body Ada_Side.Outputs is
 
    not overriding function New_List
      (Self : access Factory;
-      Head : not null Node_Access;
+      Head : Node_Access;
       Tail : not null Node_Access) return not null Node_Access
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Joins.New_Join (Head, Tail));
+      if Head = null then
+         return Tail;
+      else
+         return new Node'Class'(Outputs.Joins.New_Join (Head, Tail));
+      end if;
    end New_List;
 
    --------------

@@ -28,12 +28,16 @@ package Ada_Side.Outputs is
 
    not overriding function New_List
      (Self : access Factory;
-      Head : not null Node_Access;
-      Tail : not null Node_Access) return not null Node_Access;
+      List : Node_Access_Array) return not null Node_Access;
 
    not overriding function New_List
      (Self : access Factory;
-      List : Node_Access_Array) return not null Node_Access;
+      Head : Node_Access;
+      Tail : not null Node_Access) return not null Node_Access;
+   --  Add a Tail item to a Head list. Head could be
+   --   * a null value, that means an empty list. Result is Tail then.
+   --   * a non-list node, that means a list with single node inside.
+   --   * a list of items.
 
    --  Clauses, Pragmas and Aspects
 

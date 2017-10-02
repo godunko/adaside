@@ -151,7 +151,7 @@ private
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
-   type Variable is new Declaration with record
+   type Variable is new Node with record
       Name            : not null Node_Access;
       Type_Definition : Node_Access;
       Initialization  : Node_Access;
