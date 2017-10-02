@@ -210,6 +210,144 @@ package body Ada_Side.Generators.Adas is
       end if;
    end Generate_User_Declaration;
 
+   -------------------------------
+   -- Generate_User_Declaration --
+   -------------------------------
+
+   procedure Generate_User_Declaration
+    (Generator  : Abstract_Generator'Class;
+     Unit       : in out Ada_Side.Units.Abstract_Ada_Unit'Class;
+     Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class;
+     Factory    : access Ada_Side.Outputs.Factory'Class;
+     Result     : out Ada_Side.Outputs.Node_Access)
+   is
+      use type Abstract_Meta_Classes.Abstract_Meta_Class;
+
+      F : access Ada_Side.Outputs.Factory'Class renames Factory;
+
+      Parameters : Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
+        := Subprogram.Arguments;
+
+      Parameter_List : Ada_Side.Outputs.Node_Access;
+      --  Node list corresponding to Parameters
+
+      Return_Type   : constant Abstract_Meta_Types.Abstract_Meta_Type
+        := Subprogram.Get_Type;
+
+      Result_Type : Ada_Side.Outputs.Node_Access;
+      --  Node corresponding to Return_Type
+
+      Subprogram_Name  : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Name (User_Subprogram_Name (Subprogram));
+
+      Self_Name  : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Name (+"Self");
+
+      Class_Type    :  constant Ada_Side.Outputs.Node_Access :=
+        F.New_Name (User_Tagged_Type_Name (Class) & "'Class");
+
+   begin
+      if not Subprogram.Is_Constructor
+        and not Subprogram.Is_Static
+        and not (Subprogram.Is_Arithmetic_Operator
+                   or Subprogram.Is_Comparison_Operator)
+      then
+         Parameter_List := F.New_List
+           (Parameter_List,
+            F.New_Parameter
+              (Name            => Self_Name,
+               Type_Definition => Class_Type,
+               Is_In           => not Subprogram.Is_Constant,
+               Is_Out          => not Subprogram.Is_Constant));
+
+      elsif (Subprogram.Is_Arithmetic_Operator
+               or Subprogram.Is_Comparison_Operator)
+        and not Subprogram.Is_Reverse_Operator
+      then
+         Parameter_List := F.New_List
+           (Parameter_List,
+            F.New_Parameter
+              (Name            => Self_Name,
+               Type_Definition => Class_Type));
+      end if;
+
+      for Parameter of Parameters loop
+         declare
+            Parameter_Type : Ada_Side.Outputs.Node_Access;
+         begin
+            if Parameter.Get_Type.Is_Primitive then
+               Parameter_Type := F.New_Selected_Name
+                 (Parameter.Get_Type.Type_Entry.Target_Lang_Name
+                    .To_Universal_String);
+            elsif Parameter.Get_Type.Is_Constant then
+               declare
+                  Parameter_Class : constant
+                    Abstract_Meta_Classes.Abstract_Meta_Class
+                      := Generator.Find_Class (Parameter.Get_Type.Type_Entry);
+
+               begin
+                  Parameter_Type := F.New_Selected_Name
+                    (User_Tagged_Type_Full_Name (Parameter_Class) & "'Class");
+
+                  if Parameter_Class
+                    /= Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                  then
+                     Unit.Add_Limited_With_Clause
+                       (User_Package_Full_Name (Parameter_Class));
+                  end if;
+               end;
+
+            else
+               raise Program_Error;
+            end if;
+
+            Parameter_List := F.New_List
+              (Parameter_List,
+               F.New_Parameter
+                 (F.New_Name
+                      (Values.To_Ada_Identifier
+                           (Parameter.Name.To_Universal_String)),
+                  Type_Definition => Parameter_Type));
+         end;
+      end loop;
+
+      if Subprogram.Is_Constructor then
+         Result_Type := Class_Type;
+
+      elsif not Return_Type.Is_Null then
+         declare
+            Return_Class : constant Abstract_Meta_Classes.Abstract_Meta_Class
+              := Generator.Find_Class (Return_Type.Type_Entry);
+
+         begin
+            if Return_Type.Type_Entry.Is_Primitive then
+               Result_Type := F.New_Selected_Name
+                (Return_Type.Type_Entry.Target_Lang_Name.To_Universal_String);
+
+            elsif Return_Type.Is_Value then
+               if Abstract_Meta_Classes.Abstract_Meta_Class (Class)
+                    /= Return_Class
+               then
+                  Unit.Add_With_Clause
+                   (User_Package_Full_Name (Return_Class));
+               end if;
+
+               Result_Type := F.New_Selected_Name
+                (User_Tagged_Type_Full_Name (Return_Class));
+
+            else
+               raise Program_Error;
+            end if;
+         end;
+      end if;
+
+      Result := F.New_Subprogram_Specification
+        (Name       => Subprogram_Name,
+         Parameters => Parameter_List,
+         Result     => Result_Type);
+   end Generate_User_Declaration;
+
    ----------------------------
    -- User_Package_Full_Name --
    ----------------------------

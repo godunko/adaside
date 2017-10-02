@@ -1,4 +1,5 @@
 with Ada_Side.Units;
+private with Ada_Side.Outputs;
 
 package Ada_Side.Generators.Adas is
 
@@ -38,5 +39,13 @@ private
      Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
      Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class);
    --  Generates subprogram declaration.
+
+   procedure Generate_User_Declaration
+    (Generator  : Abstract_Generator'Class;
+     Unit       : in out Ada_Side.Units.Abstract_Ada_Unit'Class;
+     Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
+     Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class;
+     Factory    : access Ada_Side.Outputs.Factory'Class;
+     Result     : out Ada_Side.Outputs.Node_Access);
 
 end Ada_Side.Generators.Adas;
