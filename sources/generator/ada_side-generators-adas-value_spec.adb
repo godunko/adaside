@@ -31,24 +31,38 @@ package body Ada_Side.Generators.Adas.Value_Spec is
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
    is
       Unit      : Ada_Side.Units.Ada_Spec_Unit;
-      Functions : Abstract_Meta_Function_Lists.Abstract_Meta_Function_List;
+      F         : aliased Ada_Side.Outputs.Factory;
+      Functions : Abstract_Meta_Function_Lists.Abstract_Meta_Function_List
+        := Class.Functions;
+
       Generated : Universal_String_Sets.Set;
 
+      Package_Name : constant League.Strings.Universal_String :=
+        User_Package_Full_Name (Class);
+
+      With_Clause : constant Ada_Side.Outputs.Node_Access :=
+        F.New_List
+          ((F.New_With (F.New_Selected_Name (+"Ada.Finalization"),
+                        Is_Private => True),
+            F.New_With (F.New_Selected_Name (API_Package_Full_Name (Class)),
+                        Is_Private => True)));
+
+      Preelaborate : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Pragma (F.New_Name (+"Preelaborate"));
+
+      User_Type : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Name (User_Tagged_Type_Name (Class));
+
+      Private_Type : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Type
+          (Name          => User_Type,
+           Definition    => F.New_Private_Record (Is_Tagged => True));
+
+      Public_Part : Ada_Side.Outputs.Node_Access :=
+        F.New_List ((Preelaborate, Private_Type));
+
    begin
-      Unit.Set_Package_Name (User_Package_Full_Name (Class));
-
-      Unit.Add_Private_With_Clause (+"Ada.Finalization");
-      Unit.Add_Private_With_Clause (API_Package_Full_Name (Class));
-
-      Unit.New_Line;
-      Unit.Put_Line ("package " & User_Package_Full_Name (Class) & " is");
-      Unit.New_Line;
-      Unit.Put_Line (+"   pragma Preelaborate;");
-      Unit.New_Line;
-      Unit.Put_Line
-       ("   type " & User_Tagged_Type_Name (Class) & " is tagged private;");
-
-      Functions := Class.Functions;
+      Unit.Set_Package_Name (Package_Name);
 
       for Method of Functions loop
          if Self.Can_Be_Generated (Class, Method) then
@@ -59,44 +73,94 @@ package body Ada_Side.Generators.Adas.Value_Spec is
                    & "' - already generated");
 
             else
-               Generated.Include (Method.Minimal_Signature);
-               --  Protect from generation of duplicate for operators.
+               declare
+                  Spec : Ada_Side.Outputs.Node_Access;
 
-               Generate_User_Declaration (Self, Unit, Class, Method);
-               Unit.Put_Line (+";");
+               begin
+                  Generated.Include (Method.Minimal_Signature);
+                  --  Protect from generation of duplicate for operators.
+
+                  Generate_User_Declaration
+                    (Self, Unit, Class, Method, F'Access, Spec);
+
+                  Public_Part := F.New_List
+                    (Public_Part,
+                     F.New_Subprogram_Declaration (Spec));
+               end;
             end if;
          end if;
       end loop;
 
-      Unit.New_Line;
-      Unit.Put_Line (+"private");
-      Unit.New_Line;
-      Unit.Put_Line
-       ("   type " & User_Tagged_Type_Name (Class)
-          & " is new Ada.Finalization.Controlled with record");
-      Unit.Put_Line
-      ("      " & Class.Name.To_Universal_String
-         & "_View : " & API_Access_Type_Full_Name (Class) & ";");
-      Unit.Put_Line (+"      Wrapper : Boolean := False;");
-      Unit.Put_Line
-       ("      Storage : " & API_Storage_Type_Full_Name (Class) & ";");
-      Unit.Put_Line (+"   end record;");
-      Unit.New_Line;
-      Unit.Put_Line
-       ("   overriding procedure Initialize (Self : in out "
-          & User_Tagged_Type_Name (Class) & ");");
-      Unit.New_Line;
-      Unit.Put_Line
-       ("   overriding procedure Adjust (Self : in out "
-          & User_Tagged_Type_Name (Class) & ");");
-      Unit.New_Line;
-      Unit.Put_Line
-       ("   overriding procedure Finalize (Self : in out "
-          & User_Tagged_Type_Name (Class) & ");");
-      Unit.New_Line;
-      Unit.Put_Line ("end " & User_Package_Full_Name (Class) & ";");
+      declare
+         View : constant Ada_Side.Outputs.Node_Access :=
+           F.New_Variable
+             (F.New_Name (Class.Name.To_Universal_String & "_View"),
+              F.New_Selected_Name (API_Access_Type_Full_Name (Class)));
 
-      Unit.Save (Self.Output_Directory);
+         Wrapper : constant Ada_Side.Outputs.Node_Access :=
+           F.New_Variable
+             (F.New_Name (+"Wrapper"),
+              F.New_Name (+"Boolean"),
+              F.New_Name (+"False"));
+
+         Storage : constant Ada_Side.Outputs.Node_Access :=
+           F.New_Variable
+             (F.New_Name (+"Storage"),
+              F.New_Selected_Name (API_Storage_Type_Full_Name (Class)));
+
+         Private_View : constant Ada_Side.Outputs.Node_Access :=
+           F.New_Type
+             (Name          => User_Type,
+              Definition    => F.New_Record
+                (Parent     => F.New_Selected_Name
+                                 (+"Ada.Finalization.Controlled"),
+                 Components => F.New_List
+                                 ((View, Wrapper, Storage))));
+
+         Self_In_Out : constant Ada_Side.Outputs.Node_Access :=
+           F.New_Parameter
+             (Name            => F.New_Name (+"Self"),
+              Type_Definition => User_Type,
+              Is_In           => True,
+              Is_Out          => True);
+
+         Initialize : constant Ada_Side.Outputs.Node_Access :=
+           F.New_Subprogram_Declaration
+             (F.New_Subprogram_Specification
+                (Is_Overriding => True,
+                 Name          => F.New_Name (+"Initialize"),
+                 Parameters    => Self_In_Out));
+
+         Adjust : constant Ada_Side.Outputs.Node_Access :=
+           F.New_Subprogram_Declaration
+             (F.New_Subprogram_Specification
+                (Is_Overriding => True,
+                 Name          => F.New_Name (+"Adjust"),
+                 Parameters    => Self_In_Out));
+
+         Finalize : constant Ada_Side.Outputs.Node_Access :=
+           F.New_Subprogram_Declaration
+             (F.New_Subprogram_Specification
+                (Is_Overriding => True,
+                 Name          => F.New_Name (+"Finalize"),
+                 Parameters    => Self_In_Out));
+
+         Private_Part : constant Ada_Side.Outputs.Node_Access :=
+           F.New_List ((Private_View, Initialize, Adjust, Finalize));
+
+         Package_Spec : constant Ada_Side.Outputs.Node_Access :=
+           F.New_Package
+             (Name         => F.New_Selected_Name (Package_Name),
+              Public_Part  => Public_Part,
+              Private_Part => Private_Part);
+
+         Spec_Unit : constant Ada_Side.Outputs.Node_Access :=
+           F.New_Compilation_Unit (Package_Spec, With_Clause);
+
+      begin
+         Unit.Put_Lines (F.To_Text (Spec_Unit));
+         Unit.Save (Self.Output_Directory);
+      end;
    end Generate;
 
    ----------------------------

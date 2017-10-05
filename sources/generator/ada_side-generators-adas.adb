@@ -244,7 +244,10 @@ package body Ada_Side.Generators.Adas is
       Self_Name  : constant Ada_Side.Outputs.Node_Access :=
         F.New_Name (+"Self");
 
-      Class_Type    :  constant Ada_Side.Outputs.Node_Access :=
+      User_Type     : constant Ada_Side.Outputs.Node_Access :=
+        F.New_Name (User_Tagged_Type_Full_Name (Class));
+
+      Class_Type    : constant Ada_Side.Outputs.Node_Access :=
         F.New_Name (User_Tagged_Type_Name (Class) & "'Class");
 
    begin
@@ -312,8 +315,19 @@ package body Ada_Side.Generators.Adas is
          end;
       end loop;
 
+      if (Subprogram.Is_Arithmetic_Operator
+            or Subprogram.Is_Comparison_Operator)
+        and Subprogram.Is_Reverse_Operator
+      then
+         Parameter_List := F.New_List
+           (Parameter_List,
+            F.New_Parameter
+              (Name            => Self_Name,
+               Type_Definition => Class_Type));
+      end if;
+
       if Subprogram.Is_Constructor then
-         Result_Type := Class_Type;
+         Result_Type := User_Type;
 
       elsif not Return_Type.Is_Null then
          declare
