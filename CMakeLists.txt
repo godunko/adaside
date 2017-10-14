@@ -73,7 +73,9 @@ list(APPEND GPRBUILD_GRP_FLAGS "-aP${PROJECT_SOURCE_DIR}/gnat")
 
 # Run GPRbuild to build binding library
 
+add_custom_target(extractor ALL COMMAND "gprbuild" ${GPRBUILD_GRP_FLAGS} "-p" "-Pextractor")
+
 add_custom_target(binding ALL COMMAND "gprbuild" ${GPRBUILD_GRP_FLAGS} "-p" "-Papi_extractor")
-add_dependencies(binding apiextractor)
+add_dependencies(binding apiextractor extractor)
 add_custom_target(adaside ALL COMMAND "gprbuild" ${GPRBUILD_GRP_FLAGS} "-p" "-Pada_side")
 add_dependencies(adaside binding)

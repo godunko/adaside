@@ -1,0 +1,26 @@
+with "matreshka_league";
+
+with "config";
+with "libclang";
+
+project Extractor is
+
+   for Languages use ("Ada"); --, "C++");
+
+   for Source_Dirs use
+    (Config.Root_Source_Dir & "/sources/extractor");
+   for Object_Dir use Config.Root_Build_Dir & "/.objs";
+
+   for Main use ("extractor_driver.adb");
+
+   package Compiler is
+
+      for Switches ("Ada") use ("-g", "-gnatyyo", "-gnatwae");
+
+   end Compiler;
+
+   package Linker is
+      for Switches ("Ada") use (Config.Clang_Imported_Location);
+   end Linker;
+
+end Extractor;
