@@ -1,6 +1,6 @@
 with League.Strings;
 
-with Clang.Cursors;
+with Clang.Cursors.Xrefs;
 
 with Code_Model.Classes;
 with Code_Model.Namespaces;
@@ -39,7 +39,7 @@ package body Code_Model.Builders is
      Control : in out Base_Visitors.Traverse_Control)
    is
       Name  : constant League.Strings.Universal_String
-        := Clang.Cursors.Get_Spelling (Cursor);
+        := Clang.Cursors.Xrefs.Get_Spelling (Cursor);
       Class : Code_Model.Class_Access := Self.State.Scope.Lookup_Class (Name);
 
    begin
@@ -60,7 +60,7 @@ package body Code_Model.Builders is
       Ada.Text_IO.Put_Line
        (Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String
           & " '"
-          & Clang.Cursors.Get_Spelling (Cursor).To_UTF_8_String
+          & Clang.Cursors.Xrefs.Get_Spelling (Cursor).To_UTF_8_String
           & ''');
       Self.Push_Class (Class);
    end Enter_Class_Declaration;
@@ -75,7 +75,7 @@ package body Code_Model.Builders is
      Control : in out Base_Visitors.Traverse_Control)
    is
       Name  : constant League.Strings.Universal_String
-        := Clang.Cursors.Get_Spelling (Cursor);
+        := Clang.Cursors.Xrefs.Get_Spelling (Cursor);
       Namespace : Code_Model.Namespace_Access
         := Code_Model.Namespace_Access
             (Self.State.Scope).Lookup_Namespace (Name);
@@ -100,7 +100,7 @@ package body Code_Model.Builders is
       Ada.Text_IO.Put_Line
        (Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String
           & " '"
-          & Clang.Cursors.Get_Spelling (Cursor).To_UTF_8_String
+          & Clang.Cursors.Xrefs.Get_Spelling (Cursor).To_UTF_8_String
           & ''');
       Self.Push_Namespace (Namespace);
    end Enter_Namespace;
@@ -140,7 +140,7 @@ package body Code_Model.Builders is
              ("<<< "
                 & Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String
                 & " '"
-                & Clang.Cursors.Get_Spelling (Cursor).To_UTF_8_String
+                & Clang.Cursors.Xrefs.Get_Spelling (Cursor).To_UTF_8_String
                 & ''');
       end case;
    end Enter_Token;
@@ -195,7 +195,7 @@ package body Code_Model.Builders is
              (">>> "
                 & Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String
                 & " '"
-                & Clang.Cursors.Get_Spelling (Cursor).To_UTF_8_String
+                & Clang.Cursors.Xrefs.Get_Spelling (Cursor).To_UTF_8_String
                 & ''');
       end case;
    end Leave_Token;
