@@ -112,38 +112,33 @@ package body Code_Model.Builders is
    overriding procedure Enter_Token
     (Self    : in out Code_Model_Builder;
      Cursor  : clang_c_Index_h.CXCursor;
-     Control : in out Base_Visitors.Traverse_Control)
-   is
---      use all type clang_c_Index_h.CXCursorKind;
---      pragma Unreferenced (Cursor, Control);
---      pragma Unreferenced (Control);
-
+     Control : in out Base_Visitors.Traverse_Control) is
    begin
       Control := Base_Visitors.Abandon_Children;
 
       Ada.Text_IO.Set_Col (Self.Indent);
-      Self.Indent := Self.Indent + 1;
+      Self.Indent := Self.Indent + 3;
 
       case Cursor.kind is
+         when clang_c_Index_h.CXCursor_FriendDecl
+           | clang_c_Index_h.CXCursor_UnexposedAttr
+         =>
+            --  These nodes are always ignored.
+
+            null;
+
          when clang_c_Index_h.CXCursor_Namespace =>
             Self.Enter_Namespace (Cursor, Control);
 
          when clang_c_Index_h.CXCursor_ClassDecl =>
             Self.Enter_Class_Declaration (Cursor, Control);
---            Control := Base_Visitors.Continue;
---            Ada.Text_IO.Put_Line
---             (Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String
---                & " '"
---                & Clang.Cursors.Get_Spelling (Cursor).To_UTF_8_String
---                & ''');
 
          when others =>
 --            Ada.Text_IO.Put_Line
 --             (clang_c_Index_h.CXCursorKind'Image (Cursor.kind));
---            Ada.Text_IO.Put_Line
---             (Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String);
             Ada.Text_IO.Put_Line
-             (Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String
+             ("<<< "
+                & Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String
                 & " '"
                 & Clang.Cursors.Get_Spelling (Cursor).To_UTF_8_String
                 & ''');
@@ -175,33 +170,33 @@ package body Code_Model.Builders is
       pragma Unreferenced (Control);
 
    begin
-      Self.Indent := Self.Indent - 1;
+      Self.Indent := Self.Indent - 3;
+      Ada.Text_IO.Set_Col (Self.Indent);
 
       case Cursor.kind is
+         when clang_c_Index_h.CXCursor_FriendDecl
+           | clang_c_Index_h.CXCursor_UnexposedAttr
+         =>
+            --  These nodes are always ignored.
+
+            null;
+
          when clang_c_Index_h.CXCursor_Namespace =>
             Self.Pop;
---            Self.Enter_Namespace (Cursor, Control);
 
          when clang_c_Index_h.CXCursor_ClassDecl =>
             Self.Pop;
---            Control := Base_Visitors.Continue;
---            Ada.Text_IO.Put_Line
---             (Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String
---                & " '"
---                & Clang.Cursors.Get_Spelling (Cursor).To_UTF_8_String
---                & ''');
 
          when others =>
             null;
 --            Ada.Text_IO.Put_Line
 --             (clang_c_Index_h.CXCursorKind'Image (Cursor.kind));
---            Ada.Text_IO.Put_Line
---             (Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String);
---            Ada.Text_IO.Put_Line
---             (Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String
---                & " '"
---                & Clang.Cursors.Get_Spelling (Cursor).To_UTF_8_String
---                & ''');
+            Ada.Text_IO.Put_Line
+             (">>> "
+                & Clang.Cursors.Get_Spelling (Cursor.kind).To_UTF_8_String
+                & " '"
+                & Clang.Cursors.Get_Spelling (Cursor).To_UTF_8_String
+                & ''');
       end case;
    end Leave_Token;
 
