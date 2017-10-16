@@ -49,8 +49,7 @@ package body Code_Model.Builders is
          Class :=
            new Code_Model.Classes.Class'
                 (Name       => Name,
-                 Classes    => <>,
-                 Namespaces => <>);
+                 Classes    => <>);
          Self.State.Scope.Classes.Append (Class);
 
       else
@@ -78,7 +77,8 @@ package body Code_Model.Builders is
       Name  : constant League.Strings.Universal_String
         := Clang.Cursors.Get_Spelling (Cursor);
       Namespace : Code_Model.Namespace_Access
-        := Self.State.Scope.Lookup_Namespace (Name);
+        := Code_Model.Namespace_Access
+            (Self.State.Scope).Lookup_Namespace (Name);
 
    begin
       if Namespace = null then
@@ -89,7 +89,8 @@ package body Code_Model.Builders is
                 (Name       => Name,
                  Classes    => <>,
                  Namespaces => <>);
-         Self.State.Scope.Namespaces.Append (Namespace);
+         Code_Model.Namespace_Access
+          (Self.State.Scope).Namespaces.Append (Namespace);
 
       else
          Ada.Text_IO.Put_Line ("Reuse namespace!!!!");
