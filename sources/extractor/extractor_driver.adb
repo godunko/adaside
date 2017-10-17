@@ -34,7 +34,7 @@ begin
 
    if not Ada.Directories.Exists (Precompiled_File.To_UTF_8_String) then
       Error :=
-        Clang_Utilities.Parse_Translation_Unit
+        Clang.Translation_Units.Parse
          (Index,
           League.Strings.To_Universal_String ("global.h"),
           League.Application.Arguments,
