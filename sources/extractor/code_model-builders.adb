@@ -1,8 +1,16 @@
+with Interfaces.C;
+
 with League.Strings;
 
 with Clang.Cursors.Xrefs;
+with Clang.Files;
+with Clang.Locations;
 
 with Code_Model.Classes;
+with Code_Model.Files;
+pragma Unreferenced (Code_Model.Files);
+--  XXX GNAT 201701008
+with Code_Model.Models;
 with Code_Model.Namespaces;
 
 package body Code_Model.Builders is
@@ -112,9 +120,36 @@ package body Code_Model.Builders is
    overriding procedure Enter_Token
     (Self    : in out Code_Model_Builder;
      Cursor  : clang_c_Index_h.CXCursor;
-     Control : in out Base_Visitors.Traverse_Control) is
+     Control : in out Base_Visitors.Traverse_Control)
+   is
+      use type League.Strings.Universal_String;
+
+      Location  : constant clang_c_Index_h.CXSourceLocation
+        := clang_c_Index_h.clang_getCursorLocation (Cursor);
+      File      : clang_c_Index_h.CXFile;
+      File_Name : League.Strings.Universal_String;
+      Line      : Interfaces.C.unsigned;
+      Column    : Interfaces.C.unsigned;
+      Offset    : Interfaces.C.unsigned;
+
    begin
       Control := Base_Visitors.Abandon_Children;
+
+      Clang.Locations.Get_Expansion_Location
+       (Location, File, Line, Column, Offset);
+
+      File_Name := Clang.Files.Get_Name (File);
+
+      if Self.File = null or else Self.File.Name /= File_Name then
+         --  Lookup or create new file node only when if there is no current
+         --  file node or file node represents another file
+
+         Self.File := Self.Model.Lookup_Or_Create (File_Name);
+
+         Ada.Text_IO.Put_Line
+          ("Processing file '"
+             & Clang.Files.Get_Name (File).To_UTF_8_String & ''');
+      end if;
 
       Ada.Text_IO.Set_Col (Self.Indent);
       Self.Indent := Self.Indent + 3;
@@ -151,6 +186,7 @@ package body Code_Model.Builders is
 
    procedure Initialize (Self : in out Code_Model_Builder'Class) is
    begin
+      Self.Model := new Code_Model.Models.Model;
       Self.State.Scope :=
         new Code_Model.Namespaces.Namespace'
              (Name       => <>,

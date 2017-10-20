@@ -12,7 +12,7 @@ package Code_Model is
 
    type Class_Access is access all Code_Model.Classes.Class'Class;
    type File_Access is access all Code_Model.Files.File'Class;
-   type Code_Model_Access is access all Code_Model.Models.Code_Model'Class;
+   type Model_Access is access all Code_Model.Models.Model'Class;
    type Namespace_Access is access all Code_Model.Namespaces.Namespace'Class;
    type Scope_Access is access all Code_Model.Scopes.Abstract_Scope'Class;
 

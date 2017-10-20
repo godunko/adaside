@@ -31,6 +31,8 @@ private
 --  visitor traversal code.
    record
       Indent : Ada.Text_IO.Count := 1;
+      Model  : Code_Model.Model_Access;
+      File   : Code_Model.File_Access;
       State  : State_Record;
       Stack  : State_Vectors.Vector;
    end record;
