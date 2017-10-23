@@ -96,6 +96,27 @@ package body Ada_Outputs.Expressions is
    --------------
 
    overriding function Document
+    (Self    : Parentheses;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document
+   is
+      Result  : League.Pretty_Printers.Document := Printer.New_Document;
+      Child   : constant League.Pretty_Printers.Document :=
+        Self.Child.Document (Printer, Pad);
+   begin
+      Result.Put ("(");
+      Result.Append (Child.Nest (1));
+      Result.Put (")");
+
+      return Result;
+   end Document;
+
+   --------------
+   -- Document --
+   --------------
+
+   overriding function Document
     (Self    : Selected_Name;
      Printer : not null access League.Pretty_Printers.Printer'Class;
      Pad     : Natural)
@@ -180,6 +201,16 @@ package body Ada_Outputs.Expressions is
    begin
       return Expressions.Name'(Name => Name);
    end New_Name;
+
+   ---------------------
+   -- New_Parentheses --
+   ---------------------
+
+   function New_Parentheses
+     (Child : not null Node_Access) return Node'Class is
+   begin
+      return Expressions.Parentheses'(Child => Child);
+   end New_Parentheses;
 
    -----------------------
    -- New_Selected_Name --

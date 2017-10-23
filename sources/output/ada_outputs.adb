@@ -364,6 +364,19 @@ package body Ada_Outputs is
                                Is_In, Is_Out, Is_Aliased, Comment));
    end New_Parameter;
 
+   ---------------------
+   -- New_Parentheses --
+   ---------------------
+
+   not overriding function New_Parentheses
+     (Self  : access Factory;
+      Child : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Expressions.New_Parentheses (Child));
+   end New_Parentheses;
+
    ----------------
    -- New_Pragma --
    ----------------

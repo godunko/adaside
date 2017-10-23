@@ -34,6 +34,11 @@ private package Ada_Outputs.Expressions is
    function New_String
      (Text : League.Strings.Universal_String) return Node'Class;
 
+   type Parentheses is new Node with private;
+
+   function New_Parentheses
+     (Child : not null Node_Access) return Node'Class;
+
 private
 
    type Apply is new Node with record
@@ -99,6 +104,16 @@ private
 
    overriding function Document
     (Self    : String;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document;
+
+   type Parentheses is new Node with record
+      Child : not null Node_Access;
+   end record;
+
+   overriding function Document
+    (Self    : Parentheses;
      Printer : not null access League.Pretty_Printers.Printer'Class;
      Pad     : Natural)
       return League.Pretty_Printers.Document;

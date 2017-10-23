@@ -202,6 +202,10 @@ package Ada_Outputs is
      (Self : access Factory;
       Text : League.Strings.Universal_String) return not null Node_Access;
 
+   not overriding function New_Parentheses
+     (Self  : access Factory;
+      Child : not null Node_Access) return not null Node_Access;
+
    --  Statements and Paths
 
    not overriding function New_Assignment
