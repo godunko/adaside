@@ -112,16 +112,16 @@ package body Ada_Outputs.Declarations is
       Result.Append (Self.Name.Document (Printer, Pad));
       Result.Put (" :");
 
+      if Self.Is_Aliased then
+         Result.Put (" aliased");
+      end if;
+
       if Self.Is_In then
          Result.Put (" in");
       end if;
 
       if Self.Is_Out then
          Result.Put (" out");
-      end if;
-
-      if Self.Is_Aliased then
-         Result.Put (" aliased");
       end if;
 
       Result.Put (" ");
@@ -145,26 +145,27 @@ package body Ada_Outputs.Declarations is
      Pad     : Natural)
       return League.Pretty_Printers.Document
    is
+      pragma Unreferenced (Pad);
       Result : League.Pretty_Printers.Document := Printer.New_Document;
    begin
       Result.New_Line;
-      Result.Append (Self.Specification.Document (Printer, Pad));
+      Result.Append (Self.Specification.Document (Printer, 0));
       Result.Put (" is");
 
       if Self.Declarations /= null then
-         Result.Append (Self.Declarations.Document (Printer, Pad).Nest (3));
+         Result.Append (Self.Declarations.Document (Printer, 0).Nest (3));
       end if;
 
       Result.New_Line;
       Result.Put ("begin");
 
       if Self.Statements /= null then
-         Result.Append (Self.Statements.Document (Printer, Pad).Nest (3));
+         Result.Append (Self.Statements.Document (Printer, 0).Nest (3));
       end if;
 
       if Self.Exceptions /= null then
          Result.Put ("exception");
-         Result.Append (Self.Exceptions.Document (Printer, Pad).Nest (3));
+         Result.Append (Self.Exceptions.Document (Printer, 0).Nest (3));
       end if;
 
       Result.New_Line;
@@ -247,12 +248,12 @@ package body Ada_Outputs.Declarations is
       Result.Append (Self.Name.Document (Printer, Pad));
       Result.Put (" :");
 
-      if Self.Is_Constant then
-         Result.Put (" constant");
-      end if;
-
       if Self.Is_Aliased then
          Result.Put (" aliased");
+      end if;
+
+      if Self.Is_Constant then
+         Result.Put (" constant");
       end if;
 
       if Self.Type_Definition /= null then
