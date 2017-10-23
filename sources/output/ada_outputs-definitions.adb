@@ -1,4 +1,4 @@
-package body Ada_Side.Outputs.Definitions is
+package body Ada_Outputs.Definitions is
 
    --------------
    -- Document --
@@ -238,4 +238,4 @@ package body Ada_Side.Outputs.Definitions is
       return Subprogram'(Is_Overriding, Name, Parameters, Result);
    end New_Subprogram;
 
-end Ada_Side.Outputs.Definitions;
+end Ada_Outputs.Definitions;

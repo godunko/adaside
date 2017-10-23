@@ -31,7 +31,7 @@ package body Ada_Side.Generators.Adas.Value_Spec is
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
    is
       Unit      : Ada_Side.Units.Ada_Spec_Unit;
-      F         : aliased Ada_Side.Outputs.Factory;
+      F         : aliased Ada_Outputs.Factory;
       Functions : Abstract_Meta_Function_Lists.Abstract_Meta_Function_List
         := Class.Functions;
 
@@ -40,25 +40,25 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       Package_Name : constant League.Strings.Universal_String :=
         User_Package_Full_Name (Class);
 
-      With_Clause : constant Ada_Side.Outputs.Node_Access :=
+      With_Clause : constant Ada_Outputs.Node_Access :=
         F.New_List
           ((F.New_With (F.New_Selected_Name (+"Ada.Finalization"),
                         Is_Private => True),
             F.New_With (F.New_Selected_Name (API_Package_Full_Name (Class)),
                         Is_Private => True)));
 
-      Preelaborate : constant Ada_Side.Outputs.Node_Access :=
+      Preelaborate : constant Ada_Outputs.Node_Access :=
         F.New_Pragma (F.New_Name (+"Preelaborate"));
 
-      User_Type : constant Ada_Side.Outputs.Node_Access :=
+      User_Type : constant Ada_Outputs.Node_Access :=
         F.New_Name (User_Tagged_Type_Name (Class));
 
-      Private_Type : constant Ada_Side.Outputs.Node_Access :=
+      Private_Type : constant Ada_Outputs.Node_Access :=
         F.New_Type
           (Name          => User_Type,
            Definition    => F.New_Private_Record (Is_Tagged => True));
 
-      Public_Part : Ada_Side.Outputs.Node_Access :=
+      Public_Part : Ada_Outputs.Node_Access :=
         F.New_List ((Preelaborate, Private_Type));
 
    begin
@@ -74,7 +74,7 @@ package body Ada_Side.Generators.Adas.Value_Spec is
 
             else
                declare
-                  Spec : Ada_Side.Outputs.Node_Access;
+                  Spec : Ada_Outputs.Node_Access;
 
                begin
                   Generated.Include (Method.Minimal_Signature);
@@ -92,23 +92,23 @@ package body Ada_Side.Generators.Adas.Value_Spec is
       end loop;
 
       declare
-         View : constant Ada_Side.Outputs.Node_Access :=
+         View : constant Ada_Outputs.Node_Access :=
            F.New_Variable
              (F.New_Name (Class.Name.To_Universal_String & "_View"),
               F.New_Selected_Name (API_Access_Type_Full_Name (Class)));
 
-         Wrapper : constant Ada_Side.Outputs.Node_Access :=
+         Wrapper : constant Ada_Outputs.Node_Access :=
            F.New_Variable
              (F.New_Name (+"Wrapper"),
               F.New_Name (+"Boolean"),
               F.New_Name (+"False"));
 
-         Storage : constant Ada_Side.Outputs.Node_Access :=
+         Storage : constant Ada_Outputs.Node_Access :=
            F.New_Variable
              (F.New_Name (+"Storage"),
               F.New_Selected_Name (API_Storage_Type_Full_Name (Class)));
 
-         Private_View : constant Ada_Side.Outputs.Node_Access :=
+         Private_View : constant Ada_Outputs.Node_Access :=
            F.New_Type
              (Name          => User_Type,
               Definition    => F.New_Record
@@ -117,44 +117,44 @@ package body Ada_Side.Generators.Adas.Value_Spec is
                  Components => F.New_List
                                  ((View, Wrapper, Storage))));
 
-         Self_In_Out : constant Ada_Side.Outputs.Node_Access :=
+         Self_In_Out : constant Ada_Outputs.Node_Access :=
            F.New_Parameter
              (Name            => F.New_Name (+"Self"),
               Type_Definition => User_Type,
               Is_In           => True,
               Is_Out          => True);
 
-         Initialize : constant Ada_Side.Outputs.Node_Access :=
+         Initialize : constant Ada_Outputs.Node_Access :=
            F.New_Subprogram_Declaration
              (F.New_Subprogram_Specification
                 (Is_Overriding => True,
                  Name          => F.New_Name (+"Initialize"),
                  Parameters    => Self_In_Out));
 
-         Adjust : constant Ada_Side.Outputs.Node_Access :=
+         Adjust : constant Ada_Outputs.Node_Access :=
            F.New_Subprogram_Declaration
              (F.New_Subprogram_Specification
                 (Is_Overriding => True,
                  Name          => F.New_Name (+"Adjust"),
                  Parameters    => Self_In_Out));
 
-         Finalize : constant Ada_Side.Outputs.Node_Access :=
+         Finalize : constant Ada_Outputs.Node_Access :=
            F.New_Subprogram_Declaration
              (F.New_Subprogram_Specification
                 (Is_Overriding => True,
                  Name          => F.New_Name (+"Finalize"),
                  Parameters    => Self_In_Out));
 
-         Private_Part : constant Ada_Side.Outputs.Node_Access :=
+         Private_Part : constant Ada_Outputs.Node_Access :=
            F.New_List ((Private_View, Initialize, Adjust, Finalize));
 
-         Package_Spec : constant Ada_Side.Outputs.Node_Access :=
+         Package_Spec : constant Ada_Outputs.Node_Access :=
            F.New_Package
              (Name         => F.New_Selected_Name (Package_Name),
               Public_Part  => Public_Part,
               Private_Part => Private_Part);
 
-         Spec_Unit : constant Ada_Side.Outputs.Node_Access :=
+         Spec_Unit : constant Ada_Outputs.Node_Access :=
            F.New_Compilation_Unit (Package_Spec, With_Clause);
 
       begin

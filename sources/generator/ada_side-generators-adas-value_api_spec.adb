@@ -1,7 +1,7 @@
 with League.Strings;
 
 with Ada_Side.Units;
-with Ada_Side.Outputs;
+with Ada_Outputs;
 
 package body Ada_Side.Generators.Adas.Value_API_Spec is
 
@@ -88,43 +88,43 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
    is
       Unit : Ada_Side.Units.Ada_Spec_Unit;
-      F    : aliased Ada_Side.Outputs.Factory;
+      F    : aliased Ada_Outputs.Factory;
 
       Package_Name : constant League.Strings.Universal_String :=
         API_Package_Full_Name (Class);
 
-      With_Clause : constant Ada_Side.Outputs.Node_Access :=
+      With_Clause : constant Ada_Outputs.Node_Access :=
         F.New_With (F.New_Selected_Name (+"Interfaces.C"));
 
-      Preelaborate : constant Ada_Side.Outputs.Node_Access :=
+      Preelaborate : constant Ada_Outputs.Node_Access :=
         F.New_Pragma (F.New_Name (+"Preelaborate"));
 
-      Record_Type_Name : constant Ada_Side.Outputs.Node_Access :=
+      Record_Type_Name : constant Ada_Outputs.Node_Access :=
         F.New_Name (API_Record_Type_Name (Class));
 
-      Convention  : constant Ada_Side.Outputs.Node_Access :=
+      Convention  : constant Ada_Outputs.Node_Access :=
         F.New_Aspect (F.New_Name (+"Convention"), F.New_Name (+"C"));
 
-      Import : constant Ada_Side.Outputs.Node_Access :=
+      Import : constant Ada_Outputs.Node_Access :=
         F.New_Aspect (F.New_Name (+"Import"), F.New_Name (+"True"));
 
-      Link_Name : constant Ada_Side.Outputs.Node_Access :=
+      Link_Name : constant Ada_Outputs.Node_Access :=
         F.New_Aspect
           (F.New_Name (+"Link_Name"),
            F.New_String_Literal (API_Size_Of_Link_Name (Class)));
 
-      Alignment : constant Ada_Side.Outputs.Node_Access :=
+      Alignment : constant Ada_Outputs.Node_Access :=
         F.New_Aspect
           (F.New_Name (+"Alignment"),
            F.New_Name (+"Standard'Maximum_Alignment"));
 
-      Record_Type : constant Ada_Side.Outputs.Node_Access :=
+      Record_Type : constant Ada_Outputs.Node_Access :=
         F.New_Type
           (Name          => Record_Type_Name,
            Definition    => F.New_Record,
            Aspects       => Convention);
 
-      Access_Type : constant Ada_Side.Outputs.Node_Access :=
+      Access_Type : constant Ada_Outputs.Node_Access :=
         F.New_Type
           (Name          => F.New_Name (API_Access_Type_Name (Class)),
            Definition    => F.New_Access
@@ -132,10 +132,10 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
               Target => Record_Type_Name),
            Aspects       => Convention);
 
-      Size_Of_Name : constant Ada_Side.Outputs.Node_Access :=
+      Size_Of_Name : constant Ada_Outputs.Node_Access :=
         F.New_Name (API_Size_Of_Name (Class));
 
-      Size_Of   : constant Ada_Side.Outputs.Node_Access :=
+      Size_Of   : constant Ada_Outputs.Node_Access :=
         F.New_Variable
           (Name            => Size_Of_Name,
            Type_Definition => F.New_Selected_Name (+"Interfaces.C.size_t"),
@@ -143,7 +143,7 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
            Aspects         =>
              F.New_List ((Import, Convention, Link_Name)));
 
-      Storage_Type : constant Ada_Side.Outputs.Node_Access :=
+      Storage_Type : constant Ada_Outputs.Node_Access :=
         F.New_Type
           (Name          => F.New_Name (API_Storage_Type_Name (Class)),
            Definition    => F.New_Derived
@@ -155,16 +155,16 @@ package body Ada_Side.Generators.Adas.Value_API_Spec is
                       (+"..", Size_Of_Name)))),
            Aspects       => Alignment);
 
-      Public_Part : constant Ada_Side.Outputs.Node_Access :=
+      Public_Part : constant Ada_Outputs.Node_Access :=
         F.New_List
           ((Preelaborate, Record_Type, Access_Type, Size_Of, Storage_Type));
 
-      Package_Spec : constant Ada_Side.Outputs.Node_Access :=
+      Package_Spec : constant Ada_Outputs.Node_Access :=
         F.New_Package
           (Name         => F.New_Selected_Name (Package_Name),
            Public_Part  => Public_Part);
 
-      Spec_Unit : constant Ada_Side.Outputs.Node_Access :=
+      Spec_Unit : constant Ada_Outputs.Node_Access :=
         F.New_Compilation_Unit (Package_Spec, With_Clause);
 
    begin

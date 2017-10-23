@@ -1,12 +1,12 @@
-with Ada_Side.Outputs.Definitions;
-with Ada_Side.Outputs.Clauses;
-with Ada_Side.Outputs.Declarations;
-with Ada_Side.Outputs.Expressions;
-with Ada_Side.Outputs.Joins;
-with Ada_Side.Outputs.Statements;
-with Ada_Side.Outputs.Units;
+with Ada_Outputs.Definitions;
+with Ada_Outputs.Clauses;
+with Ada_Outputs.Declarations;
+with Ada_Outputs.Expressions;
+with Ada_Outputs.Joins;
+with Ada_Outputs.Statements;
+with Ada_Outputs.Units;
 
-package body Ada_Side.Outputs is
+package body Ada_Outputs is
 
    --------------
    -- Document --
@@ -106,7 +106,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Definitions.New_Access
+      return new Node'Class'(Definitions.New_Access
                              (Is_All => Is_All, Target => Target));
    end New_Access;
 
@@ -121,7 +121,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Expressions.New_Apply
+      return new Node'Class'(Expressions.New_Apply
                                (Prefix, Arguments));
    end New_Apply;
 
@@ -136,7 +136,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Clauses.New_Aspect (Name, Value));
+      return new Node'Class'(Clauses.New_Aspect (Name, Value));
    end New_Aspect;
 
    --------------------
@@ -150,7 +150,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Statements.New_Assignment (Left, Right));
+      return new Node'Class'(Statements.New_Assignment (Left, Right));
    end New_Assignment;
 
    --------------------------
@@ -167,7 +167,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Units.New_Compilation_Unit
+      return new Node'Class'(Units.New_Compilation_Unit
                              (Root, Clauses, License));
    end New_Compilation_Unit;
 
@@ -181,7 +181,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Definitions.New_Derived (Parent));
+      return new Node'Class'(Definitions.New_Derived (Parent));
    end New_Derived;
 
    ---------------
@@ -195,7 +195,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Statements.New_Elsif (Condition, List));
+      return new Node'Class'(Statements.New_Elsif (Condition, List));
    end New_Elsif;
 
    ----------------------
@@ -211,7 +211,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Statements.New_If
+      return new Node'Class'(Statements.New_If
                              (Condition, Then_Path, Elsif_List, Else_Path));
    end New_If;
 
@@ -226,7 +226,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Expressions.New_Infix (Operator, Left));
+      return new Node'Class'(Expressions.New_Infix (Operator, Left));
    end New_Infix;
 
    --------------
@@ -243,7 +243,7 @@ package body Ada_Side.Outputs is
       if Head = null then
          return Tail;
       else
-         return new Node'Class'(Outputs.Joins.New_Join (Head, Tail));
+         return new Node'Class'(Joins.New_Join (Head, Tail));
       end if;
    end New_List;
 
@@ -275,7 +275,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Expressions.New_Literal
+      return new Node'Class'(Expressions.New_Literal
                                (Value, Base));
    end New_Literal;
 
@@ -290,7 +290,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Expressions.New_Name (Name));
+      return new Node'Class'(Expressions.New_Name (Name));
    end New_Name;
 
    ------------------------
@@ -304,7 +304,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Definitions.New_Null_Exclusion
+      return new Node'Class'(Definitions.New_Null_Exclusion
                              (Definition, Exclude));
    end New_Null_Exclusion;
 
@@ -323,7 +323,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Declarations.New_Package
+      return new Node'Class'(Declarations.New_Package
                              (Name, Public_Part, Private_Part, Comment));
    end New_Package;
 
@@ -338,7 +338,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Declarations.New_Package_Body
+      return new Node'Class'(Declarations.New_Package_Body
                              (Name, List));
    end New_Package_Body;
 
@@ -359,7 +359,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Declarations.New_Parameter
+      return new Node'Class'(Declarations.New_Parameter
                              (Name, Type_Definition, Initialization,
                                Is_In, Is_Out, Is_Aliased, Comment));
    end New_Parameter;
@@ -378,7 +378,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self, Comment);
    begin
-      return new Node'Class'(Outputs.Clauses.New_Pragma (Name, Arguments));
+      return new Node'Class'(Clauses.New_Pragma (Name, Arguments));
    end New_Pragma;
 
    ------------------------
@@ -391,7 +391,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Definitions.New_Private_Record
+      return new Node'Class'(Definitions.New_Private_Record
                                (Is_Tagged));
    end New_Private_Record;
 
@@ -406,7 +406,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Definitions.New_Record
+      return new Node'Class'(Definitions.New_Record
                                (Parent, Components));
    end New_Record;
 
@@ -420,7 +420,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Statements.New_Return (Expression));
+      return new Node'Class'(Statements.New_Return (Expression));
    end New_Return;
 
    -----------------------
@@ -435,7 +435,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Expressions.New_Selected_Name
+      return new Node'Class'(Expressions.New_Selected_Name
                              (Prefix, Selector));
    end New_Selected_Name;
 
@@ -465,7 +465,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Statements.New_Statement (Expression));
+      return new Node'Class'(Statements.New_Statement (Expression));
    end New_Statement;
 
    ------------------------
@@ -479,7 +479,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Expressions.New_String (Text));
+      return new Node'Class'(Expressions.New_String (Text));
    end New_String_Literal;
 
    -------------------------
@@ -494,7 +494,7 @@ package body Ada_Side.Outputs is
       Exceptions    : Node_Access := null) return not null Node_Access is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Declarations.New_Subprogram_Body
+      return new Node'Class'(Ada_Outputs.Declarations.New_Subprogram_Body
                              (Specification,
                               Declarations,
                               Statements,
@@ -514,7 +514,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Declarations.New_Subprogram_Declaration
+      return new Node'Class'(Declarations.New_Subprogram_Declaration
                              (Specification, Aspects, Comment));
    end New_Subprogram_Declaration;
 
@@ -531,7 +531,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Definitions.New_Subprogram
+      return new Node'Class'(Definitions.New_Subprogram
                              (Is_Overriding,
                               Name,
                               Parameters,
@@ -575,7 +575,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Declarations.New_Type
+      return new Node'Class'(Declarations.New_Type
                              (Name,
                               Discriminants,
                               Definition,
@@ -594,7 +594,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Clauses.New_Use (Name, Use_Type));
+      return new Node'Class'(Clauses.New_Use (Name, Use_Type));
    end New_Use;
 
    ------------------
@@ -614,7 +614,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Declarations.New_Variable
+      return new Node'Class'(Declarations.New_Variable
                              (Name,
                               Type_Definition,
                               Initialization,
@@ -636,7 +636,7 @@ package body Ada_Side.Outputs is
    is
       pragma Unreferenced (Self);
    begin
-      return new Node'Class'(Outputs.Clauses.New_With
+      return new Node'Class'(Clauses.New_With
                                (Name, Is_Limited, Is_Private));
    end New_With;
 
@@ -685,4 +685,4 @@ package body Ada_Side.Outputs is
       return Printer.Pretty (Width => 79, Input => Document);
    end To_Text;
 
-end Ada_Side.Outputs;
+end Ada_Outputs;

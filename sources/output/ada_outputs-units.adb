@@ -1,4 +1,4 @@
-package body Ada_Side.Outputs.Units is
+package body Ada_Outputs.Units is
 
    --------------
    -- Document --
@@ -41,4 +41,4 @@ package body Ada_Side.Outputs.Units is
       return Compilation_Unit'(Root, Clauses, License);
    end New_Compilation_Unit;
 
-end Ada_Side.Outputs.Units;
+end Ada_Outputs.Units;

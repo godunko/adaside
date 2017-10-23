@@ -1,4 +1,4 @@
-private package Ada_Side.Outputs.Clauses is
+private package Ada_Outputs.Clauses is
 
    type Aspect is new Node with private;
 
@@ -82,4 +82,4 @@ private
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
-end Ada_Side.Outputs.Clauses;
+end Ada_Outputs.Clauses;

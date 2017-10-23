@@ -219,35 +219,35 @@ package body Ada_Side.Generators.Adas is
      Unit       : in out Ada_Side.Units.Abstract_Ada_Unit'Class;
      Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
      Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class;
-     Factory    : access Ada_Side.Outputs.Factory'Class;
-     Result     : out Ada_Side.Outputs.Node_Access)
+     Factory    : access Ada_Outputs.Factory'Class;
+     Result     : out Ada_Outputs.Node_Access)
    is
       use type Abstract_Meta_Classes.Abstract_Meta_Class;
 
-      F : access Ada_Side.Outputs.Factory'Class renames Factory;
+      F : access Ada_Outputs.Factory'Class renames Factory;
 
       Parameters : Abstract_Meta_Argument_Lists.Abstract_Meta_Argument_List
         := Subprogram.Arguments;
 
-      Parameter_List : Ada_Side.Outputs.Node_Access;
+      Parameter_List : Ada_Outputs.Node_Access;
       --  Node list corresponding to Parameters
 
       Return_Type   : constant Abstract_Meta_Types.Abstract_Meta_Type
         := Subprogram.Get_Type;
 
-      Result_Type : Ada_Side.Outputs.Node_Access;
+      Result_Type : Ada_Outputs.Node_Access;
       --  Node corresponding to Return_Type
 
-      Subprogram_Name  : constant Ada_Side.Outputs.Node_Access :=
+      Subprogram_Name  : constant Ada_Outputs.Node_Access :=
         F.New_Name (User_Subprogram_Name (Subprogram));
 
-      Self_Name  : constant Ada_Side.Outputs.Node_Access :=
+      Self_Name  : constant Ada_Outputs.Node_Access :=
         F.New_Name (+"Self");
 
-      User_Type     : constant Ada_Side.Outputs.Node_Access :=
+      User_Type     : constant Ada_Outputs.Node_Access :=
         F.New_Name (User_Tagged_Type_Full_Name (Class));
 
-      Class_Type    : constant Ada_Side.Outputs.Node_Access :=
+      Class_Type    : constant Ada_Outputs.Node_Access :=
         F.New_Name (User_Tagged_Type_Name (Class) & "'Class");
 
    begin
@@ -277,7 +277,7 @@ package body Ada_Side.Generators.Adas is
 
       for Parameter of Parameters loop
          declare
-            Parameter_Type : Ada_Side.Outputs.Node_Access;
+            Parameter_Type : Ada_Outputs.Node_Access;
          begin
             if Parameter.Get_Type.Is_Primitive then
                Parameter_Type := F.New_Selected_Name

@@ -1,4 +1,4 @@
-package body Ada_Side.Outputs.Clauses is
+package body Ada_Outputs.Clauses is
 
    --------------
    -- Document --
@@ -172,4 +172,4 @@ package body Ada_Side.Outputs.Clauses is
       return With_Clause'(Name, Is_Limited, Is_Private);
    end New_With;
 
-end Ada_Side.Outputs.Clauses;
+end Ada_Outputs.Clauses;

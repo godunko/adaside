@@ -1,5 +1,5 @@
 with Ada_Side.Units;
-with Ada_Side.Outputs;
+with Ada_Outputs;
 
 package body Ada_Side.Generators.Adas.Value_Internals_Spec is
 
@@ -18,24 +18,24 @@ package body Ada_Side.Generators.Adas.Value_Internals_Spec is
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
    is
       Unit : Ada_Side.Units.Ada_Spec_Unit;
-      F    : aliased Ada_Side.Outputs.Factory;
+      F    : aliased Ada_Outputs.Factory;
 
       Package_Name : constant League.Strings.Universal_String :=
         User_Package_Full_Name (Class) & ".Internals";
 
-      With_Clause : constant Ada_Side.Outputs.Node_Access :=
+      With_Clause : constant Ada_Outputs.Node_Access :=
         F.New_With (F.New_Selected_Name (API_Package_Full_Name (Class)));
 
-      Preelaborate : constant Ada_Side.Outputs.Node_Access :=
+      Preelaborate : constant Ada_Outputs.Node_Access :=
         F.New_Pragma (F.New_Name (+"Preelaborate"));
 
-      Self_Arg : constant Ada_Side.Outputs.Node_Access :=
+      Self_Arg : constant Ada_Outputs.Node_Access :=
         F.New_Parameter
           (Name            => F.New_Name (+"Self"),
            Type_Definition => F.New_Selected_Name
              (User_Tagged_Type_Full_Name (Class) & "'Class"));
 
-      View : constant Ada_Side.Outputs.Node_Access :=
+      View : constant Ada_Outputs.Node_Access :=
         F.New_Subprogram_Specification
           (Name       => F.New_Name (Class.Name.To_Universal_String & "_View"),
            Parameters => Self_Arg,
@@ -43,15 +43,15 @@ package body Ada_Side.Generators.Adas.Value_Internals_Spec is
              (F.New_Selected_Name
                 (API_Access_Type_Full_Name (Class))));
 
-      View_Decl : constant Ada_Side.Outputs.Node_Access :=
+      View_Decl : constant Ada_Outputs.Node_Access :=
         F.New_Subprogram_Declaration (View);
 
-      Package_Spec : constant Ada_Side.Outputs.Node_Access :=
+      Package_Spec : constant Ada_Outputs.Node_Access :=
         F.New_Package
           (Name         => F.New_Selected_Name (Package_Name),
            Public_Part  => F.New_List (Preelaborate, View_Decl));
 
-      Spec_Unit : constant Ada_Side.Outputs.Node_Access :=
+      Spec_Unit : constant Ada_Outputs.Node_Access :=
         F.New_Compilation_Unit (Package_Spec, With_Clause);
    begin
       Unit.Set_Package_Name (Package_Name);

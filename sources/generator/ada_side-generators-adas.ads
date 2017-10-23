@@ -1,5 +1,5 @@
 with Ada_Side.Units;
-private with Ada_Side.Outputs;
+private with Ada_Outputs;
 
 package Ada_Side.Generators.Adas is
 
@@ -45,7 +45,7 @@ private
      Unit       : in out Ada_Side.Units.Abstract_Ada_Unit'Class;
      Class      : Abstract_Meta_Classes.Abstract_Meta_Class'Class;
      Subprogram : Abstract_Meta_Functions.Abstract_Meta_Function'Class;
-     Factory    : access Ada_Side.Outputs.Factory'Class;
-     Result     : out Ada_Side.Outputs.Node_Access);
+     Factory    : access Ada_Outputs.Factory'Class;
+     Result     : out Ada_Outputs.Node_Access);
 
 end Ada_Side.Generators.Adas;

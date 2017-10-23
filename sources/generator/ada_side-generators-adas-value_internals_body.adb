@@ -1,4 +1,4 @@
-with Ada_Side.Outputs;
+with Ada_Outputs;
 with Ada_Side.Units;
 
 package body Ada_Side.Generators.Adas.Value_Internals_Body is
@@ -18,24 +18,24 @@ package body Ada_Side.Generators.Adas.Value_Internals_Body is
      Class : Abstract_Meta_Classes.Abstract_Meta_Class'Class)
    is
       Unit : Ada_Side.Units.Ada_Body_Unit;
-      F    : aliased Ada_Side.Outputs.Factory;
+      F    : aliased Ada_Outputs.Factory;
 
       Package_Name : constant League.Strings.Universal_String :=
         User_Package_Full_Name (Class) & ".Internals";
 
-      Self_Name : constant Ada_Side.Outputs.Node_Access :=
+      Self_Name : constant Ada_Outputs.Node_Access :=
         F.New_Name (+"Self");
 
-      Self_Arg : constant Ada_Side.Outputs.Node_Access :=
+      Self_Arg : constant Ada_Outputs.Node_Access :=
         F.New_Parameter
           (Name            => Self_Name,
            Type_Definition => F.New_Selected_Name
              (User_Tagged_Type_Full_Name (Class) & "'Class"));
 
-      View_Name : constant Ada_Side.Outputs.Node_Access :=
+      View_Name : constant Ada_Outputs.Node_Access :=
         F.New_Name (Class.Name.To_Universal_String & "_View");
 
-      View : constant Ada_Side.Outputs.Node_Access :=
+      View : constant Ada_Outputs.Node_Access :=
         F.New_Subprogram_Specification
           (Name       => View_Name,
            Parameters => Self_Arg,
@@ -43,20 +43,20 @@ package body Ada_Side.Generators.Adas.Value_Internals_Body is
              (F.New_Selected_Name
                 (API_Access_Type_Full_Name (Class))));
 
-      Return_Stmt : constant Ada_Side.Outputs.Node_Access := F.New_Return
+      Return_Stmt : constant Ada_Outputs.Node_Access := F.New_Return
         (F.New_Selected_Name (Self_Name, View_Name));
 
-      View_Body : constant Ada_Side.Outputs.Node_Access :=
+      View_Body : constant Ada_Outputs.Node_Access :=
         F.New_Subprogram_Body
           (Specification => View,
            Statements    => Return_Stmt);
 
-      Package_Body : constant Ada_Side.Outputs.Node_Access :=
+      Package_Body : constant Ada_Outputs.Node_Access :=
         F.New_Package_Body
           (Name => F.New_Selected_Name (Package_Name),
            List => View_Body);
 
-      Body_Unit : constant Ada_Side.Outputs.Node_Access :=
+      Body_Unit : constant Ada_Outputs.Node_Access :=
         F.New_Compilation_Unit (Package_Body);
    begin
       Unit.Set_Package_Name (Package_Name);

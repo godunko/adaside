@@ -1,4 +1,4 @@
-private package Ada_Side.Outputs.Definitions is
+private package Ada_Outputs.Definitions is
 
    type Access_Definition is new Node with private;
 
@@ -104,4 +104,4 @@ private
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
-end Ada_Side.Outputs.Definitions;
+end Ada_Outputs.Definitions;

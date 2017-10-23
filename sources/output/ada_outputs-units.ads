@@ -1,4 +1,4 @@
-private package Ada_Side.Outputs.Units is
+private package Ada_Outputs.Units is
 
    type Compilation_Unit is new Node with private;
 
@@ -21,4 +21,4 @@ private
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
-end Ada_Side.Outputs.Units;
+end Ada_Outputs.Units;

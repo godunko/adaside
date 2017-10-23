@@ -1,4 +1,4 @@
-private package Ada_Side.Outputs.Expressions is
+private package Ada_Outputs.Expressions is
 
    type Apply is new Node with private;
 
@@ -103,4 +103,4 @@ private
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
-end Ada_Side.Outputs.Expressions;
+end Ada_Outputs.Expressions;

@@ -1,4 +1,4 @@
-private package Ada_Side.Outputs.Declarations is
+private package Ada_Outputs.Declarations is
 
    type Package_Body is new Node with private;
 
@@ -170,4 +170,4 @@ private
      Pad     : Natural)
       return League.Pretty_Printers.Document;
 
-end Ada_Side.Outputs.Declarations;
+end Ada_Outputs.Declarations;

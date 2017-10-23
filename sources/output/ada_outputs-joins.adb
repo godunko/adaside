@@ -1,4 +1,4 @@
-package body Ada_Side.Outputs.Joins is
+package body Ada_Outputs.Joins is
 
    --------------
    -- Document --
@@ -48,4 +48,4 @@ package body Ada_Side.Outputs.Joins is
       return Join'(Left, Right);
    end New_Join;
 
-end Ada_Side.Outputs.Joins;
+end Ada_Outputs.Joins;
