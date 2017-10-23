@@ -39,6 +39,12 @@ private package Ada_Outputs.Expressions is
    function New_Parentheses
      (Child : not null Node_Access) return Node'Class;
 
+   type Component_Association is new Node with private;
+
+   function New_Component_Association
+     (Choices : Node_Access;
+      Value   : not null Node_Access) return Node'Class;
+
 private
 
    type Apply is new Node with record
@@ -114,6 +120,24 @@ private
 
    overriding function Document
     (Self    : Parentheses;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document;
+
+   type Component_Association is new Node with record
+      Choices : Node_Access;
+      Value   : not null Node_Access;
+   end record;
+
+   overriding function Join
+    (Self    : Component_Association;
+     List    : Node_Access_Array;
+     Pad     : Natural;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document;
+
+   overriding function Document
+    (Self    : Component_Association;
      Printer : not null access League.Pretty_Printers.Printer'Class;
      Pad     : Natural)
       return League.Pretty_Printers.Document;

@@ -206,6 +206,11 @@ package Ada_Outputs is
      (Self  : access Factory;
       Child : not null Node_Access) return not null Node_Access;
 
+   not overriding function New_Component_Association
+     (Self    : access Factory;
+      Choices : Node_Access := null;
+      Value   : not null Node_Access) return not null Node_Access;
+
    --  Statements and Paths
 
    not overriding function New_Assignment

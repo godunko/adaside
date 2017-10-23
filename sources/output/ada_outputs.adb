@@ -171,6 +171,21 @@ package body Ada_Outputs is
                              (Root, Clauses, License));
    end New_Compilation_Unit;
 
+   -------------------------------
+   -- New_Component_Association --
+   -------------------------------
+
+   not overriding function New_Component_Association
+     (Self    : access Factory;
+      Choices : Node_Access := null;
+      Value   : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Expressions.New_Component_Association
+                             (Choices, Value));
+   end New_Component_Association;
+
    -----------------
    -- New_Derived --
    -----------------

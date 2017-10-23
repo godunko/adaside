@@ -34,6 +34,28 @@ package body Ada_Outputs.Expressions is
    --------------
 
    overriding function Document
+    (Self    : Component_Association;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      if Self.Choices /= null then
+         Result.Append (Self.Choices.Document (Printer, Pad));
+         Result.Put (" => ");
+      end if;
+
+      Result.Append (Self.Value.Document (Printer, Pad));
+
+      return Result;
+   end Document;
+
+   --------------
+   -- Document --
+   --------------
+
+   overriding function Document
      (Self    : Infix;
       Printer : not null access League.Pretty_Printers.Printer'Class;
       Pad     : Natural)
@@ -159,6 +181,30 @@ package body Ada_Outputs.Expressions is
       return Result;
    end Document;
 
+   ----------
+   -- Join --
+   ----------
+
+   overriding function Join
+    (Self    : Component_Association;
+     List    : Node_Access_Array;
+     Pad     : Natural;
+     Printer : not null access League.Pretty_Printers.Printer'Class)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.Append (Self.Document (Printer, Pad));
+
+      for J in List'Range loop
+         Result.Put (",");
+         Result.New_Line;
+         Result.Append (List (J).Document (Printer, Pad));
+      end loop;
+
+      return Result.Group;
+   end Join;
+
    ---------------
    -- New_Apply --
    ---------------
@@ -169,6 +215,17 @@ package body Ada_Outputs.Expressions is
    begin
       return Apply'(Prefix, Arguments);
    end New_Apply;
+
+   -------------------------------
+   -- New_Component_Association --
+   -------------------------------
+
+   function New_Component_Association
+     (Choices : Node_Access;
+      Value   : not null Node_Access) return Node'Class is
+   begin
+      return Component_Association'(Choices, Value);
+   end New_Component_Association;
 
    ---------------
    -- New_Infix --
