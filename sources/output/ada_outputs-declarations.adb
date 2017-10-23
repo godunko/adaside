@@ -261,8 +261,16 @@ package body Ada_Outputs.Declarations is
       end if;
 
       if Self.Initialization /= null then
-         Result.Put (" := ");
-         Result.Append (Self.Initialization.Document (Printer, 0));
+         declare
+            Init : League.Pretty_Printers.Document := Printer.New_Document;
+         begin
+            Init.New_Line;
+            Init.Append (Self.Initialization.Document (Printer, 0));
+            Init.Nest (2);
+            Init.Group;
+            Result.Put (" :=");
+            Result.Append (Init);
+         end;
       end if;
 
       Result.Append (Print_Aspect (Self.Aspects, Printer));
