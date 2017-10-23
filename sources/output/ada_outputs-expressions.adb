@@ -43,10 +43,14 @@ package body Ada_Outputs.Expressions is
    begin
       if Self.Choices /= null then
          Result.Append (Self.Choices.Document (Printer, Pad));
-         Result.Put (" => ");
+         Result.Put (" =>");
+         Result.New_Line;
+         Result.Append (Self.Value.Document (Printer, Pad));
+         Result.Nest (2);
+         Result.Group;
+      else
+         Result.Append (Self.Value.Document (Printer, Pad));
       end if;
-
-      Result.Append (Self.Value.Document (Printer, Pad));
 
       return Result;
    end Document;
@@ -197,12 +201,18 @@ package body Ada_Outputs.Expressions is
       Result.Append (Self.Document (Printer, Pad));
 
       for J in List'Range loop
-         Result.Put (",");
-         Result.New_Line;
-         Result.Append (List (J).Document (Printer, Pad));
+         declare
+            Next : League.Pretty_Printers.Document := Printer.New_Document;
+         begin
+            Next.Put (",");
+            Next.New_Line;
+            Next.Append (List (J).Document (Printer, Pad));
+            Next.Group;
+            Result.Append (Next);
+         end;
       end loop;
 
-      return Result.Group;
+      return Result;
    end Join;
 
    ---------------
