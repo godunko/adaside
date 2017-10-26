@@ -215,6 +215,15 @@ package body Ada_Outputs.Expressions is
       return Result;
    end Join;
 
+   overriding function Max_Pad (Self : Argument_Association) return Natural is
+   begin
+      if Self.Choices = null then
+         return 0;
+      else
+         return Self.Choices.Max_Pad;
+      end if;
+   end Max_Pad;
+
    ---------------
    -- New_Apply --
    ---------------
@@ -225,6 +234,17 @@ package body Ada_Outputs.Expressions is
    begin
       return Apply'(Prefix, Arguments);
    end New_Apply;
+
+   ------------------------------
+   -- New_Argument_Association --
+   ------------------------------
+
+   function New_Argument_Association
+     (Choice : Node_Access;
+      Value  : not null Node_Access) return Node'Class is
+   begin
+      return Argument_Association'(Choice, Value);
+   end New_Argument_Association;
 
    -------------------------------
    -- New_Component_Association --

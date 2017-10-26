@@ -45,6 +45,12 @@ private package Ada_Outputs.Expressions is
      (Choices : Node_Access;
       Value   : not null Node_Access) return Node'Class;
 
+   type Argument_Association is new Node with private;
+
+   function New_Argument_Association
+     (Choice : Node_Access;
+      Value  : not null Node_Access) return Node'Class;
+
 private
 
    type Apply is new Node with record
@@ -141,5 +147,9 @@ private
      Printer : not null access League.Pretty_Printers.Printer'Class;
      Pad     : Natural)
       return League.Pretty_Printers.Document;
+
+   type Argument_Association is new Component_Association with null record;
+
+   overriding function Max_Pad (Self : Argument_Association) return Natural;
 
 end Ada_Outputs.Expressions;

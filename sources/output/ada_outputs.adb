@@ -125,6 +125,21 @@ package body Ada_Outputs is
                                (Prefix, Arguments));
    end New_Apply;
 
+   ------------------------------
+   -- New_Argument_Association --
+   ------------------------------
+
+   not overriding function New_Argument_Association
+     (Self   : access Factory;
+      Value  : not null Node_Access;
+      Choice : Node_Access := null) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Expressions.New_Argument_Association
+                             (Choice, Value));
+   end New_Argument_Association;
+
    ----------------
    -- New_Aspect --
    ----------------
@@ -153,6 +168,34 @@ package body Ada_Outputs is
       return new Node'Class'(Statements.New_Assignment (Left, Right));
    end New_Assignment;
 
+   --------------
+   -- New_Case --
+   --------------
+
+   not overriding function New_Case
+     (Self       : access Factory;
+      Expression : not null Node_Access;
+      List       : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Statements.New_Case (Expression, List));
+   end New_Case;
+
+   -------------------
+   -- New_Case_Path --
+   -------------------
+
+   not overriding function New_Case_Path
+     (Self   : access Factory;
+      Choice : not null Node_Access;
+      List   : not null Node_Access) return not null Node_Access
+   is
+      pragma Unreferenced (Self);
+   begin
+      return new Node'Class'(Statements.New_Case_Path (Choice, List));
+   end New_Case_Path;
+
    --------------------------
    -- New_Compilation_Unit --
    --------------------------
@@ -177,8 +220,8 @@ package body Ada_Outputs is
 
    not overriding function New_Component_Association
      (Self    : access Factory;
-      Choices : Node_Access := null;
-      Value   : not null Node_Access) return not null Node_Access
+      Value   : not null Node_Access;
+      Choices : Node_Access := null) return not null Node_Access
    is
       pragma Unreferenced (Self);
    begin

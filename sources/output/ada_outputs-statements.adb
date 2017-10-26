@@ -5,6 +5,53 @@ package body Ada_Outputs.Statements is
    --------------
 
    overriding function Document
+    (Self    : Case_Statement;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.New_Line;
+      Result.Put ("case ");
+      Result.Append (Self.Expression.Document (Printer, Pad));
+      Result.Put (" is");
+
+      Result.Append (Self.List.Document (Printer, Pad).Nest (3));
+
+      Result.New_Line;
+      Result.Put ("end case;");
+
+      return Result;
+   end Document;
+
+   --------------
+   -- Document --
+   --------------
+
+   overriding function Document
+    (Self    : Case_Path;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document
+   is
+      Result : League.Pretty_Printers.Document := Printer.New_Document;
+   begin
+      Result.New_Line;
+      Result.Put ("when ");
+      Result.Append (Self.Choice.Document (Printer, Pad));
+      Result.Put (" =>");
+
+      Result.Append (Self.List.Document (Printer, Pad).Nest (3));
+
+      return Result;
+   end Document;
+
+   --------------
+   -- Document --
+   --------------
+
+   overriding function Document
     (Self    : Elsif_Statement;
      Printer : not null access League.Pretty_Printers.Printer'Class;
      Pad     : Natural)
@@ -132,6 +179,28 @@ package body Ada_Outputs.Statements is
    begin
       return Assignment'(Left, Right);
    end New_Assignment;
+
+   --------------
+   -- New_Case --
+   --------------
+
+   function New_Case
+     (Expression : not null Node_Access;
+      List       : not null Node_Access) return Node'Class is
+   begin
+      return Case_Statement'(Expression, List);
+   end New_Case;
+
+   -------------------
+   -- New_Case_Path --
+   -------------------
+
+   function New_Case_Path
+     (Choice : not null Node_Access;
+      List   : not null Node_Access) return Node'Class is
+   begin
+      return Case_Path'(Choice, List);
+   end New_Case_Path;
 
    ---------------
    -- New_Elsif --

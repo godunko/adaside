@@ -6,6 +6,18 @@ private package Ada_Outputs.Statements is
      (Left  : not null Node_Access;
       Right : not null Node_Access) return Node'Class;
 
+   type Case_Statement is new Node with private;
+
+   function New_Case
+     (Expression : not null Node_Access;
+      List       : not null Node_Access) return Node'Class;
+
+   type Case_Path is new Node with private;
+
+   function New_Case_Path
+     (Choice : not null Node_Access;
+      List   : not null Node_Access) return Node'Class;
+
    type Elsif_Statement is new Node with private;
 
    function New_Elsif
@@ -39,6 +51,28 @@ private
 
    overriding function Document
     (Self    : Assignment;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document;
+
+   type Case_Statement is new Node with record
+      Expression : not null Node_Access;
+      List       : not null Node_Access;
+   end record;
+
+   overriding function Document
+    (Self    : Case_Statement;
+     Printer : not null access League.Pretty_Printers.Printer'Class;
+     Pad     : Natural)
+      return League.Pretty_Printers.Document;
+
+   type Case_Path is new Node with record
+      Choice : not null Node_Access;
+      List   : not null Node_Access;
+   end record;
+
+   overriding function Document
+    (Self    : Case_Path;
      Printer : not null access League.Pretty_Printers.Printer'Class;
      Pad     : Natural)
       return League.Pretty_Printers.Document;

@@ -206,10 +206,15 @@ package Ada_Outputs is
      (Self  : access Factory;
       Child : not null Node_Access) return not null Node_Access;
 
+   not overriding function New_Argument_Association
+     (Self   : access Factory;
+      Value  : not null Node_Access;
+      Choice : Node_Access := null) return not null Node_Access;
+
    not overriding function New_Component_Association
      (Self    : access Factory;
-      Choices : Node_Access := null;
-      Value   : not null Node_Access) return not null Node_Access;
+      Value   : not null Node_Access;
+      Choices : Node_Access := null) return not null Node_Access;
 
    --  Statements and Paths
 
@@ -217,6 +222,16 @@ package Ada_Outputs is
      (Self  : access Factory;
       Left  : not null Node_Access;
       Right : not null Node_Access) return not null Node_Access;
+
+   not overriding function New_Case
+     (Self       : access Factory;
+      Expression : not null Node_Access;
+      List       : not null Node_Access) return not null Node_Access;
+
+   not overriding function New_Case_Path
+     (Self   : access Factory;
+      Choice : not null Node_Access;
+      List   : not null Node_Access) return not null Node_Access;
 
    not overriding function New_Elsif
      (Self       : access Factory;
